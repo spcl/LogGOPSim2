@@ -1,0 +1,28 @@
+num_ranks 2
+
+rank 0 {
+l1: calc 1
+l2a: send 11b to 1 cpu 1 nic 0
+l2b: recv 11b from 1 cpu 1 nic 0
+l3: calc 0
+l4: calc 3
+l2a requires l1
+l3 irequires l2a
+l2b requires l2a
+l4 requires l2b
+l4 requires l3
+}
+
+rank 1 {
+l1: calc 1
+l2a: recv 11b from 0 cpu 1 nic 0
+l2b: send 11b to 0 cpu 1 nic 0
+l3: calc 0
+l4: calc 3
+l2a requires l1
+l3 irequires l2a
+l2b requires l2a
+l4 requires l2b
+l4 requires l3
+}
+

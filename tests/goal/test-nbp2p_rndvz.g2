@@ -1,0 +1,24 @@
+num_ranks 2
+
+rank 0 {
+l1: calc 1
+l2: send 11b to 1
+l3: calc 2
+l4: calc 3
+l2 requires l1
+l3 irequires l2
+l4 requires l2
+l4 requires l3
+}
+
+rank 1 {
+l1: calc 1
+l2: recv 11b from 0
+l3: calc 2
+l4: calc 3
+l2 requires l1
+l3 irequires l2
+l4 requires l2
+l4 requires l3
+}
+

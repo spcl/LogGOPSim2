@@ -1,0 +1,1 @@
+- ./schedgen -s 9 --ptrn=nwaydissemination --nway=2 is broken

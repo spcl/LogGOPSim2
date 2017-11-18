@@ -1,0 +1,73 @@
+num_ranks 4
+
+rank 0 {
+l1: send 1b to 1 tag 1000000
+l2: recv 1b from 3 tag 1000000
+l3: send 1b to 2 tag 1000000
+l3 requires l2
+l4: recv 1b from 2 tag 1000000
+l5: calc 0
+l5 requires l1
+l5 requires l3
+l5 requires l4
+l6: calc 1000
+l1 requires l6
+l2 requires l6
+l4 requires l6
+l7: calc 7000
+l7 requires l5
+}
+
+rank 1 {
+l1: send 1b to 2 tag 1000000
+l2: recv 1b from 0 tag 1000000
+l3: send 1b to 3 tag 1000000
+l3 requires l2
+l4: recv 1b from 3 tag 1000000
+l5: calc 0
+l5 requires l1
+l5 requires l3
+l5 requires l4
+l6: calc 2000
+l1 requires l6
+l2 requires l6
+l4 requires l6
+l7: calc 6000
+l7 requires l5
+}
+
+rank 2 {
+l1: send 1b to 3 tag 1000000
+l2: recv 1b from 1 tag 1000000
+l3: send 1b to 0 tag 1000000
+l3 requires l2
+l4: recv 1b from 0 tag 1000000
+l5: calc 0
+l5 requires l1
+l5 requires l3
+l5 requires l4
+l6: calc 3000
+l1 requires l6
+l2 requires l6
+l4 requires l6
+l7: calc 5000
+l7 requires l5
+}
+
+rank 3 {
+l1: send 1b to 0 tag 1000000
+l2: recv 1b from 2 tag 1000000
+l3: send 1b to 1 tag 1000000
+l3 requires l2
+l4: recv 1b from 1 tag 1000000
+l5: calc 0
+l5 requires l1
+l5 requires l3
+l5 requires l4
+l6: calc 4000
+l1 requires l6
+l2 requires l6
+l4 requires l6
+l7: calc 4000
+l7 requires l5
+}

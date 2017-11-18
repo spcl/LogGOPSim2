@@ -1,0 +1,21 @@
+num_ranks 4
+rank 0{
+l0: put 1b to 1 ct 0 tag 10
+l1: put 1b to 2 ct 1 tag 10
+l1 requires l0
+}
+rank 1{
+l0: append 1b to priority_list allowed 0 ct 0 use_once tag 10
+l1: tput 1b to 3 when 0 reaches 1 ct 1 tag 10
+l1 requires l0
+}
+rank 2{
+l0: append 1b to priority_list allowed 0 ct 0 use_once tag 10
+}
+rank 3{
+l0: append 1b to priority_list allowed 1 ct 0 use_once tag 10
+l1: test 0 for 1
+l1 requires l0
+l2: calc 1
+l2 requires l1
+}

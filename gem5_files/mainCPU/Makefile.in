@@ -1,0 +1,33 @@
+FLAGS 	= 
+CFLAGS 	= 
+LDFLAGS =
+
+LIBGEM5DIR = #LIBGEM5DIR#
+
+ARM_BIN=$(PWD)/arm_bin
+
+all: arm_code  
+
+
+arm_code: FLAGS += -I$(LIBGEM5DIR)/
+arm_code: LDFLAGS += $(LIBGEM5DIR)/util/m5/m5op_arm.S -march=armv8-a --static -O0 
+arm_code: $(ARM_BIN) 
+$(ARM_BIN): arm_print 
+	arm-linux-gnueabi-gcc $(FLAGS) $(CFLAGS) -o $(ARM_BIN) main.c $(LDFLAGS) $(FLAGS)
+	@echo "##############################"
+	@echo
+arm_print:
+	@echo "##### BUILDING Arm Binary #####"
+
+
+
+debug: FLAGS += -DDEBUG -g -O0
+debug: arm_code
+
+clean:
+	@echo "##### CLEAN-UP #####"
+	-rm -f $(ARM_BIN)
+	@echo "####################"
+	@echo
+	 
+.PHONY : all clean 

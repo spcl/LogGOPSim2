@@ -1,0 +1,46 @@
+package "goalsim" 
+version "0.1"
+
+
+option "network-file"   -  "Input file for network (annotated dot format)" string optional
+option "network-pktsize"-  "Network packet size" int default="64" optional
+option "network-maxcredits" - "Switch buffer capacity" int default="4096" optional
+option "network-ptime" -  "Switch packet's byte processing time" int default="1" optional
+option "network-latency" -  "Link latency" int default="2000" optional
+
+
+
+option "filename"       f  "Prefix for the filenames which contain the schedules" string
+option "save-mem"       -  "Map the schedules as MAP_SHARED to enable processing of large schedule (larger than main memory). This will invalidate the schedules during simulation." flag off
+option "vizfile"        V  "Name of the output file for visualization data" string optional
+option "verbose"        v  "Enable more verbose output" optional
+option "progress"       -  "print progress" optional
+option "batchmode"      b  "enable batchmode (never print detailed host info)" optional
+#option "collnoise"     -  "Enable noise in collective operations" optional
+option "noise-trace"    -  "Read Noise from trace <file>" string optional
+option "noise-cosched"  -  "Co-schedule noise (use same starttime on all processes)" flag off
+option "noise-time-mult"  -  "Noise trace time multiplier (default is ns)" float default="1.0" optional
+
+
+option "LogGOPS_L"        L  "The latency parameter L in the LogGP model" int default="2500" optional
+option "LogGOPS_o"        o  "The overhead parameter o in the LogGP model" int default="1500" optional
+option "LogGOPS_g"        g  "The gap per message parameter g in the LogGP model" int default="1000" optional
+option "LogGOPS_G"        G  "The gap per byte parameter G in the LogGP model" int default="6" optional
+option "LogGOPS_S"        S  "Datasize at which we change from eager to rendezvous protocol" int  default="65535" optional
+option "LogGOPS_O"	      O  "The overhead per byte in LogGOP" int default="0" optional
+
+option "LogGOPS_C"	C  "P4: Time to transfer 1byte from the main memory to the NIC memory" int default="1" optional
+option "LogGOPS_c"	c  "P4: Time required from the NIC to process one incoming message" int default="100" optional
+option "sPIN_c_packet"		-  "P4: Time required from the NIC to match one packet but the first" int default="10" optional
+
+
+option "gem5-conf-file"	    -  "P4: GEM5 configuration file" string optional
+option "gem5-time-mult"	    -  "P4: GEM5 time multiplier (1 tick=1ps)" int default="1000" optional
+option "gem5_o_hpu"	    -  "P4: overhead of sending network request from HPU " int default="0" optional
+option "gem5_o_nb_dma"	    -  "P4: overhead of non-blocking DMA requests" int default="0" optional
+option "gem5_cas_failure_rate"	    -  "P4: probability of CAS failure" int default="10" optional
+
+option "DMA_L"        -  "LogGP L for DMA" int default="3" optional
+option "DMA_G"        -  "LogGP G for DMA" int default="0" optional
+option "DMA_g"        -  "LogGP g for DMA" int default="0" optional
+option "DMA_contention"        -  "Contention for DMA" int default="1" optional

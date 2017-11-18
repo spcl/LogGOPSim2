@@ -1,0 +1,135 @@
+#README file for the LogGOPSim simulator (and gem5 support for host-side simulations)
+
+Installing
+----------
+
+  * prerequisites to for LogGOPSim: 
+    - C++ compiler (e.g., g++)
+    - re2c - http://re2c.org/
+    - gengetopt - http://www.gnu.org/software/gengetopt/gengetopt.html
+    - libagraph - http://www.graphviz.org/
+
+  * optional prerequisites to enable gem5 support (assuming modern Ubuntu/Debian system -- tested with Ubuntu 16 LTS):
+    - install and test gem5:
+      1) sudo apt-get install mercurial scons swig gcc m4 python python-dev libgoogle-perftools-dev g++ zlib1g-dev
+      2) hg clone -r 11794 http://repo.gem5.org/gem5
+      3) cd gem5
+      4) (optional) build binaries with: scons build/ARM/gem5.opt -j 4
+      5) (optional) test with: build/ARM/gem5.opt configs/example/se.py -c tests/test-progs/hello/bin/arm/linux/hello
+    - install cross-compilation tools for ARM
+      7) sudo apt-get install gcc-arm-linux-gnueabi
+      8) optional: sudo apt-get install libc6-dev-armel-armhf-cross
+
+  * build: 
+    - without gem5: ./configure
+    - with gem5:    ./configure --with-gem5={PATH TO GEM5} --patch-gem5
+      - build gem5 as library: (in gem-5 directory) scons --without-python --with-cxx-config --without-tcmalloc -j 4 build/ARM/libgem5_opt.so
+    - make
+
+Running a LogP simulation without gem5
+--------------------------------------
+
+  * write or generate a GOAL schedule or use one of the example
+    schedules (e.g., dissemination_16.goal or binary_tree_16.goal)
+
+  * convert schedule to binary format using txt2bin:
+    - e.g., txt2bin -i dissemination_16.goal -o dissemination_16.bin  
+
+  * execute simulation with default parameters (see LogGOPSim --help for
+    more options):
+    - e.g., LogGOPSim -f dissemination_16.bin
+
+  * interpret output:
+    - for small simulations, each host end time is printed (22000ns for
+      our example with default parameters)
+    - for larger runs, only the maximum time is printed
+
+Running a LogP+packet simulation with gem5
+------------------------------------------
+
+  * generate network topology file or use one of the examples (e.g., use
+    simplenet.dot)
+
+  * write or generate a GOAL schedule (see README_GOAL) or use one of the example
+    schedules (e.g. create_goal.sh in benchmarks)
+
+  * To run a simple simulation with gem5 support: ./run.sh <goal-file-prefix>  
+    - run with visualization: ./run.sh <goal-file-prefix> -V
+    -> see run.sh for details
+
+Visualization
+-------------
+
+  * run LogGOPSim with -V <outfile> option:
+    - e.g., LogGOPSim -f dissemination_16.bin -V viz.out
+
+  * compile DrawViz (simple "make")
+  
+  * run DrawViz (only for smaller simulations):
+    - e.g., drawviz -i viz.out -o viz.eps
+
+  * view postscript output:
+    - e.g., gv viz.eps
+
+
+P4Schedgen - automatic GOAL schedule generator for Portals 4
+------------------------------------------------------------
+  * compile P4Schedgen (sime "make") 
+
+  * run schedgen to produce GOAL files for Portals 4 collective operations.
+    e.g.: ./p4schedgen allreduce 16 4 
+    (generates an allreduce schedule for 16 processors with a 4byte message size)
+
+  * see ./p4schedgen --help for the complete usage
+
+
+
+Schedgen - automatic GOAL schedule generator
+--------------------------------------------
+
+  * compile SchedGen (simple "make")
+
+  * run schedgen to generate schedules for collective operations:
+    - e.g., schedgen -p binomialtreebcast -s 32 -o binary_tree_32.goal
+      (generates a binomial tree brodacast pattern with 32 processes,
+      the GOAL schedule can be converted to the binary simulator input
+      with txt2bin)
+
+  * run schedgen to generate schedules for application traces collected
+    with liballprof-0.9:
+    - traces need to be collected by linking liballprof as PMPI layer
+      with an MPI application. Sample traces are included in the
+      distribution in liballprof-samples
+    - e.g., schedgen -p trace --traces liballprof-samples/sweep3d-2x2/pmpi-trace-rank-0.txt -o sweep-4.goal
+    - convert and simulate:
+      - e.g., txt2bin -i sweep-4.goal -o sweep-4.bin
+              LogGOPSim -f sweep-4.bin
+
+Benchmarks 
+----------
+
+  * To build all required binaries for benchmarks execute ./init.sh {PATH TO GEM5}
+    - Note: gem5 should be already patched (see the Installing section in README)
+
+  * To run all benchmarks from the paper, use ./run_all_tests.sh
+
+  * To create visualizations for all test from the paper, use ./create_all_visualizations.sh
+    - The resulting figure will be in DrawViz folder
+
+  * To run a particular test, use ./run_benchmark.sh
+
+  * To create a particular figure, use ./run_create_vis.sh
+    - The resulting figure will be in DrawViz folder
+  
+
+
+Citation
+--------
+
+Any published work which uses this software should include the following
+citation:
+----------------------------------------------------------------------
+T. Hoefler, T. Schneider, A. Lumsdaine: LogGOPSim ­ Simulating
+Large-Scale Applications in the LogGOPS Model
+----------------------------------------------------------------------
+
