@@ -30,7 +30,7 @@ if test "x$link_regex" != "xyes"; then
 fi
 
 AM_CXXFLAGS=-O3 -g -pedantic -Wno-deprecated -Wall -Wno-long-long -std=c++11
-AC_CONFIG_FILES([Makefile src/DrawViz/Makefile src/p4schedgen/Makefile src/simulator/Makefile src/txt2bin/Makefile])
+AC_CONFIG_FILES([Makefile src/DrawViz/Makefile src/p4schedgen/Makefile src/schedgen/Makefile src/simulator/Makefile src/txt2bin/Makefile])
 
 
 

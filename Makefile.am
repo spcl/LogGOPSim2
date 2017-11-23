@@ -1,18 +1,18 @@
 SUBDIRS = src/DrawViz src/p4schedgen src/schedgen src/simulator src/txt2bin
 
-.PHONY = simulator drawviz p4schedgen schedgen txt2bin
+.PHONY = lgs drawviz schedgen_portals schedgen_mpi goal2bin
 
-sim:
+lgs:
 	cd src/simulator && make
 
 drawviz:
-	cd DrawViz && make
+	cd src/DrawViz && make
 
 schedgen_portals:
-	cd p4schedgen && make
+	cd src/p4schedgen && make
 
-schedgen:
-	cd schedgen && make
+schedgen_mpi:
+	cd src/schedgen && make
 
-txt2bin:
+goal2bin:
 	cd src/txt2bin && make

@@ -88,7 +88,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = x86_64-pc-linux-gnu
 host_triplet = x86_64-pc-linux-gnu
-bin_PROGRAMS = p4schedgen$(EXEEXT)
+bin_PROGRAMS = schedgen_portals$(EXEEXT)
 subdir = src/p4schedgen
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_boost_base.m4 \
@@ -102,11 +102,11 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_p4schedgen_OBJECTS = p4schedgen-p4schedgen.$(OBJEXT)
-p4schedgen_OBJECTS = $(am_p4schedgen_OBJECTS)
-p4schedgen_LDADD = $(LDADD)
-p4schedgen_LINK = $(CXXLD) $(p4schedgen_CXXFLAGS) $(CXXFLAGS) \
-	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+am_schedgen_portals_OBJECTS = schedgen_portals-p4schedgen.$(OBJEXT)
+schedgen_portals_OBJECTS = $(am_schedgen_portals_OBJECTS)
+schedgen_portals_LDADD = $(LDADD)
+schedgen_portals_LINK = $(CXXLD) $(schedgen_portals_CXXFLAGS) \
+	$(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_$(V))
 am__v_P_ = $(am__v_P_$(AM_DEFAULT_VERBOSITY))
 am__v_P_0 = false
@@ -140,8 +140,8 @@ AM_V_CXXLD = $(am__v_CXXLD_$(V))
 am__v_CXXLD_ = $(am__v_CXXLD_$(AM_DEFAULT_VERBOSITY))
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
-SOURCES = $(p4schedgen_SOURCES)
-DIST_SOURCES = $(p4schedgen_SOURCES)
+SOURCES = $(schedgen_portals_SOURCES)
+DIST_SOURCES = $(schedgen_portals_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -259,7 +259,7 @@ mandir = ${datarootdir}/man
 mkdir_p = $(MKDIR_P)
 oldincludedir = /usr/include
 pdfdir = ${docdir}
-prefix = /usr/local
+prefix = /home/salvo/ETH/github/LogGOPSim/build
 program_transform_name = s,x,x,
 psdir = ${docdir}
 runstatedir = ${localstatedir}/run
@@ -271,8 +271,8 @@ target_alias =
 top_build_prefix = ../../
 top_builddir = ../..
 top_srcdir = ../..
-p4schedgen_SOURCES = p4schedgen.cpp
-p4schedgen_CXXFLAGS = -lcgraph
+schedgen_portals_SOURCES = p4schedgen.cpp
+schedgen_portals_CXXFLAGS = -lcgraph
 all: all-am
 
 .SUFFIXES:
@@ -349,9 +349,9 @@ uninstall-binPROGRAMS:
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
 
-p4schedgen$(EXEEXT): $(p4schedgen_OBJECTS) $(p4schedgen_DEPENDENCIES) $(EXTRA_p4schedgen_DEPENDENCIES) 
-	@rm -f p4schedgen$(EXEEXT)
-	$(AM_V_CXXLD)$(p4schedgen_LINK) $(p4schedgen_OBJECTS) $(p4schedgen_LDADD) $(LIBS)
+schedgen_portals$(EXEEXT): $(schedgen_portals_OBJECTS) $(schedgen_portals_DEPENDENCIES) $(EXTRA_schedgen_portals_DEPENDENCIES) 
+	@rm -f schedgen_portals$(EXEEXT)
+	$(AM_V_CXXLD)$(schedgen_portals_LINK) $(schedgen_portals_OBJECTS) $(schedgen_portals_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -359,7 +359,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-include ./$(DEPDIR)/p4schedgen-p4schedgen.Po
+include ./$(DEPDIR)/schedgen_portals-p4schedgen.Po
 
 .cpp.o:
 	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -375,19 +375,19 @@ include ./$(DEPDIR)/p4schedgen-p4schedgen.Po
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(AM_V_CXX_no)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
-p4schedgen-p4schedgen.o: p4schedgen.cpp
-	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(p4schedgen_CXXFLAGS) $(CXXFLAGS) -MT p4schedgen-p4schedgen.o -MD -MP -MF $(DEPDIR)/p4schedgen-p4schedgen.Tpo -c -o p4schedgen-p4schedgen.o `test -f 'p4schedgen.cpp' || echo '$(srcdir)/'`p4schedgen.cpp
-	$(AM_V_at)$(am__mv) $(DEPDIR)/p4schedgen-p4schedgen.Tpo $(DEPDIR)/p4schedgen-p4schedgen.Po
-#	$(AM_V_CXX)source='p4schedgen.cpp' object='p4schedgen-p4schedgen.o' libtool=no \
+schedgen_portals-p4schedgen.o: p4schedgen.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(schedgen_portals_CXXFLAGS) $(CXXFLAGS) -MT schedgen_portals-p4schedgen.o -MD -MP -MF $(DEPDIR)/schedgen_portals-p4schedgen.Tpo -c -o schedgen_portals-p4schedgen.o `test -f 'p4schedgen.cpp' || echo '$(srcdir)/'`p4schedgen.cpp
+	$(AM_V_at)$(am__mv) $(DEPDIR)/schedgen_portals-p4schedgen.Tpo $(DEPDIR)/schedgen_portals-p4schedgen.Po
+#	$(AM_V_CXX)source='p4schedgen.cpp' object='schedgen_portals-p4schedgen.o' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(p4schedgen_CXXFLAGS) $(CXXFLAGS) -c -o p4schedgen-p4schedgen.o `test -f 'p4schedgen.cpp' || echo '$(srcdir)/'`p4schedgen.cpp
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(schedgen_portals_CXXFLAGS) $(CXXFLAGS) -c -o schedgen_portals-p4schedgen.o `test -f 'p4schedgen.cpp' || echo '$(srcdir)/'`p4schedgen.cpp
 
-p4schedgen-p4schedgen.obj: p4schedgen.cpp
-	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(p4schedgen_CXXFLAGS) $(CXXFLAGS) -MT p4schedgen-p4schedgen.obj -MD -MP -MF $(DEPDIR)/p4schedgen-p4schedgen.Tpo -c -o p4schedgen-p4schedgen.obj `if test -f 'p4schedgen.cpp'; then $(CYGPATH_W) 'p4schedgen.cpp'; else $(CYGPATH_W) '$(srcdir)/p4schedgen.cpp'; fi`
-	$(AM_V_at)$(am__mv) $(DEPDIR)/p4schedgen-p4schedgen.Tpo $(DEPDIR)/p4schedgen-p4schedgen.Po
-#	$(AM_V_CXX)source='p4schedgen.cpp' object='p4schedgen-p4schedgen.obj' libtool=no \
+schedgen_portals-p4schedgen.obj: p4schedgen.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(schedgen_portals_CXXFLAGS) $(CXXFLAGS) -MT schedgen_portals-p4schedgen.obj -MD -MP -MF $(DEPDIR)/schedgen_portals-p4schedgen.Tpo -c -o schedgen_portals-p4schedgen.obj `if test -f 'p4schedgen.cpp'; then $(CYGPATH_W) 'p4schedgen.cpp'; else $(CYGPATH_W) '$(srcdir)/p4schedgen.cpp'; fi`
+	$(AM_V_at)$(am__mv) $(DEPDIR)/schedgen_portals-p4schedgen.Tpo $(DEPDIR)/schedgen_portals-p4schedgen.Po
+#	$(AM_V_CXX)source='p4schedgen.cpp' object='schedgen_portals-p4schedgen.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(p4schedgen_CXXFLAGS) $(CXXFLAGS) -c -o p4schedgen-p4schedgen.obj `if test -f 'p4schedgen.cpp'; then $(CYGPATH_W) 'p4schedgen.cpp'; else $(CYGPATH_W) '$(srcdir)/p4schedgen.cpp'; fi`
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(schedgen_portals_CXXFLAGS) $(CXXFLAGS) -c -o schedgen_portals-p4schedgen.obj `if test -f 'p4schedgen.cpp'; then $(CYGPATH_W) 'p4schedgen.cpp'; else $(CYGPATH_W) '$(srcdir)/p4schedgen.cpp'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique

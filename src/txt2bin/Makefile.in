@@ -88,7 +88,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-bin_PROGRAMS = txt2bin$(EXEEXT)
+bin_PROGRAMS = goal2bin$(EXEEXT)
 subdir = src/txt2bin
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_boost_base.m4 \
@@ -102,9 +102,9 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_txt2bin_OBJECTS = txt2bin.$(OBJEXT) txt2bin_cmdline.$(OBJEXT)
-txt2bin_OBJECTS = $(am_txt2bin_OBJECTS)
-txt2bin_LDADD = $(LDADD)
+am_goal2bin_OBJECTS = txt2bin.$(OBJEXT) txt2bin_cmdline.$(OBJEXT)
+goal2bin_OBJECTS = $(am_goal2bin_OBJECTS)
+goal2bin_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -146,8 +146,8 @@ AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
-SOURCES = $(txt2bin_SOURCES)
-DIST_SOURCES = $(txt2bin_SOURCES)
+SOURCES = $(goal2bin_SOURCES)
+DIST_SOURCES = $(goal2bin_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -277,7 +277,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-txt2bin_SOURCES = txt2bin.cpp txt2bin_cmdline.c
+goal2bin_SOURCES = txt2bin.cpp txt2bin_cmdline.c
 BUILT_SOURCES = txt2bin.cpp txt2bin_cmdline.c
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -356,9 +356,9 @@ uninstall-binPROGRAMS:
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
 
-txt2bin$(EXEEXT): $(txt2bin_OBJECTS) $(txt2bin_DEPENDENCIES) $(EXTRA_txt2bin_DEPENDENCIES) 
-	@rm -f txt2bin$(EXEEXT)
-	$(AM_V_CXXLD)$(CXXLINK) $(txt2bin_OBJECTS) $(txt2bin_LDADD) $(LIBS)
+goal2bin$(EXEEXT): $(goal2bin_OBJECTS) $(goal2bin_DEPENDENCIES) $(EXTRA_goal2bin_DEPENDENCIES) 
+	@rm -f goal2bin$(EXEEXT)
+	$(AM_V_CXXLD)$(CXXLINK) $(goal2bin_OBJECTS) $(goal2bin_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)

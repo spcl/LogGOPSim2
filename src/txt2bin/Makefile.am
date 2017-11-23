@@ -1,6 +1,6 @@
-bin_PROGRAMS = txt2bin
+bin_PROGRAMS = goal2bin
 
-txt2bin_SOURCES = txt2bin.cpp txt2bin_cmdline.c
+goal2bin_SOURCES = txt2bin.cpp txt2bin_cmdline.c
 BUILT_SOURCES = txt2bin.cpp txt2bin_cmdline.c
 
 txt2bin.cpp: txt2bin.re

@@ -1,4 +1,4 @@
-bin_PROGRAMS = p4schedgen
+bin_PROGRAMS = schedgen_portals
 
-p4schedgen_SOURCES = p4schedgen.cpp
-p4schedgen_CXXFLAGS = -lcgraph
+schedgen_portals_SOURCES = p4schedgen.cpp
+schedgen_portals_CXXFLAGS = -lcgraph
