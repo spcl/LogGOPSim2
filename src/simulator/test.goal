@@ -1,0 +1,13 @@
+num_ranks 2
+rank 0{
+l0: append 10b to priority_list allowed 1 ct 0 tag 53
+l1: put 200b to 1 tag 10
+l1 requires l0
+}
+
+rank 1{
+l0: append 200b to priority_list hh 20 allowed 0 ct 9 use_once tag 10
+l1: tput 10b to 0 when 9 reaches 1 ct 5 tag 53
+l1 requires l0
+}
+
