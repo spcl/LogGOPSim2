@@ -1,15 +1,13 @@
 LogGOPSim 
 
-
-- Changelog:
+Changelog
+---------
  v2.0: new structure, packet-switched network module, gem5 integration - Salvatore Di Girolamo, Konstantin Taranov, Timo Schneider, Torsten Hoefler
  v1.1: ported agraph to cgraph, Torsten Hoefler, Timo Schneider
  v1.0: Initial version - Torsten Hoefler, Timo Schneider
 
-
 Installing
 ----------
-
   * prerequisites to for LogGOPSim: 
     - C++ compiler (e.g., g++)
     - re2c - http://re2c.org/
@@ -37,7 +35,6 @@ Installing
 
 Running a LogP simulation without gem5
 --------------------------------------
-
   * write or generate a GOAL schedule or use one of the example
     schedules (e.g., dissemination_16.goal or binary_tree_16.goal)
 
@@ -55,7 +52,6 @@ Running a LogP simulation without gem5
 
 Running a LogP+packet simulation with gem5
 ------------------------------------------
-
   * generate network topology file or use one of the examples (e.g., use
     simplenet.dot)
 
@@ -68,7 +64,6 @@ Running a LogP+packet simulation with gem5
 
 Visualization
 -------------
-
   * run LogGOPSim with -V <outfile> option:
     - e.g., LogGOPSim -f dissemination_16.bin -V viz.out
 
@@ -95,7 +90,6 @@ P4Schedgen - automatic GOAL schedule generator for Portals 4
 
 Schedgen - automatic GOAL schedule generator
 --------------------------------------------
-
   * compile SchedGen (simple "make")
 
   * run schedgen to generate schedules for collective operations:
@@ -116,7 +110,6 @@ Schedgen - automatic GOAL schedule generator
 
 Benchmarks 
 ----------
-
   * To build all required binaries for benchmarks execute ./init.sh {PATH TO GEM5}
     - Note: gem5 should be already patched (see the Installing section in README)
 
@@ -134,7 +127,6 @@ Benchmarks
 
 Citation
 --------
-
 Any published work which uses this software should include the following
 citation:
 ----------------------------------------------------------------------
