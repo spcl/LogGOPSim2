@@ -7,6 +7,8 @@ AC_DEFUN([CHECK_GEM5],
     AC_SUBST([GEM5_CFLAGS], [])
     AC_SUBST([GEM5_LDFLAGS], [])
 
+
+
     check_gem5=yes
     
     if test x"${with_gem5}" == xno; then
@@ -16,7 +18,8 @@ AC_DEFUN([CHECK_GEM5],
     elif test x"${with_gem5}" != x; then
         CFLAGS="${CFLAGS} -I${with_gem5}"
         CPPFLAGS="${CPPFLAGS} -I${with_gem5}"
-        LDFLAGS="${LDFLAGS} -L${with_gem5}/ -lgem5_opt"
+
+        LDFLAGS="${LDFLAGS} -L${with_gem5}/ -lgem5_opt -Wl,-rpath,${with_gem5}"
 
         gem5_path=${with_gem5}
     fi
@@ -27,17 +30,25 @@ AC_DEFUN([CHECK_GEM5],
         AC_CHECK_LIB(gem5_opt, main, [], [AC_MSG_ERROR([gem5 libgem5_opt.so not found! Did you recompile gem5?])])
         AC_CHECK_FILE([${gem5_path}/sim/cxx_config.cc], [], [AC_MSG_ERROR([gem5 cxx_config.cc not found! Did you recompile with --with-cxx-config?])])
 
+        AC_CHECK_FILE
 
+        LDFLAGS="${LDFLAGS} ${gem5_path}/sim/cxx_config.os"
+
+        #CPPFLAGS="${CPPFLAGS} ${gem5_path}/sim/cxx_config.cc"
         AC_LANG_POP
 
         AC_DEFINE(HAVE_GEM5, 1, enables gem5)
         AC_MSG_NOTICE([gem5 support enabled])
-        AC_SUBST([GEM5_CFLAGS], [])
-        AC_SUBST([GEM5_LDFLAGS], [-lgem5_opt])
-        if test x${gem5_path} != x; then
-            AC_SUBST([GEM5_CFLAGS], [-I${gem5_path}/])
-            AC_SUBST([GEM5_LDFLAGS], ["-L${gem5_path} -lgem5_opt"])
-        fi
+        #AC_SUBST([GEM5_CFLAGS], [])
+        #AC_SUBST([GEM5_LDFLAGS], [-lgem5_opt])
+        #if test x${gem5_path} != x; then
+        #    AC_SUBST([GEM5_CFLAGS], [-I${gem5_path}/ sim/cxx_config.cc])
+        #    AC_SUBST([GEM5_LDFLAGS], ["-L${gem5_path} -lgem5_opt"])
+        #fi
+
+
     fi
+
+
     ]
 )

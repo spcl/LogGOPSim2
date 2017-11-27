@@ -109,7 +109,8 @@ am__objects_1 = modules/dma/lgs-dma.$(OBJEXT) \
 	modules/packet_net/lgs-NetMod.$(OBJEXT) \
 	modules/portals4/lgs-p4.$(OBJEXT) \
 	modules/portals4_smp/lgs-p4smp.$(OBJEXT) \
-	modules/portals4_smp/gem5/lgs-GEM5Mod.$(OBJEXT)
+	modules/portals4_smp/gem5/lgs-GEM5Mod.$(OBJEXT) \
+	modules/portals4_smp/gem5/lgs-stats.$(OBJEXT)
 am_lgs_OBJECTS = lgs-sim.$(OBJEXT) lgs-cmdline.$(OBJEXT) \
 	lgs-main.$(OBJEXT) $(am__objects_1)
 lgs_OBJECTS = $(am_lgs_OBJECTS)
@@ -214,15 +215,15 @@ ECHO_N = -n
 ECHO_T = 
 EGREP = /bin/grep -E
 EXEEXT = 
-GEM5_CFLAGS = -I/home/salvo/ETH/gem5/build/ARM/
-GEM5_LDFLAGS = -L/home/salvo/ETH/gem5/build/ARM -lgem5_opt
+GEM5_CFLAGS = 
+GEM5_LDFLAGS = 
 GREP = /bin/grep
 INSTALL = /usr/bin/install -c
 INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
-LDFLAGS =  -L/home/salvo/ETH/gem5/build/ARM/ -lgem5_opt
+LDFLAGS =  -L/home/salvo/ETH/gem5/build/ARM/ -lgem5_opt -Wl,-rpath,/home/salvo/ETH/gem5/build/ARM /home/salvo/ETH/gem5/build/ARM/sim/cxx_config.os
 LIBOBJS = 
 LIBS = -lgem5_opt -lcgraph -lps 
 LTLIBOBJS = 
@@ -299,7 +300,8 @@ MODULES = modules/dma/dma.cpp \
           modules/packet_net/NetMod.cpp \
           modules/portals4/p4.cpp \
           modules/portals4_smp/p4smp.cpp \
-          modules/portals4_smp/gem5/GEM5Mod.cpp
+          modules/portals4_smp/gem5/GEM5Mod.cpp \
+          modules/portals4_smp/gem5/stats.cpp
 
 lgs_SOURCES = sim.cpp cmdline.c main.cpp ${MODULES}
 lgs_CPPFLAGS = -std=c++11
@@ -432,6 +434,9 @@ modules/portals4_smp/gem5/$(DEPDIR)/$(am__dirstamp):
 modules/portals4_smp/gem5/lgs-GEM5Mod.$(OBJEXT):  \
 	modules/portals4_smp/gem5/$(am__dirstamp) \
 	modules/portals4_smp/gem5/$(DEPDIR)/$(am__dirstamp)
+modules/portals4_smp/gem5/lgs-stats.$(OBJEXT):  \
+	modules/portals4_smp/gem5/$(am__dirstamp) \
+	modules/portals4_smp/gem5/$(DEPDIR)/$(am__dirstamp)
 
 lgs$(EXEEXT): $(lgs_OBJECTS) $(lgs_DEPENDENCIES) $(EXTRA_lgs_DEPENDENCIES) 
 	@rm -f lgs$(EXEEXT)
@@ -458,6 +463,7 @@ include modules/packet_net/$(DEPDIR)/lgs-NetMod.Po
 include modules/portals4/$(DEPDIR)/lgs-p4.Po
 include modules/portals4_smp/$(DEPDIR)/lgs-p4smp.Po
 include modules/portals4_smp/gem5/$(DEPDIR)/lgs-GEM5Mod.Po
+include modules/portals4_smp/gem5/$(DEPDIR)/lgs-stats.Po
 
 .c.o:
 	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -616,6 +622,20 @@ modules/portals4_smp/gem5/lgs-GEM5Mod.obj: modules/portals4_smp/gem5/GEM5Mod.cpp
 #	$(AM_V_CXX)source='modules/portals4_smp/gem5/GEM5Mod.cpp' object='modules/portals4_smp/gem5/lgs-GEM5Mod.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lgs_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o modules/portals4_smp/gem5/lgs-GEM5Mod.obj `if test -f 'modules/portals4_smp/gem5/GEM5Mod.cpp'; then $(CYGPATH_W) 'modules/portals4_smp/gem5/GEM5Mod.cpp'; else $(CYGPATH_W) '$(srcdir)/modules/portals4_smp/gem5/GEM5Mod.cpp'; fi`
+
+modules/portals4_smp/gem5/lgs-stats.o: modules/portals4_smp/gem5/stats.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lgs_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT modules/portals4_smp/gem5/lgs-stats.o -MD -MP -MF modules/portals4_smp/gem5/$(DEPDIR)/lgs-stats.Tpo -c -o modules/portals4_smp/gem5/lgs-stats.o `test -f 'modules/portals4_smp/gem5/stats.cpp' || echo '$(srcdir)/'`modules/portals4_smp/gem5/stats.cpp
+	$(AM_V_at)$(am__mv) modules/portals4_smp/gem5/$(DEPDIR)/lgs-stats.Tpo modules/portals4_smp/gem5/$(DEPDIR)/lgs-stats.Po
+#	$(AM_V_CXX)source='modules/portals4_smp/gem5/stats.cpp' object='modules/portals4_smp/gem5/lgs-stats.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lgs_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o modules/portals4_smp/gem5/lgs-stats.o `test -f 'modules/portals4_smp/gem5/stats.cpp' || echo '$(srcdir)/'`modules/portals4_smp/gem5/stats.cpp
+
+modules/portals4_smp/gem5/lgs-stats.obj: modules/portals4_smp/gem5/stats.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lgs_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT modules/portals4_smp/gem5/lgs-stats.obj -MD -MP -MF modules/portals4_smp/gem5/$(DEPDIR)/lgs-stats.Tpo -c -o modules/portals4_smp/gem5/lgs-stats.obj `if test -f 'modules/portals4_smp/gem5/stats.cpp'; then $(CYGPATH_W) 'modules/portals4_smp/gem5/stats.cpp'; else $(CYGPATH_W) '$(srcdir)/modules/portals4_smp/gem5/stats.cpp'; fi`
+	$(AM_V_at)$(am__mv) modules/portals4_smp/gem5/$(DEPDIR)/lgs-stats.Tpo modules/portals4_smp/gem5/$(DEPDIR)/lgs-stats.Po
+#	$(AM_V_CXX)source='modules/portals4_smp/gem5/stats.cpp' object='modules/portals4_smp/gem5/lgs-stats.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lgs_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o modules/portals4_smp/gem5/lgs-stats.obj `if test -f 'modules/portals4_smp/gem5/stats.cpp'; then $(CYGPATH_W) 'modules/portals4_smp/gem5/stats.cpp'; else $(CYGPATH_W) '$(srcdir)/modules/portals4_smp/gem5/stats.cpp'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique

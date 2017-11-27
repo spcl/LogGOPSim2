@@ -45,6 +45,10 @@
  *  Register with: Stats::registerHandlers(statsReset, statsDump)
  */
 
+
+#include "../../../../config.h"
+#ifdef HAVE_GEM5
+
 #include "base/statistics.hh"
 #include "stats.hh"
 
@@ -113,3 +117,5 @@ void statsEnable()
 }
 
 }
+
+#endif
