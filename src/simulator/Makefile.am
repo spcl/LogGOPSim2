@@ -16,5 +16,5 @@ lgs_LDADD = -lcgraph
 BUILT_SOURCES = cmdline.c
 
 cmdline.c: cmdline.ggo
-	gengetout < $(srcdir)/cmdline.ggo
+	gengetopt < $(srcdir)/cmdline.ggo
 
