@@ -1,4 +1,11 @@
-#README file for the LogGOPSim simulator (and gem5 support for host-side simulations)
+LogGOPSim 
+
+
+- Changelog:
+ v2.0: new structure, packet-switched network module, gem5 integration - Salvatore Di Girolamo, Konstantin Taranov, Timo Schneider, Torsten Hoefler
+ v1.1: ported agraph to cgraph, Torsten Hoefler, Timo Schneider
+ v1.0: Initial version - Torsten Hoefler, Timo Schneider
+
 
 Installing
 ----------
@@ -22,9 +29,11 @@ Installing
 
   * build: 
     - without gem5: ./configure
-    - with gem5:    ./configure --with-gem5={PATH TO GEM5} --patch-gem5
+    - with gem5:    ./configure --with-gem5=<path to gem5>
+      - install lgs-gem5 module: ./install_gem5mod.sh <path to gem5>
       - build gem5 as library: (in gem-5 directory) scons --without-python --with-cxx-config --without-tcmalloc -j 4 build/ARM/libgem5_opt.so
     - make
+    - make install
 
 Running a LogP simulation without gem5
 --------------------------------------
