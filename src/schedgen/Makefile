@@ -92,7 +92,8 @@ bin_PROGRAMS = schedgen_mpi$(EXEEXT)
 subdir = src/schedgen
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_boost_base.m4 \
-	$(top_srcdir)/m4/ax_boost_regex.m4 $(top_srcdir)/configure.ac
+	$(top_srcdir)/m4/ax_boost_regex.m4 $(top_srcdir)/m4/gem5.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/Makefile.am $(am__DIST_COMMON)
@@ -187,10 +188,11 @@ BOOST_LDFLAGS = -L/usr/lib/x86_64-linux-gnu
 BOOST_REGEX_LIB = -lboost_regex
 CC = gcc
 CCDEPMODE = depmode=gcc3
-CFLAGS = -g -O2
+CFLAGS = -g -O2 -I/home/salvo/ETH/gem5/build/ARM
 CPP = gcc -E
-CPPFLAGS = 
+CPPFLAGS = -std=c++11 -I/home/salvo/ETH/gem5/build/ARM
 CXX = g++
+CXXCPP = g++ -E
 CXXDEPMODE = depmode=gcc3
 CXXFLAGS = -g -O2
 CYGPATH_W = echo
@@ -201,15 +203,17 @@ ECHO_N = -n
 ECHO_T = 
 EGREP = /bin/grep -E
 EXEEXT = 
+GEM5_CFLAGS = -I/home/salvo/ETH/gem5/build/ARM/
+GEM5_LDFLAGS = -L/home/salvo/ETH/gem5/build/ARM -lgem5_opt
 GREP = /bin/grep
 INSTALL = /usr/bin/install -c
 INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
-LDFLAGS = 
+LDFLAGS =  -L/home/salvo/ETH/gem5/build/ARM/ -lgem5_opt
 LIBOBJS = 
-LIBS = -lcgraph -lps 
+LIBS = -lgem5_opt -lcgraph -lps 
 LTLIBOBJS = 
 MAKEINFO = ${SHELL} /home/salvo/ETH/github/LogGOPSim/missing makeinfo
 MKDIR_P = /bin/mkdir -p

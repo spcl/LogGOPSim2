@@ -4,7 +4,8 @@ MODULES = modules/dma/dma.cpp \
           modules/loggop/loggop.cpp \
           modules/packet_net/NetMod.cpp \
           modules/portals4/p4.cpp \
-          modules/portals4_smp/p4smp.cpp
+          modules/portals4_smp/p4smp.cpp \
+          modules/portals4_smp/gem5/GEM5Mod.cpp
 
 
 bin_PROGRAMS = lgs

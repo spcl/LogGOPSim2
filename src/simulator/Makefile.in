@@ -92,7 +92,8 @@ bin_PROGRAMS = lgs$(EXEEXT)
 subdir = src/simulator
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_boost_base.m4 \
-	$(top_srcdir)/m4/ax_boost_regex.m4 $(top_srcdir)/configure.ac
+	$(top_srcdir)/m4/ax_boost_regex.m4 $(top_srcdir)/m4/gem5.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/Makefile.am $(am__DIST_COMMON)
@@ -107,7 +108,8 @@ am__objects_1 = modules/dma/lgs-dma.$(OBJEXT) \
 	modules/loggop/lgs-loggop.$(OBJEXT) \
 	modules/packet_net/lgs-NetMod.$(OBJEXT) \
 	modules/portals4/lgs-p4.$(OBJEXT) \
-	modules/portals4_smp/lgs-p4smp.$(OBJEXT)
+	modules/portals4_smp/lgs-p4smp.$(OBJEXT) \
+	modules/portals4_smp/gem5/lgs-GEM5Mod.$(OBJEXT)
 am_lgs_OBJECTS = lgs-sim.$(OBJEXT) lgs-cmdline.$(OBJEXT) \
 	lgs-main.$(OBJEXT) $(am__objects_1)
 lgs_OBJECTS = $(am_lgs_OBJECTS)
@@ -201,6 +203,7 @@ CFLAGS = @CFLAGS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
+CXXCPP = @CXXCPP@
 CXXDEPMODE = @CXXDEPMODE@
 CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
@@ -211,6 +214,8 @@ ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
+GEM5_CFLAGS = @GEM5_CFLAGS@
+GEM5_LDFLAGS = @GEM5_LDFLAGS@
 GREP = @GREP@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -293,7 +298,8 @@ MODULES = modules/dma/dma.cpp \
           modules/loggop/loggop.cpp \
           modules/packet_net/NetMod.cpp \
           modules/portals4/p4.cpp \
-          modules/portals4_smp/p4smp.cpp
+          modules/portals4_smp/p4smp.cpp \
+          modules/portals4_smp/gem5/GEM5Mod.cpp
 
 lgs_SOURCES = sim.cpp cmdline.c main.cpp ${MODULES}
 lgs_CPPFLAGS = -std=c++11
@@ -417,6 +423,15 @@ modules/portals4_smp/$(DEPDIR)/$(am__dirstamp):
 modules/portals4_smp/lgs-p4smp.$(OBJEXT):  \
 	modules/portals4_smp/$(am__dirstamp) \
 	modules/portals4_smp/$(DEPDIR)/$(am__dirstamp)
+modules/portals4_smp/gem5/$(am__dirstamp):
+	@$(MKDIR_P) modules/portals4_smp/gem5
+	@: > modules/portals4_smp/gem5/$(am__dirstamp)
+modules/portals4_smp/gem5/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) modules/portals4_smp/gem5/$(DEPDIR)
+	@: > modules/portals4_smp/gem5/$(DEPDIR)/$(am__dirstamp)
+modules/portals4_smp/gem5/lgs-GEM5Mod.$(OBJEXT):  \
+	modules/portals4_smp/gem5/$(am__dirstamp) \
+	modules/portals4_smp/gem5/$(DEPDIR)/$(am__dirstamp)
 
 lgs$(EXEEXT): $(lgs_OBJECTS) $(lgs_DEPENDENCIES) $(EXTRA_lgs_DEPENDENCIES) 
 	@rm -f lgs$(EXEEXT)
@@ -429,6 +444,7 @@ mostlyclean-compile:
 	-rm -f modules/packet_net/*.$(OBJEXT)
 	-rm -f modules/portals4/*.$(OBJEXT)
 	-rm -f modules/portals4_smp/*.$(OBJEXT)
+	-rm -f modules/portals4_smp/gem5/*.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
@@ -441,6 +457,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@modules/packet_net/$(DEPDIR)/lgs-NetMod.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@modules/portals4/$(DEPDIR)/lgs-p4.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@modules/portals4_smp/$(DEPDIR)/lgs-p4smp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@modules/portals4_smp/gem5/$(DEPDIR)/lgs-GEM5Mod.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -586,6 +603,20 @@ modules/portals4_smp/lgs-p4smp.obj: modules/portals4_smp/p4smp.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lgs_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o modules/portals4_smp/lgs-p4smp.obj `if test -f 'modules/portals4_smp/p4smp.cpp'; then $(CYGPATH_W) 'modules/portals4_smp/p4smp.cpp'; else $(CYGPATH_W) '$(srcdir)/modules/portals4_smp/p4smp.cpp'; fi`
 
+modules/portals4_smp/gem5/lgs-GEM5Mod.o: modules/portals4_smp/gem5/GEM5Mod.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lgs_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT modules/portals4_smp/gem5/lgs-GEM5Mod.o -MD -MP -MF modules/portals4_smp/gem5/$(DEPDIR)/lgs-GEM5Mod.Tpo -c -o modules/portals4_smp/gem5/lgs-GEM5Mod.o `test -f 'modules/portals4_smp/gem5/GEM5Mod.cpp' || echo '$(srcdir)/'`modules/portals4_smp/gem5/GEM5Mod.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) modules/portals4_smp/gem5/$(DEPDIR)/lgs-GEM5Mod.Tpo modules/portals4_smp/gem5/$(DEPDIR)/lgs-GEM5Mod.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='modules/portals4_smp/gem5/GEM5Mod.cpp' object='modules/portals4_smp/gem5/lgs-GEM5Mod.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lgs_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o modules/portals4_smp/gem5/lgs-GEM5Mod.o `test -f 'modules/portals4_smp/gem5/GEM5Mod.cpp' || echo '$(srcdir)/'`modules/portals4_smp/gem5/GEM5Mod.cpp
+
+modules/portals4_smp/gem5/lgs-GEM5Mod.obj: modules/portals4_smp/gem5/GEM5Mod.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lgs_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT modules/portals4_smp/gem5/lgs-GEM5Mod.obj -MD -MP -MF modules/portals4_smp/gem5/$(DEPDIR)/lgs-GEM5Mod.Tpo -c -o modules/portals4_smp/gem5/lgs-GEM5Mod.obj `if test -f 'modules/portals4_smp/gem5/GEM5Mod.cpp'; then $(CYGPATH_W) 'modules/portals4_smp/gem5/GEM5Mod.cpp'; else $(CYGPATH_W) '$(srcdir)/modules/portals4_smp/gem5/GEM5Mod.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) modules/portals4_smp/gem5/$(DEPDIR)/lgs-GEM5Mod.Tpo modules/portals4_smp/gem5/$(DEPDIR)/lgs-GEM5Mod.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='modules/portals4_smp/gem5/GEM5Mod.cpp' object='modules/portals4_smp/gem5/lgs-GEM5Mod.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lgs_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o modules/portals4_smp/gem5/lgs-GEM5Mod.obj `if test -f 'modules/portals4_smp/gem5/GEM5Mod.cpp'; then $(CYGPATH_W) 'modules/portals4_smp/gem5/GEM5Mod.cpp'; else $(CYGPATH_W) '$(srcdir)/modules/portals4_smp/gem5/GEM5Mod.cpp'; fi`
+
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
 tags: tags-am
@@ -713,6 +744,8 @@ distclean-generic:
 	-rm -f modules/portals4/$(am__dirstamp)
 	-rm -f modules/portals4_smp/$(DEPDIR)/$(am__dirstamp)
 	-rm -f modules/portals4_smp/$(am__dirstamp)
+	-rm -f modules/portals4_smp/gem5/$(DEPDIR)/$(am__dirstamp)
+	-rm -f modules/portals4_smp/gem5/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -723,7 +756,7 @@ clean: clean-am
 clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
-	-rm -rf ./$(DEPDIR) modules/dma/$(DEPDIR) modules/loggop/$(DEPDIR) modules/packet_net/$(DEPDIR) modules/portals4/$(DEPDIR) modules/portals4_smp/$(DEPDIR)
+	-rm -rf ./$(DEPDIR) modules/dma/$(DEPDIR) modules/loggop/$(DEPDIR) modules/packet_net/$(DEPDIR) modules/portals4/$(DEPDIR) modules/portals4_smp/$(DEPDIR) modules/portals4_smp/gem5/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -769,7 +802,7 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-	-rm -rf ./$(DEPDIR) modules/dma/$(DEPDIR) modules/loggop/$(DEPDIR) modules/packet_net/$(DEPDIR) modules/portals4/$(DEPDIR) modules/portals4_smp/$(DEPDIR)
+	-rm -rf ./$(DEPDIR) modules/dma/$(DEPDIR) modules/loggop/$(DEPDIR) modules/packet_net/$(DEPDIR) modules/portals4/$(DEPDIR) modules/portals4_smp/$(DEPDIR) modules/portals4_smp/gem5/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

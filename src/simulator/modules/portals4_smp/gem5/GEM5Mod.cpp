@@ -1,3 +1,8 @@
+
+#include "../../../../config.h"
+
+#ifdef HAVE_GEM5
+
 #include <cstdlib> 
 #include <iostream> 
 #include <sstream>
@@ -638,3 +643,5 @@ size_t GEM5Mod::maxTime(){
            
     return max;
 }
+
+#endif

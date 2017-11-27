@@ -21,15 +21,17 @@ AC_CHECK_LIB(ps, PS_open_file, , AC_MSG_ERROR(libps not found!))
 AC_CHECK_LIB(cgraph, agnxtnode, , AC_MSG_ERROR(libcgraph not found!))
 
 
+AM_CXXFLAGS=-O3 -g -pedantic -Wno-deprecated -Wall -Wno-long-long -std=c++11
+
 AX_BOOST_BASE
 AX_BOOST_REGEX
 
+CHECK_GEM5
 
 if test "x$link_regex" != "xyes"; then
     AC_MSG_ERROR("Drawviz cannot be compiled without boost:regex!")
 fi
 
-AM_CXXFLAGS=-O3 -g -pedantic -Wno-deprecated -Wall -Wno-long-long -std=c++11
 AC_CONFIG_FILES([Makefile src/DrawViz/Makefile src/p4schedgen/Makefile src/schedgen/Makefile src/simulator/Makefile src/txt2bin/Makefile])
 
 
