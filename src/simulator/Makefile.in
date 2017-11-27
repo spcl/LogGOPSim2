@@ -217,6 +217,7 @@ EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 GEM5_CFLAGS = @GEM5_CFLAGS@
 GEM5_LDFLAGS = @GEM5_LDFLAGS@
+GENGETOPT_CHECK = @GENGETOPT_CHECK@
 GREP = @GREP@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -238,6 +239,7 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
+RE2C_CHECK = @RE2C_CHECK@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
@@ -860,7 +862,7 @@ uninstall-am: uninstall-binPROGRAMS
 
 
 cmdline.c: cmdline.ggo
-	gengetout < $(srcdir)/cmdline.ggo
+	gengetopt < $(srcdir)/cmdline.ggo
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

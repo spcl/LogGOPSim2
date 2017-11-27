@@ -217,6 +217,7 @@ EGREP = /bin/grep -E
 EXEEXT = 
 GEM5_CFLAGS = 
 GEM5_LDFLAGS = 
+GENGETOPT_CHECK = yes
 GREP = /bin/grep
 INSTALL = /usr/bin/install -c
 INSTALL_DATA = ${INSTALL} -m 644
@@ -238,6 +239,7 @@ PACKAGE_TARNAME = lgs
 PACKAGE_URL = 
 PACKAGE_VERSION = 2.0.0
 PATH_SEPARATOR = :
+RE2C_CHECK = yes
 SET_MAKE = 
 SHELL = /bin/bash
 STRIP = 
@@ -860,7 +862,7 @@ uninstall-am: uninstall-binPROGRAMS
 
 
 cmdline.c: cmdline.ggo
-	gengetout < $(srcdir)/cmdline.ggo
+	gengetopt < $(srcdir)/cmdline.ggo
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

@@ -20,8 +20,19 @@ AC_FUNC_REALLOC
 AC_CHECK_LIB(ps, PS_open_file, , AC_MSG_ERROR(libps not found!))
 AC_CHECK_LIB(cgraph, agnxtnode, , AC_MSG_ERROR(libcgraph not found!))
 
+AC_CHECK_PROG(GENGETOPT_CHECK, gengetopt, yes)
+if test x"$GENGETOPT_CHECK" != x"yes" ; then
+    AC_MSG_ERROR("gengetopt utility not found! Please install it.")
+fi
 
-AM_CXXFLAGS=-O3 -g -pedantic -Wno-deprecated -Wall -Wno-long-long -std=c++11
+AC_CHECK_PROG(RE2C_CHECK, re2c, yes)
+if test x"$RE2C_CHECK" != x"yes" ; then
+    AC_MSG_ERROR("re2c utility not found! Please install it.")
+fi
+
+
+
+AM_CXXFLAGS="-O3 -g -pedantic -Wno-deprecated -Wall -Wno-long-long -std=c++11"
 
 AX_BOOST_BASE
 AX_BOOST_REGEX
