@@ -230,9 +230,9 @@ modules/portals4/lgs-p4.o: modules/portals4/p4.cpp \
  modules/portals4/../packet_net/NetMod.hpp \
  modules/portals4/../packet_net/Network.hpp \
  /usr/include/graphviz/cgraph.h /usr/include/graphviz/cdt.h \
+ modules/portals4/../packet_net/../../cmdline.h \
  modules/portals4/../packet_net/../../sim.hpp \
  modules/portals4/../packet_net/../../simEvents.hpp \
- modules/portals4/../packet_net/../../cmdline.h \
  modules/portals4/../packet_net/../loggop/loggop.hpp
 
 /usr/include/stdc-predef.h:
@@ -821,10 +821,10 @@ modules/portals4/../packet_net/Network.hpp:
 
 /usr/include/graphviz/cdt.h:
 
+modules/portals4/../packet_net/../../cmdline.h:
+
 modules/portals4/../packet_net/../../sim.hpp:
 
 modules/portals4/../packet_net/../../simEvents.hpp:
-
-modules/portals4/../packet_net/../../cmdline.h:
 
 modules/portals4/../packet_net/../loggop/loggop.hpp:

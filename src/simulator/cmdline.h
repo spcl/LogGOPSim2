@@ -54,6 +54,9 @@ struct gengetopt_args_info
   int network_latency_arg;	/**< @brief Link latency (default='2000').  */
   char * network_latency_orig;	/**< @brief Link latency original value given at command line.  */
   const char *network_latency_help; /**< @brief Link latency help description.  */
+  char * network_mapping_arg;	/**< @brief Input file mapping ranks to hosts.  */
+  char * network_mapping_orig;	/**< @brief Input file mapping ranks to hosts original value given at command line.  */
+  const char *network_mapping_help; /**< @brief Input file mapping ranks to hosts help description.  */
   char * filename_arg;	/**< @brief Prefix for the filenames which contain the schedules.  */
   char * filename_orig;	/**< @brief Prefix for the filenames which contain the schedules original value given at command line.  */
   const char *filename_help; /**< @brief Prefix for the filenames which contain the schedules help description.  */
@@ -135,6 +138,7 @@ struct gengetopt_args_info
   unsigned int network_maxcredits_given ;	/**< @brief Whether network-maxcredits was given.  */
   unsigned int network_ptime_given ;	/**< @brief Whether network-ptime was given.  */
   unsigned int network_latency_given ;	/**< @brief Whether network-latency was given.  */
+  unsigned int network_mapping_given ;	/**< @brief Whether network-mapping was given.  */
   unsigned int filename_given ;	/**< @brief Whether filename was given.  */
   unsigned int save_mem_given ;	/**< @brief Whether save-mem was given.  */
   unsigned int vizfile_given ;	/**< @brief Whether vizfile was given.  */

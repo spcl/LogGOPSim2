@@ -120,10 +120,12 @@ public:
 	    maxcredits = sim.args_info.network_maxcredits_arg;
 	    pktsize = sim.args_info.network_pktsize_arg;
 	    char * filename = sim.args_info.network_file_arg;
+        char * mapping_file = sim.args_info.network_mapping_given ? sim.args_info.network_mapping_arg : NULL;
+
         G = sim.args_info.LogGOPS_G_arg;
         print = sim.args_info.verbose_given;
 
-        topology = new TopoGraph(filename);
+        topology = new TopoGraph(filename, mapping_file, print);
 	    int p = topology->get_size();
 	
         printf("NetMod: nodes: %i; ptime: %u; latency: %u; max_credits: %u; pktsize: %u; deliver_single_packets: %i\n", p, ptime, latency, maxcredits, pktsize, deliver_single_packets);

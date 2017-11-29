@@ -235,9 +235,9 @@ modules/portals4_smp/lgs-p4smp.o: modules/portals4_smp/p4smp.cpp \
  modules/portals4_smp/../portals4/../packet_net/NetMod.hpp \
  modules/portals4_smp/../portals4/../packet_net/Network.hpp \
  /usr/include/graphviz/cgraph.h /usr/include/graphviz/cdt.h \
+ modules/portals4_smp/../portals4/../packet_net/../../cmdline.h \
  modules/portals4_smp/../portals4/../packet_net/../../sim.hpp \
  modules/portals4_smp/../portals4/../packet_net/../../simEvents.hpp \
- modules/portals4_smp/../portals4/../packet_net/../../cmdline.h \
  modules/portals4_smp/../portals4/../packet_net/../loggop/loggop.hpp \
  modules/portals4_smp/gem5/GEM5Mod.hpp \
  /home/salvo/ETH/gem5/build/ARM/mem/cache/dummy_cache.hh \
@@ -1072,11 +1072,11 @@ modules/portals4_smp/../portals4/../packet_net/Network.hpp:
 
 /usr/include/graphviz/cdt.h:
 
+modules/portals4_smp/../portals4/../packet_net/../../cmdline.h:
+
 modules/portals4_smp/../portals4/../packet_net/../../sim.hpp:
 
 modules/portals4_smp/../portals4/../packet_net/../../simEvents.hpp:
-
-modules/portals4_smp/../portals4/../packet_net/../../cmdline.h:
 
 modules/portals4_smp/../portals4/../packet_net/../loggop/loggop.hpp:
 

@@ -223,8 +223,8 @@ lgs-main.o: main.cpp /usr/include/stdc-predef.h cmdline.h config.h \
  /usr/include/x86_64-linux-gnu/bits/xopen_lim.h \
  modules/packet_net/NetMod.hpp modules/packet_net/Network.hpp \
  /usr/include/graphviz/cgraph.h /usr/include/graphviz/cdt.h \
- modules/packet_net/../../sim.hpp modules/packet_net/../../simEvents.hpp \
- modules/packet_net/../../cmdline.h \
+ modules/packet_net/../../cmdline.h modules/packet_net/../../sim.hpp \
+ modules/packet_net/../../simEvents.hpp \
  modules/packet_net/../loggop/loggop.hpp modules/portals4/p4.hpp \
  modules/portals4/../../sim.hpp modules/portals4/../loggop/loggop.hpp \
  modules/portals4/../packet_net/NetMod.hpp modules/dma/dma.hpp \
@@ -815,11 +815,11 @@ modules/packet_net/Network.hpp:
 
 /usr/include/graphviz/cdt.h:
 
+modules/packet_net/../../cmdline.h:
+
 modules/packet_net/../../sim.hpp:
 
 modules/packet_net/../../simEvents.hpp:
-
-modules/packet_net/../../cmdline.h:
 
 modules/packet_net/../loggop/loggop.hpp:
 
