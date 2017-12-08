@@ -1,5 +1,5 @@
 LogGOPSim 
-
+ 
 Changelog
 ---------
  v2.0: new structure, packet-switched network module, gem5 integration - Salvatore Di Girolamo, Konstantin Taranov, Timo Schneider, Torsten Hoefler
