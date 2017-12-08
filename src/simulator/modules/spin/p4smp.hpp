@@ -34,18 +34,7 @@ public:
         if (sim.args_info.gem5_conf_file_given && simplenet){
             printf("Warning: cannot use gem5 with simplenet (ignoring gem5 option)\n");
         }else{
-            char * cfile = sim.args_info.gem5_conf_file_arg;
-            uint32_t timemult = sim.args_info.gem5_time_mult_arg;    
             c_packet = sim.args_info.sPIN_c_packet_arg;// 0;
-
-            uint32_t o_dma = sim.args_info.gem5_o_hpu_arg;    
-            uint32_t o_hpu = sim.args_info.gem5_o_nb_dma_arg;    
-            uint8_t cas_failure_rate = sim.args_info.gem5_cas_failure_rate_arg;    
-
-
-
-    
-            gem5 = new GEM5Mod(sim, cfile, sim.ranks, timemult, o_dma, DMA_L, o_hpu, cas_failure_rate, print);
         }
 
     }

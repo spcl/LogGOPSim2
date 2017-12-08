@@ -25,23 +25,16 @@
 #define HANDLER_SUSPENDED -3
 
 
-class GEM5Mod {
+class GEM5Mod: SimModule {
 
 private:
+
     class myQueue: public EventQueue{
     public:
         myQueue(const char * str): EventQueue(str){ ; }
     };
 
 private:
-
-    uint32_t DMA_L;
-    uint32_t o_hpu;         //overhead of sending network request from HPU
-    uint32_t o_dma;         //overhead of non-blocking DMA requests
-    uint8_t cas_failure_rate;  // percentage 
-
-
-
 
     std::vector<DerivO3CPU*> cpus;
     std::vector<DummyCache*> dummycaches; 

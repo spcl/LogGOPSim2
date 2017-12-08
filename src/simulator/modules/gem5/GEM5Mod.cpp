@@ -26,31 +26,25 @@
 
 #include "clientlib/portals.h"
 
-
-
-
 #include <map>
 
 /* Warning: here we make a strong assumption on the config.ini: cpus appear in system #id order. */
 #define HPU(i,j) cpus[i*hpus + j]
-
 #define DUMMYCACHE(i, j) dummycaches[i*hpus + j]
-
-
 
 inline bool ends_with(std::string const & value, std::string const & ending, int rpad=0){
     if (ending.size() > value.size()) return false;
     return std::equal(ending.rbegin(), ending.rend(), value.rbegin()+rpad);
 }
 
+GEM5Mod::GEM5Mod(Simulator& sim, uint32_t ranks, bool print): 
+     print(print), sim(sim), p(ranks){
 
+    /* Load parameters */
+    char * cfile = sim.args_info.gem5_conf_file_arg;
+    timemult = sim.args_info.gem5_time_mult_arg;    
+    print = sim.args_info.verbose_given;
 
-
-GEM5Mod::GEM5Mod(Simulator& sim, const std::string config_file, uint32_t ranks, uint32_t timemult, uint32_t o_dma, uint32_t DMA_L, uint32_t o_hpu, uint8_t cas_failure_rate, bool print): 
- o_dma(o_dma), DMA_L(DMA_L), o_hpu(o_hpu), timemult(timemult), cas_failure_rate(cas_failure_rate), print(print), sim(sim), p(ranks){
-
-    srand(1);
-    //GlobalSimLoopExitEvent * exit_event;
 
     /* Initialise the cxx_config directory */
     cxxConfigInit();
@@ -69,14 +63,10 @@ GEM5Mod::GEM5Mod(Simulator& sim, const std::string config_file, uint32_t ranks, 
     Stats::initSimStats();     
     Stats::registerHandlers(CxxConfig::statsReset, CxxConfig::statsDump);
 
-    /* get config file name */    
-    //const std::string config_file(argv[1]);
-
     /* load config file */
-    //printf("creating CxxConfigFileBase(): %s; %lu\n", config_file.c_str(), SimClock::Int::ns);
     CxxConfigFileBase *conf = new CxxIniFile();
-    if (!conf->load(config_file.c_str())) {
-        std::cerr << "Can't open config file: " << config_file << '\n';         
+    if (!conf->load(cfile)) {
+        printf("Can't open config file! (%s)\n", cfile);
         std::exit(EXIT_FAILURE);     
     }
 
