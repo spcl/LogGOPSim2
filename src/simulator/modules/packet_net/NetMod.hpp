@@ -1,6 +1,11 @@
 #ifndef __NETMOD_HPP__
 #define __NETMOD_HPP__
 
+/* TODOs:
+    - ptime is now multiplied by msg.size. Check if this is consistent. 
+
+*/
+
 #include <math.h>
 #include <queue>
 #include "Network.hpp"
@@ -38,6 +43,7 @@ public:
     uint32_t size;
     uint32_t starttime;
     bool buffered=false;
+    bool is_credit=false;    
     
     uint16_t id; // should be only for debug
     uint32_t pktoffset;
@@ -75,17 +81,6 @@ public:
 };
 
 
-
-
-
-/*class CreditPkt: public simevent{
-public:
-    uint32_t switchid;
-    uint32_t portid;
-
-    CreditPkt(uint32_t switchid, uint32_t portid): switchid(switchid), portid(portid){ ; }
-}*/
-
 class NetMod: SimModule {
 private:
     Simulator& sim;
@@ -99,6 +94,8 @@ private:
     uint32_t latency;
 #ifdef STATS
     uint64_t totpkt=0;
+    uint64_t nocredits=0;
+    uint64_t creditpkts_payload=0;
 #endif
 
     bool print=false;
@@ -106,33 +103,39 @@ private:
     std::vector<uint32_t> buffsize;
 
     std::vector<std::vector<uint32_t>> credits;
-
     std::vector<std::vector<std::queue<DataPkt*>>> buffer;
 
     bool deliver_single_packets;
 
 
 public:
-    NetMod(Simulator& sim, bool deliver_single_packets=false): sim(sim), deliver_single_packets(deliver_single_packets) {
+    NetMod(Simulator& sim, bool deliver_single_packets=false): 
+        sim(sim), deliver_single_packets(deliver_single_packets) {
 
         ptime = sim.args_info.network_ptime_arg;
         latency = sim.args_info.network_latency_arg;
+
         maxcredits = sim.args_info.network_maxcredits_arg;
         pktsize = sim.args_info.network_pktsize_arg;
         char * filename = sim.args_info.network_file_arg;
-        char * mapping_file = sim.args_info.network_mapping_given ? sim.args_info.network_mapping_arg : NULL;
+        char * mapping_file = sim.args_info.network_mapping_given ? 
+                                sim.args_info.network_mapping_arg : NULL;
 
         G = sim.args_info.LogGOPS_G_arg;
         print = sim.args_info.verbose_given;
 
         topology = new TopoGraph(filename, mapping_file, print);
+
         int p = topology->get_size();
     
-        printf("NetMod: nodes: %i; ptime: %u; latency: %u; max_credits: %u; pktsize: %u; deliver_single_packets: %i\n", p, ptime, latency, maxcredits, pktsize, deliver_single_packets);
+        printf("NetMod: nodes: %i; ptime: %u; latency: %u; max_credits: %u; 
+                pktsize: %u; deliver_single_packets: %i\n", p, ptime, latency, 
+                maxcredits, pktsize, deliver_single_packets);
+        
         nexto.resize(p);
-
         buffer.resize(p);     
         credits.resize(p);
+
         for (int i=0; i<p; i++){
             uint32_t ports = topology->get_outports(i);
             credits[i].resize(ports, maxcredits);
@@ -179,8 +182,8 @@ public:
             //time += ptime;
             //time += G*pktsize;;
             sim.addEvent(pkt);
-            if (print) printf("\tnew data pkt: srcid: %i size: %i; time: %lu\n", srcid, pkt->size, pkt->time);
-            //forward(*pkt);
+            //if (print) printf("\tnew data pkt: srcid: %i size: %i; \
+                                 time: %lu\n", srcid, pkt->size, pkt->time);
             tosend -= pkt->size;
 #ifdef STATS
             totpkt++;
@@ -191,37 +194,71 @@ public:
         return 0;
     }
 
-    /* TODO: I'm not sure of this. Is it fair? */
-    int forward(DataPkt& msg){
+    void * release_credit(DataPkt& msg, btime_t t){
+        assert(msg.lastport==topology->next_port(msg.lasthop, msg.destid));
+        DataPkt * creditpkt = new DataPkt(msg.lasthop, msg.destid);
+        creditpkt->is_credit=true;
+        creditpkt->time=t; 
+        sim.addEvent(creditpkt);
 
-        int res;
-        do{
-           res = _forward(msg);
-        }while (res==1);
+        if (print){
+            printf("\tsending credit back to: %s; port: %i;\n", \
+                    topology->get_nodename(msg.lasthop).c_str(), msg.lastport);
+        }
 
-        return 0;
+        return NULL;
     }
+
 
     int _forward(DataPkt& msg){
         //receive packet (if there is time)
         uint32_t sw = msg.currenthop;
-
+        uint32_t sw_port = topology->next_port(sw, msg.destid);
         bool endswitch = sw==msg.destid;
 
-        if (print) printf("[NET %s] forwarding packet: %i->%i(%i); msg.time: %lu; nexto[%i]: %lu\n", topology->get_nodename(sw).c_str(), msg.header->source, msg.destid, msg.id, msg.time, sw, nexto[sw]);
+        if (print) {
+            printf("[NET %s] forwarding packet: %i->%i(%i); msg.time: %lu; \
+                    nexto[%i]: %lu\n", topology->get_nodename(sw).c_str(), \
+                    msg.header->source, msg.destid, msg.id, msg.time, sw, \
+                    nexto[sw]);
+        }
 
         /* check if there is time */
         if (nexto[sw] > msg.time){ /* no time */ 
-            if (print) printf("\tno time; nexto[%i]: %lu; msgtime: %lu\n", sw, nexto[sw], msg.time);
+            if (print) printf("\tno time; nexto[%i]: %lu; msgtime: %lu\n", sw, \
+                               nexto[sw], msg.time);
+
             msg.time = nexto[sw];
             msg.buffered = true;
             sim.reinsertEvent(&msg);
             return 0;
         }
     
-        
+        if (msg.is_credit){
+            credits[sw][topology->next_port(sw, msg.destid)]++;
+
+            assert(credits[sw][topology->next_port(sw, msg.destid)]<=maxcredits);
+
+            if (!buffer[sw][topology->next_port(sw, msg.destid)].empty()){
+#ifdef STATS
+                creditpkts_payload++;
+#endif 
+                //printf("-- forwarding queued pkt\n");
+                DataPkt * toforward = buffer[sw][topology->next_port(sw, msg.destid)].front();
+                buffer[sw][topology->next_port(sw, msg.destid)].pop();
+                toforward->time = msg.time;
+                _forward(*toforward);
+            }
+            return 0;
+        }
+
         if (!endswitch && credits[sw][topology->next_port(sw, msg.destid)]==0){
-            if (print) printf("\tno credits: switch: %i; port: %i; msg.time: %lu; new time: %lu\n", sw, topology->next_port(sw, msg.destid), msg.time, std::max(msg.time, nexto[topology->next_hop(sw, msg.destid)]));
+            if (print) {
+                printf("\tno credits: switch: %i; port: %i; msg.time: %lu; \
+                        new time: %lu\n", sw, \
+                        topology->next_port(sw, msg.destid), msg.time, \
+                        std::max(msg.time, nexto[topology->next_hop(sw, msg.destid)]));
+
             //there is now guarantee that there will be a credit at this time
             msg.time = std::max(msg.time, nexto[topology->next_hop(sw, msg.destid)]);
             //TODO: add processing time and credit latency (if any)
@@ -231,29 +268,31 @@ public:
             buffer[sw][topology->next_port(sw, msg.destid)].push(&msg);
             msg.keepalive=true;
 
+#ifdef STATS
+            nocredits++;
+#endif
+
             return 0;
         }
 
 
         //we are handling the forwarding now
-        //nexto[sw] = msg.time + ptime;
-        if(ptime)
-             nexto[sw] = msg.time + ptime*msg.size; //ktaranov
+        nexto[sw] = msg.time + ptime*msg.size;
 
         /* msg.lasthop==msg.currenthop only if this is the source host 
            (hence the message is already buffered and we don't have to increase the credits) */
         if (msg.lasthop!=msg.currenthop) {
-            credits[msg.lasthop][msg.lastport]++;
 
-            if (!buffer[msg.lasthop][msg.lastport].empty()){
-                DataPkt * newpkt = buffer[msg.lasthop][msg.lastport].front();
-                buffer[msg.lasthop][msg.lastport].pop();
-                newpkt->keepalive=false;
-                newpkt->time=nexto[sw];
-                sim.addEvent(newpkt);
-            }
-            if ( msg.id == 0)  msg.header->time = msg.time;
-            if (print) printf("\tsending credit back to: %i; port: %i;\n", msg.lasthop, msg.lastport);
+
+            if (!(endswitch && deliver_single_packets)){
+                release_credit(msg, msg.time);  
+            }/* else the credit has to be released after another module signals it. 
+                (e.g., sPIN NIC). */    
+
+        }else if(msg.isTail()){
+            /* here we are the source and we are able to forward the last packet. 
+               Notify the host.*/
+            sim.signal(SIG_SEND_COMPLETE, msg.header->getPayload(false));
         }
 
         //forward to next hop or check&deliver
@@ -262,29 +301,28 @@ public:
                 msg.header->toreceive--;
                 if (msg.header->toreceive==0) {
                     simevent * payload = msg.header->getPayload();
-                    /* this is already the host, the nic processing cost will be accounted
-                    by the handler of the payload (e.g., loggp or p4) */
-                   // payload->time = msg.time; //+ptime; 
-                    payload->time = msg.header->time; //ktaranov
-                //      printf("  sim.addEvent(payload). %lu %lu %lu \n",msg.time,payload->time, msg.header->time);
+                    /* this is already the host, the nic processing cost will 
+                    be accounted by the handler of the payload (e.g., loggp or p4) */
+                    payload->time = msg.header->time; 
                     sim.addEvent(payload);
-                  
                 }
             }else{
-              //  printf("Event created. \n");
                 sim.addEvent(new HostDataPkt(msg));
             }
-        }else{
+        }else{ /* just forward */
             uint32_t nexthop = topology->next_hop(sw, msg.destid);
             msg.lasthop = msg.currenthop;
-            //msg.time += ptime + latency;
-            msg.time += ptime*msg.size + latency; //ktaranov
+            msg.time += ptime*msg.size + latency;
             msg.lastport = topology->next_port(msg.currenthop, msg.destid);
             msg.currenthop = nexthop;
             credits[msg.lasthop][msg.lastport]--;
-            if (print) printf("\tforward to: %s; port: %i; remaining credits: %i\n", topology->get_nodename(nexthop).c_str(), msg.lastport, credits[msg.lasthop][msg.lastport]);
-            return 1;
-            //sim.addEvent(new DataPkt(msg, nexthop));
+
+            if (print) {
+                printf("\tforward to: %s; port: %i; remaining credits: %i\n", \
+                        topology->get_nodename(nexthop).c_str(), msg.lastport, \
+                        credits[msg.lasthop][msg.lastport]);
+            }
+            sim.reinsertEvent(&msg);
         }
         return 0;
     }
@@ -292,19 +330,24 @@ public:
     virtual int registerHandlers(Simulator& sim){
         sim.addHandler(this, NET_MSG, NetMod::dispatch);
         sim.addHandler(this, NET_PKT, NetMod::dispatch);
+
+        sim.addSignalHandler(this, SIG_PKT_RECEIVED, NetMod::dispatch_signal);
         return 0;
     }
 
 
     virtual void printStatus(){
 #ifdef STATS
-        printf("NetMod: Total packets: %lu\n", totpkt);
+        printf("NetMod: Total packets: %lu; \
+                nocredits: %lu; \
+                credit packets with payload: %lu\n", \
+                totpkt, nocredits, creditpkts_payload);
 #endif
     }
     virtual size_t maxTime(){ return 0;}
 
     static int dispatch(SimModule* mod, simevent* ev);
-
+    static void * dispatch_signal(SimModule * mod, sim_signal_t signal, void * arg);
 
 };
 
