@@ -33,7 +33,7 @@ public:
     uint64_t getID(){ return id; }
 };
 
-class DataPkt: public simevent{
+class DataPkt: public simEvent{
 public:
     HeadPkt * header=NULL;
     uint32_t currenthop;
@@ -81,7 +81,7 @@ public:
 };
 
 
-class NetMod: SimModule {
+class NetMod: simModule {
 private:
     Simulator& sim;
 
@@ -300,7 +300,7 @@ public:
             if (!deliver_single_packets){
                 msg.header->toreceive--;
                 if (msg.header->toreceive==0) {
-                    simevent * payload = msg.header->getPayload();
+                    simEvent * payload = msg.header->getPayload();
                     /* this is already the host, the nic processing cost will 
                     be accounted by the handler of the payload (e.g., loggp or p4) */
                     payload->time = msg.header->time; 
@@ -346,8 +346,8 @@ public:
     }
     virtual size_t maxTime(){ return 0;}
 
-    static int dispatch(SimModule* mod, simevent* ev);
-    static void * dispatch_signal(SimModule * mod, sim_signal_t signal, void * arg);
+    static int dispatch(simModule* mod, simEvent* ev);
+    static void * dispatch_signal(simModule * mod, sim_signal_t signal, void * arg);
 
 };
 

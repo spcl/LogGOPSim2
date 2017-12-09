@@ -31,14 +31,14 @@ bool LogGOPmod::match(const LogGPBaseEvent &elem, ruq_t *q, ruqelem_t *retelem) 
 int LogGOPmod::network(NetMsgEvent& elem){
     if(print) printf("[NETWORK] network msg from %i to %i, t: %lu\n", elem.source, elem.dest, elem.time);
     
-    simevent * msg = elem.getPayload();
+    simEvent * msg = elem.getPayload();
     msg->time = elem.time+L;
     //msg.invert();
     sim.addEvent(msg);   
     return 0;
 }
 
-int LogGOPmod::dispatch(SimModule* mod, simevent* _elem){
+int LogGOPmod::dispatch(simModule* mod, simEvent* _elem){
 
     LogGOPmod* lmod = (LogGOPmod*) mod;
     switch (_elem->type){

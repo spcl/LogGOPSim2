@@ -4,7 +4,7 @@
 
 uint64_t HeadPkt::idgen = 0;
 
-int NetMod::dispatch(SimModule* mod, simevent* _elem){
+int NetMod::dispatch(simModule* mod, simEvent* _elem){
 
     NetMod* nmod = (NetMod*) mod;
 

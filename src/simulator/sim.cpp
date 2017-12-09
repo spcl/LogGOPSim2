@@ -4,10 +4,10 @@
 //#include "liblsb.h" 
 
 
-uint64_t simevent::gid=0;
+uint64_t simEvent::gid=0;
 
 
-void Simulator::addHandler(SimModule* mod, ekey_t key, efun_t fun){
+void Simulator::addHandler(simModule* mod, ekey_t key, efun_t fun){
     this->dmap[key] = std::make_pair(mod, fun);
 }
 
@@ -15,7 +15,7 @@ void Simulator::addHandler(SimModule* mod, ekey_t key, efun_t fun){
 
 
 void Simulator::printStatus(){
-    printf("Total events: %lu;", simevent::gid); 
+    printf("Total events: %lu;", simEvent::gid); 
 #ifdef STATS
     printf(" Reinserted: %lu;\n", reinserted);
 #else
@@ -44,7 +44,7 @@ void Simulator::maxTime(){
 
 
 
-void Simulator::addModule(SimModule* mod){
+void Simulator::addModule(simModule* mod){
     mod->registerHandlers(*this);
     mods.push_back(mod);   
 }

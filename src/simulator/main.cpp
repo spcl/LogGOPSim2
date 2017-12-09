@@ -23,10 +23,10 @@ gengetopt_args_info args_info;
 int main(int argc, char * argv[]){
 
 
-	if (cmdline_parser(argc, argv, &args_info) != 0) {
+    if (cmdline_parser(argc, argv, &args_info) != 0) {
         fprintf(stderr, "Couldn't parse command line arguments!\n");
         throw(10);
-	}
+    }
 
     Parser parser(args_info.filename_arg, args_info.save_mem_given);
     Simulator sim(argc, argv, parser.schedules.size());
@@ -35,8 +35,8 @@ int main(int argc, char * argv[]){
     bool gem5 = args_info.gem5_conf_file_given;
     
 
-    SimModule * lmod=NULL;
-    SimModule * dmamod=NULL;
+    simModule * lmod=NULL;
+    simModule * dmamod=NULL;
     NetMod * nmod=NULL;
 
 #ifdef HAVE_GEM5
@@ -63,17 +63,13 @@ int main(int argc, char * argv[]){
 
     if (!simplenet){
         nmod = new NetMod(sim, gem5);
-        sim.addModule((SimModule *) nmod);
+        sim.addModule((simModule *) nmod);
     }
 
     if(dmamod!=NULL) sim.addModule(dmamod);    
 
     sim.simulate(parser);
-
-
     sim.printStatus(); 
-
-
 
     if (nmod!=NULL) delete nmod; 
     if (lmod!=NULL) delete lmod; 

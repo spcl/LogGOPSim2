@@ -1,26 +1,29 @@
-
 #ifndef __SIMEVENTS_HPP__
 #define __SIMEVENTS_HPP__
 
 typedef uint64_t btime_t;
 
-
-class simevent{
+class simEvent{
 public:
     btime_t time;
     uint32_t type;
     bool keepalive;
     uint64_t id;
     static uint64_t gid;
+    simEvent * payload;
 
        
-    simevent(){ 
+    simEvent(simEvent * _payload=NULL){ 
         keepalive=false; 
         id=gid++;
-        //printf("simevent: new: id: %u;\n", id);
+        payload = _payload;
+        //printf("simEvent: new: id: %u;\n", id);
     }
 
-    /*simevent(const simevent& ev){
+    bool hasPayload(){ return payload!=NULL; }
+    bool getPayload(){ return payload; }
+
+    /*simEvent(const simEvent& ev){
         time = ev.time;
         type = ev.type;
         keepalive = ev.keepalive;
@@ -32,7 +35,7 @@ public:
 /* used to resolve a duplicate definition of the cmdline.h btw the sim and txt2bin (differnt content, same names)*/
 class ISimulator{
 public:
-    virtual void addEvent(simevent * ev)=0;
+    virtual void addEvent(simEvent * ev)=0;
 };
 
 class IParser{
@@ -44,7 +47,7 @@ public:
 };
 
 
-class LogGPBaseEvent: public simevent{
+class LogGPBaseEvent: public simEvent{
 public:
     uint32_t host;
     uint32_t target;
@@ -54,7 +57,7 @@ public:
     uint32_t tag;
     uint32_t offset;
 
-    LogGPBaseEvent(LogGPBaseEvent g, int type, btime_t time): simevent(){
+    LogGPBaseEvent(LogGPBaseEvent g, int type, btime_t time): simEvent(){
         host = g.host;
         target = g.target;
         proc = g.proc;
@@ -66,9 +69,9 @@ public:
         this->type = type;
     }
 
-    LogGPBaseEvent(): simevent(){;}
+    LogGPBaseEvent(): simEvent(){;}
 
-    //LogGPBaseEvent(const LogGPBaseEvent& ev): simevent(ev) {;}
+    //LogGPBaseEvent(const LogGPBaseEvent& ev): simEvent(ev) {;}
 
 
 };
@@ -194,7 +197,7 @@ static const uint32_t ANY_TAG = ~0;
  * operation types of graph_node_properties */
 class gnp_op_comp_func {
   public:
-  bool operator()(simevent * x, simevent * y) {
+  bool operator()(simEvent * x, simEvent * y) {
     if(x->type < y->type) return true;
     return false;
   }

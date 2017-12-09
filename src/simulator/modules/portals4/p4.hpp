@@ -167,7 +167,7 @@ public:
     inline int nctwait(goalevent& elem);
 
 
-    static int dispatch(SimModule* mod, simevent* ev);
+    static int dispatch(simModule* mod, simEvent* ev);
 
     virtual void printStatus();
 

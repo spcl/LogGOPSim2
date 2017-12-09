@@ -1,23 +1,15 @@
 #ifndef __GEM5_MOD_H__
 #define __GEM5_MOD_H__
 
-
 #include <vector>
 
-//#include "mem/controlled_simple_mem.hh"
 #include "mem/cache/dummy_cache.hh"
 #include "cpu/o3/deriv.hh"
 #include "sim/cxx_manager.hh" 
 #include "cpu/base.hh" 
 
-#include "../../../simEvents.hpp"
-#include "../../../sim.hpp"
-
-#include "../../packet_net/NetMod.hpp"
-
-#include "../../dma/dma.hpp"
-#include "../p4smp_events.hpp"
-
+#include "../../simEvents.hpp"
+#include "../../sim.hpp"
 
 #define HANDLER_EXECUTED 0
 #define NO_HPU_AVAIL -1
@@ -25,7 +17,7 @@
 #define HANDLER_SUSPENDED -3
 
 
-class GEM5Mod: SimModule {
+class GEM5Mod: simModule {
 
 private:
 
@@ -52,24 +44,24 @@ private:
     std::vector<std::priority_queue<hpu_t>> nexthpu;
     //std::vector<std::list<hpu_t>> busyhpu;
 
-    std::vector<std::queue<MatchedHostDataPkt*>> waiting_queue;
+    std::vector<std::queue<gem5SimRequest*>> waiting_queue;
 private:
-
-    bool simcall(MatchedHostDataPkt& event, uint32_t syscall_num, void *data, btime_t& time);
+    bool simcall(gem5SimRequest& event, uint32_t syscall_num, void *data);
 
 public:
-    GEM5Mod(Simulator& sim, const std::string config_file, uint32_t ranks, uint32_t timemult, uint32_t o_dma,  uint32_t DMA_L, uint32_t o_hpu, uint8_t cas_failure_rate, bool print=false);
+    GEM5Mod(Simulator& sim, uint32_t ranks);
 
-
-    int executeHandler(MatchedHostDataPkt& pkt, btime_t& time);
+    int executeHandler(gem5SimRequest& pkt);
 
     void printStatus();
-
     size_t maxTime();
 
+    static int dispatch(simModule* mod, simEvent* ev);
+
+    virtual int registerHandlers(Simulator& sim){
+        sim.addHandler(this, GEM5_SIM_REQUEST, GEM5Mod::dispatch);
+    }
+
 };
-
-
-
 
 #endif /* __GEM5_MOD_H__ */

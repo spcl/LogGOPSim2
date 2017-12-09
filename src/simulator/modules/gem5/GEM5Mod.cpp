@@ -37,18 +37,27 @@ inline bool ends_with(std::string const & value, std::string const & ending, int
     return std::equal(ending.rbegin(), ending.rend(), value.rbegin()+rpad);
 }
 
-GEM5Mod::GEM5Mod(Simulator& sim, uint32_t ranks, bool print): 
-     print(print), sim(sim), p(ranks){
+
+int P4SMPMod::dispatch(simModule* mod, simEvent* _elem){
+    GEM5Mod* pmod = (GEM5Mod*) mod;
+
+    switch(_elem->type){
+        case GEM5_SIM_REQUEST:
+            return pmod->executeHandler(*((gem5SimRequest *) _elem));
+    }
+    return -1;
+}
+
+/* TODO ranks has to go */
+GEM5Mod::GEM5Mod(Simulator& sim, uint32_t ranks): sim(sim), p(ranks){
 
     /* Load parameters */
     char * cfile = sim.args_info.gem5_conf_file_arg;
     timemult = sim.args_info.gem5_time_mult_arg;    
     print = sim.args_info.verbose_given;
-
-
+     
     /* Initialise the cxx_config directory */
     cxxConfigInit();
-
 
     /* set event queues */
     numMainEventQueues=1;
@@ -154,7 +163,6 @@ GEM5Mod::GEM5Mod(Simulator& sim, uint32_t ranks, bool print):
     uint32_t * hpu_executing = (uint32_t *) calloc(systems, sizeof(uint32_t));
         
     
-
     /* simulate until all the variables are intercepted */
     while (!curEventQueue()->empty() /*&& suspended < mems.size()*/){
         curEventQueue()->serviceOne();
@@ -185,7 +193,6 @@ GEM5Mod::GEM5Mod(Simulator& sim, uint32_t ranks, bool print):
         }
     }
 
-    
     nexthpu.resize(ranks);
     waiting_queue.resize(ranks);
     hpu_t hpu;
@@ -198,33 +205,17 @@ GEM5Mod::GEM5Mod(Simulator& sim, uint32_t ranks, bool print):
 }
 
 
-
-
-
-int GEM5Mod::executeHandler(MatchedHostDataPkt& pkt, btime_t& time){
+int GEM5Mod::executeHandler(gem5SimRequest& elem){
 
     int once = 1;
-    uint32_t shift_start = 18000;
-    uint32_t shift_o = 400;
-    uint32_t shift_finish = 10000;
-    uint32_t shift=shift_start;
-    uint32_t shift_table[20] = {0};
-    shift_table[GETHOST]= 15000;// 28000;
-    shift_table[PUTDEVICE] = 10000;
-    shift_table[PUTHOST] =  14000 ;  
-
-
     btime_t  htot = 0;
     hpu_t hpu;
 
-    uint32_t hindex = pkt.currentHandlerIdx();
-
-    /* Get message payload */
-    goalevent elem = *((goalevent *) pkt.header->getPayload());
+    uint32_t hindex = elem.handlerIndex;
     uint32_t host = elem.target;
    
     /* Check if we are resuming the handler or starting it from scratch */
-    if (!pkt.isCurrentHandlerSuspended()){ /* in this case we have to seek resources */
+    if (!elem.isSuspended()){ /* in this case we have to seek resources */
         /* 
         * Check if there is an avaialable context. In this case the handler 
         * is being executed (currently suspended) and we don't know 
@@ -234,16 +225,13 @@ int GEM5Mod::executeHandler(MatchedHostDataPkt& pkt, btime_t& time){
 
             if (print) printf("--no context available; time: %lu; host[%i]; Keeping event in th gem5mod waiting queue\n", time, host);
             /* no HPU available, insert event in our local waiting queue */
-            waiting_queue[host].push(&pkt);
+            waiting_queue[host].push(&elem);
 
             /* this means that the caller should not reinser the event in the queue */
             return NO_CONTEXT_AVAIL;
         }        
     
-
         hpu = nexthpu[host].top();
-    
-
 
         /* Check if the hpu is available at this time. If not, we now have an estimate. */
         if(hpu.time>time){ /* not avilable */
@@ -255,34 +243,22 @@ int GEM5Mod::executeHandler(MatchedHostDataPkt& pkt, btime_t& time){
             return NO_HPU_AVAIL;
         }
 
-
         /* get the hpu => by popping we also remove the context availability */
         nexthpu[host].pop();  
-
-      
        
-        if (print) printf("-- Handler: host: %u; hindex: %u; time: %lu\n", host, hindex, time);
-        if (print) {
-            printf("Handler type is %s \n",pkt.currentHandler==HHEADER ? "HHEADER" :  
-                                                      pkt.currentHandler==HPAYLOAD ? "HPAYLOAD" : 
-                                                      pkt.currentHandler==HCOMPLETION ? "HCOMPLETION" : 
-                                                      "UNKNOWN" );
-        }
-
         /* Set the handler to execute */
         DUMMYCACHE(host, hpu.hid)->setVal(OP, (void*)&hindex, sizeof(uint32_t));
 
         //printf("copying data (%i %i): %p\n", host, hpu.hid, DUMMYCACHE(host, hpu.hid)->getPtr(DATA));
         /* Copy message */
-        pkt.copyCurrentHandlerData(DUMMYCACHE(host, hpu.hid)->getPtr(DATA));
+        if (elem.hasData()) elem.copyHandlerData(DUMMYCACHE(host, hpu.hid)->getPtr(DATA));
 
         //printf("done\n");
         hpu.time = time; /* the hpu time is set to the elem arrival time */
-        pkt.start_hpu_time = time; /* used for drawing */
+        elem.start_hpu_time = time; /* used for drawing */
 
     }else{ /* we are resuming an already started handler */
-        shift=shift_o;
-        hpu = pkt.resumeCurrentHandler();
+        hpu = elem.resumeHandler();
         if (print) printf("Resumuing handler @%lu\n",hpu.time);
     }
 
@@ -290,15 +266,11 @@ int GEM5Mod::executeHandler(MatchedHostDataPkt& pkt, btime_t& time){
     DUMMYCACHE(host, hpu.hid)->resetMonitor(CTRL);
     DUMMYCACHE(host, hpu.hid)->resetMonitor(SIMCALL);
 
-
     /* Activate HPU context */
     if (print) printf("ExecuteHandler host: [%d]; hpu.hid: [%d]; hpus: %i (%p)\n", host, hpu.hid, hpus, HPU(host, hpu.hid));
     HPU(host, hpu.hid)->activateContext(0);
 
-
     Tick t = curTick();
-   
-
 
     while (!curEventQueue()->empty() && !DUMMYCACHE(host, hpu.hid)->monitor(CTRL)){
         curEventQueue()->serviceOne();
@@ -313,34 +285,18 @@ int GEM5Mod::executeHandler(MatchedHostDataPkt& pkt, btime_t& time){
 
             if (print) printf("-- GOT SIMCALL\n");
             if (print) printf("Time true: %lu\n",(curTick() - t)/timemult);
-
-            
-            uint32_t temp = curTick() - t;
-          
-        
-            if (temp > shift + shift_table[syscall_num])
-                htot = (temp - shift - shift_table[syscall_num])/timemult;
-            else
-                htot = 0;
-
-            if(once){
-                once=0;
-                shift=shift_o;
-            }
-            
-
-              
-            if (print) printf("Time calibrated: %lu\n",htot);
-            
-
+  
+            htot = (curTick() - t)/timemult;
+                 
             hpu.time=time+htot;
-            btime_t simcall_time = hpu.time;       
-            if (!simcall(pkt, syscall_num, syscall_data, simcall_time)){
+            btime_t simcall_time = hpu.time;    
+
+            if (!simcall(elem, syscall_num, syscall_data)){
                 /* Suspend the context */
                 if (print) printf("-- Suspending handler @%lu\n",simcall_time);        
 
                 HPU(host, hpu.hid)->suspendContext(0);
-                pkt.suspendCurrentHandler(hpu);
+                elem.suspendHandler(hpu);
                 return HANDLER_SUSPENDED;
             }else{
                 /* the last parameter of simcall() is IN/OUT */
@@ -352,47 +308,13 @@ int GEM5Mod::executeHandler(MatchedHostDataPkt& pkt, btime_t& time){
         }
     }
     
-    if (print) printf("Time true final: %lu\n",(curTick() - t)/timemult);
-
-    uint32_t temp = curTick() - t;
-   
-    shift+= shift_finish;
-
-    if (temp > shift)
-            htot = (temp - shift)/timemult;
-        else
-            htot = 0;
-    if (print) printf("Time calibrated: %lu\n",htot);
-
-
+    htot = (curTick() - t)/timemult;  
+    if (print) printf("Time: %lu\n",htot);
 
     HPU(host, hpu.hid)->suspendContext(0);
-
-
-    pkt.processHandlerReturn(DUMMYCACHE(host, hpu.hid)->getPtr(SIMCALL_DATA), DUMMYCACHE(host, hpu.hid)->getPtr(DATA));
-
- 
  
     /* add to cpu time to hpu_time */
     hpu.time+=htot;
-
-    //time = hpu.time - pkt.start_hpu_time;
-
-    //printf("drawing; start: %lu; stop: %lu\n", pkt.start_hpu_time, hpu.time);
-
-    /* TODO: Konstantin, please try to use the same coding style used in the rest of the project (e..g, curly brackets) ;) */
-    switch(pkt.currentHandler){
-        case 1:
-            sim.tlviz->add_ohpu(host, pkt.start_hpu_time, hpu.time, hpu.hid, 0,0,1 );
-            break;
-        case 2:
-            sim.tlviz->add_ohpu(host, pkt.start_hpu_time, hpu.time, hpu.hid, 0,1,0);
-            break;
-        case 3:
-            sim.tlviz->add_ohpu(host, pkt.start_hpu_time, hpu.time, hpu.hid, 1,0,0);
-            break;
-    }
-    
 
     /* make this context available */
     nexthpu[host].push(hpu);
@@ -401,21 +323,29 @@ int GEM5Mod::executeHandler(MatchedHostDataPkt& pkt, btime_t& time){
     assert(nexthpu[host].size() <= hpus);
 
     if(!waiting_queue[host].empty()){ //have waiting events 
-        MatchedHostDataPkt *pkt = waiting_queue[host].front();
+        gem5SimRequest * waiting_request = waiting_queue[host].front();
         waiting_queue[host].pop();
-        pkt->time=hpu.time;
-        sim.reinsertEvent(pkt);
+        waiting_request->time=hpu.time;
+        sim.reinsertEvent(waiting_request);
     }
 
     time = hpu.time; //handlers should be executed sequentially 
  
+
+    /* the handler has been simulated: send payload back */
+    if (elem.hasPayload()){
+        sim.insertEvent(elem.getPayload());
+    }
+
     return HANDLER_EXECUTED;
 } 
 
 
 /* SIMCALLS */
-bool GEM5Mod::simcall(MatchedHostDataPkt& event, uint32_t num, void *data, btime_t& time){
+bool GEM5Mod::simcall(gem5SimRequest& event, uint32_t num, void *data, btime_t& time){
     
+    printf("SIMCALL not implemented in this version (yet)!!!\n");
+
     /* never reached */
     return true;
 }

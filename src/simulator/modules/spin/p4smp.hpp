@@ -46,7 +46,7 @@ public:
 
     inline int recvpkt(HostDataPkt& pkt);
     inline int processHandlers(MatchedHostDataPkt& pkt);
-    static int dispatch(SimModule* mod, simevent* ev);
+    static int dispatch(simModule* mod, simEvent* ev);
 
     virtual int registerHandlers(Simulator& sim){
         P4Mod::registerHandlers(sim);
