@@ -27,9 +27,10 @@ Installing
 
   * build: 
     - without gem5: ./configure
-    - with gem5:    ./configure --with-gem5=<path to gem5>
-      - install lgs-gem5 module: ./install_gem5mod.sh <path to gem5>
+    - with gem5:    
+      - install lgs-gem5 module: ./install_gem5mod.sh <path to gem5 BUILD>
       - build gem5 as library: (in gem-5 directory) scons --without-python --with-cxx-config --without-tcmalloc -j 4 build/ARM/libgem5_opt.so
+    - ./configure --with-gem5=<path to gem5>
     - make
     - make install
 
