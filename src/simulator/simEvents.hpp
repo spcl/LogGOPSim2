@@ -192,6 +192,8 @@ static const int GEM5_SIM_REQUEST = 28;
 static const int SIG_SEND_COMPLETE = 29;
 static const int SIG_PKT_RECEIVED = 30;
 
+static const int OP_MSG_RTR = 31;
+static const int OP_MSG_RTS = 32;
 
 static const uint32_t ANY_SOURCE = ~0;
 static const uint32_t ANY_TAG = ~0;
