@@ -35,9 +35,9 @@ public:
 };*/
 
 
-class NetMsgEvent : public simevent {
+class NetMsgEvent : public simEvent {
 private:
-    simevent * payload;
+    simEvent * payload;
 
 public:
     uint32_t source;
@@ -45,7 +45,7 @@ public:
     uint32_t size;
 
 
-    NetMsgEvent(simevent * g, uint32_t source, uint32_t dest, uint32_t size, btime_t time): payload(g), source(source), dest(dest), size(size){
+    NetMsgEvent(simEvent * g, uint32_t source, uint32_t dest, uint32_t size, btime_t time): payload(g), source(source), dest(dest), size(size){
         type = NET_MSG;
         this->time = time;
         g->keepalive = true;
@@ -57,7 +57,7 @@ public:
     NetMsgEvent(LogGPBaseEvent * g, btime_t time): NetMsgEvent(g, g->host, g->target, g->size, time){;}
 
 
-    simevent * getPayload(){ 
+    simEvent * getPayload(){ 
         payload->keepalive=false;
         return payload; 
     }
@@ -86,7 +86,7 @@ public:
 
 
 //template<typename T>
-class LogGOPmod: public SimModule {
+class LogGOPmod: public simModule {
 protected:
     typedef std::list<ruqelem_t> ruq_t;
 
@@ -175,13 +175,13 @@ public:
 
 
     virtual int registerHandlers(Simulator& sim){
-        sim.addHandler(this, OP_SEND, LogGOPmod::dispatch);
-        sim.addHandler(this, OP_MSG, LogGOPmod::dispatch);
-        sim.addHandler(this, ACK_MSG, LogGOPmod::dispatch);
-        if (simplenet) sim.addHandler(this, NET_MSG, LogGOPmod::dispatch);
-        sim.addHandler(this, OP_RECV, LogGOPmod::dispatch);
-        sim.addHandler(this, OP_LOCOP, LogGOPmod::dispatch);
-        sim.addHandler(this, OP_LOCGEM5OP, LogGOPmod::dispatch);
+        sim.addEventHandler(this, OP_SEND, LogGOPmod::dispatch);
+        sim.addEventHandler(this, OP_MSG, LogGOPmod::dispatch);
+        sim.addEventHandler(this, ACK_MSG, LogGOPmod::dispatch);
+        if (simplenet) sim.addEventHandler(this, NET_MSG, LogGOPmod::dispatch);
+        sim.addEventHandler(this, OP_RECV, LogGOPmod::dispatch);
+        sim.addEventHandler(this, OP_LOCOP, LogGOPmod::dispatch);
+        sim.addEventHandler(this, OP_LOCGEM5OP, LogGOPmod::dispatch);
         return 0;
     }
 
@@ -189,7 +189,7 @@ public:
     virtual size_t maxTime();
 
 
-    static int dispatch(SimModule* mod, simevent* ev);
+    static int dispatch(simModule* mod, simEvent* ev);
 
 };
 

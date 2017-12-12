@@ -167,7 +167,7 @@ public:
     inline int nctwait(goalevent& elem);
 
 
-    static int dispatch(SimModule* mod, simevent* ev);
+    static int dispatch(simModule* mod, simEvent* ev);
 
     virtual void printStatus();
 
@@ -177,7 +177,7 @@ public:
         int handlers[handlerscnt] = {OP_APPEND, OP_NAPPEND, OP_PUT, OP_GET, OP_NPUT, OP_NGET,
                                      OP_PUTMSG, OP_GETMSG, OP_GETREPLY, OP_TPUT, OP_TAPPEND,
                                       OP_CTWAIT, OP_TGET, OP_NCTWAIT};
-        for (int i=0; i<handlerscnt; i++) sim.addHandler(this, handlers[i], P4Mod::dispatch);
+        for (int i=0; i<handlerscnt; i++) sim.addEventHandler(this, handlers[i], P4Mod::dispatch);
 
         return 0;
     }

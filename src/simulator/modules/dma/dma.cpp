@@ -26,7 +26,7 @@ size_t DMAmod::maxTime(){
 
 
 
-int DMAmod::dispatch(SimModule* mod, simevent* _elem){
+int DMAmod::dispatch(simModule* mod, simEvent* _elem){
 
     DMAmod* lmod = (DMAmod*) mod;
 

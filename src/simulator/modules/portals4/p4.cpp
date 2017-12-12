@@ -11,7 +11,7 @@
 
 
 
-int P4Mod::dispatch(SimModule* mod, simevent* _elem){
+int P4Mod::dispatch(simModule* mod, simEvent* _elem){
 
     LogGOPmod::dispatch(mod, _elem);
     

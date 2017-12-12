@@ -2,7 +2,7 @@
 
 #ifdef HAVE_GEM5
 
-int P4SMPMod::dispatch(SimModule* mod, simevent* _elem){
+int P4SMPMod::dispatch(simModule* mod, simEvent* _elem){
 
     P4Mod::dispatch(mod, _elem);
     
