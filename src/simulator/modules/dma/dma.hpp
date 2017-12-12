@@ -107,9 +107,9 @@ public:
 
 
     virtual int registerHandlers(Simulator& sim){
-        sim.addHandler(this, DMA_WRITE, DMAmod::dispatch);
-        sim.addHandler(this, DMA_READ, DMAmod::dispatch);
-        sim.addHandler(this, DMA_WAIT, DMAmod::dispatch);        
+        sim.addEventHandler(this, DMA_WRITE, DMAmod::dispatch);
+        sim.addEventHandler(this, DMA_READ, DMAmod::dispatch);
+        sim.addEventHandler(this, DMA_WAIT, DMAmod::dispatch);        
         return 0;
     }
 

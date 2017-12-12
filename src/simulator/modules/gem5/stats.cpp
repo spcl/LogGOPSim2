@@ -46,7 +46,7 @@
  */
 
 
-#include "../../../../config.h"
+#include "../../../config.h"
 #ifdef HAVE_GEM5
 
 #include "base/statistics.hh"

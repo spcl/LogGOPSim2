@@ -51,6 +51,12 @@ public:
     bool ishead=false;
     bool istail=false;
 
+    DataPkt(uint32_t currenthop, uint32_t destid): currenthop(currenthop), destid(destid){
+        type=NET_PKT;
+        header=NULL;
+        size=0;
+    }
+
     DataPkt(HeadPkt * header, uint32_t currenthop, uint32_t size):  header(header), currenthop(currenthop), size(size) {
         type=NET_PKT;
     }
@@ -128,8 +134,8 @@ public:
 
         int p = topology->get_size();
     
-        printf("NetMod: nodes: %i; ptime: %u; latency: %u; max_credits: %u; 
-                pktsize: %u; deliver_single_packets: %i\n", p, ptime, latency, 
+        printf("NetMod: nodes: %i; ptime: %u; latency: %u; max_credits: %u;  \
+                pktsize: %u; deliver_single_packets: %i\n", p, ptime, latency, \
                 maxcredits, pktsize, deliver_single_packets);
         
         nexto.resize(p);
@@ -258,6 +264,7 @@ public:
                         new time: %lu\n", sw, \
                         topology->next_port(sw, msg.destid), msg.time, \
                         std::max(msg.time, nexto[topology->next_hop(sw, msg.destid)]));
+            }
 
             //there is now guarantee that there will be a credit at this time
             msg.time = std::max(msg.time, nexto[topology->next_hop(sw, msg.destid)]);
@@ -292,7 +299,7 @@ public:
         }else if(msg.isTail()){
             /* here we are the source and we are able to forward the last packet. 
                Notify the host.*/
-            sim.signal(SIG_SEND_COMPLETE, msg.header->getPayload(false));
+            sim.signal(SIG_SEND_COMPLETE, msg.header->getPayload());
         }
 
         //forward to next hop or check&deliver
@@ -328,8 +335,8 @@ public:
     }
 
     virtual int registerHandlers(Simulator& sim){
-        sim.addHandler(this, NET_MSG, NetMod::dispatch);
-        sim.addHandler(this, NET_PKT, NetMod::dispatch);
+        sim.addEventHandler(this, NET_MSG, NetMod::dispatch);
+        sim.addEventHandler(this, NET_PKT, NetMod::dispatch);
 
         sim.addSignalHandler(this, SIG_PKT_RECEIVED, NetMod::dispatch_signal);
         return 0;

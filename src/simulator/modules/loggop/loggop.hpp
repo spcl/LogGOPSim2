@@ -175,13 +175,13 @@ public:
 
 
     virtual int registerHandlers(Simulator& sim){
-        sim.addHandler(this, OP_SEND, LogGOPmod::dispatch);
-        sim.addHandler(this, OP_MSG, LogGOPmod::dispatch);
-        sim.addHandler(this, ACK_MSG, LogGOPmod::dispatch);
-        if (simplenet) sim.addHandler(this, NET_MSG, LogGOPmod::dispatch);
-        sim.addHandler(this, OP_RECV, LogGOPmod::dispatch);
-        sim.addHandler(this, OP_LOCOP, LogGOPmod::dispatch);
-        sim.addHandler(this, OP_LOCGEM5OP, LogGOPmod::dispatch);
+        sim.addEventHandler(this, OP_SEND, LogGOPmod::dispatch);
+        sim.addEventHandler(this, OP_MSG, LogGOPmod::dispatch);
+        sim.addEventHandler(this, ACK_MSG, LogGOPmod::dispatch);
+        if (simplenet) sim.addEventHandler(this, NET_MSG, LogGOPmod::dispatch);
+        sim.addEventHandler(this, OP_RECV, LogGOPmod::dispatch);
+        sim.addEventHandler(this, OP_LOCOP, LogGOPmod::dispatch);
+        sim.addEventHandler(this, OP_LOCGEM5OP, LogGOPmod::dispatch);
         return 0;
     }
 

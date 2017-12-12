@@ -7,11 +7,13 @@
 uint64_t simEvent::gid=0;
 
 
-void Simulator::addHandler(simModule* mod, ekey_t key, efun_t fun){
+void Simulator::addEventHandler(simModule* mod, ekey_t key, efun_t fun){
     this->dmap[key] = std::make_pair(mod, fun);
 }
 
-
+void Simulator::addSignalHandler(simModule* mod, sim_signal_t signal, sfun_t fun){
+    this->dmap_signals[signal] = std::make_pair(mod, fun);
+}
 
 
 void Simulator::printStatus(){

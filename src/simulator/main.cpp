@@ -11,7 +11,7 @@
 
 
 #ifdef HAVE_GEM5
-#include "modules/portals4_smp/p4smp.hpp"
+#include "modules/spin/p4smp.hpp"
 #endif
 
 #include "modules/portals4/p4.hpp"
@@ -43,7 +43,7 @@ int main(int argc, char * argv[]){
     
     if (gem5 && !simplenet){
         //printf("SMP\n");
-        lmod = new P4SMPMod(sim, parser, simplenet);
+        //lmod = new P4SMPMod(sim, parser, simplenet);
         dmamod = new DMAmod(sim, parser.schedules.size());
     }else{
         lmod = new P4Mod(sim, parser, simplenet);

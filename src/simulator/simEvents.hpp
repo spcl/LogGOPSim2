@@ -181,12 +181,16 @@ static const int HOST_DATA_PKT = 22;
 
 static const int OP_LOCGEM5OP = 23;
 
-
 static const int MATCHED_HOST_DATA_PKT = 24;
 static const int DMA_WRITE = 25;
 static const int DMA_READ = 26;
 static const int DMA_WAIT = 27;
 
+static const int GEM5_SIM_REQUEST = 28;
+
+
+static const int SIG_SEND_COMPLETE = 29;
+static const int SIG_PKT_RECEIVED = 30;
 
 
 static const uint32_t ANY_SOURCE = ~0;
