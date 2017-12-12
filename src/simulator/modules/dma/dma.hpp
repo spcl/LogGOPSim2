@@ -7,16 +7,16 @@
 #include "../../simEvents.hpp"
 #include "../../cmdline.h"
 
-class DMAEvent: public simevent{
+class DMAEvent: public simEvent{
 public:
     uint32_t host;
-    simevent * originatingEvent;
+    simEvent * originatingEvent;
     uint32_t size;
     bool isBlocking; //used by NB operations and wait
 
     uint64_t targetid; //used only by the wait, otw equal to id
 
-    DMAEvent(simevent * pkt, uint32_t size, uint32_t host, bool isBlocking, btime_t time): simevent(){
+    DMAEvent(simEvent * pkt, uint32_t size, uint32_t host, bool isBlocking, btime_t time): simEvent(){
         this->originatingEvent = pkt;
         this->size = size;
         this->time = time;
@@ -27,7 +27,7 @@ public:
         originatingEvent->keepalive = true;
     }
 
-    simevent * extractOriginatingEvent(){
+    simEvent * extractOriginatingEvent(){
         originatingEvent->time = time;
         originatingEvent->keepalive = false;
         return originatingEvent;
@@ -41,7 +41,7 @@ public:
 
 class DMAReadEvent: public DMAEvent{
 public:
-    DMAReadEvent(simevent * pkt, uint32_t size, uint32_t host, bool isBlocking, btime_t time):
+    DMAReadEvent(simEvent * pkt, uint32_t size, uint32_t host, bool isBlocking, btime_t time):
         DMAEvent(pkt, size, host, isBlocking, time){
         type = DMA_READ;
     }
@@ -49,7 +49,7 @@ public:
 
 class DMAWriteEvent: public DMAEvent{
 public:
-    DMAWriteEvent(simevent * pkt, uint32_t size, uint32_t host, bool isBlocking, btime_t time):
+    DMAWriteEvent(simEvent * pkt, uint32_t size, uint32_t host, bool isBlocking, btime_t time):
         DMAEvent(pkt, size, host, isBlocking, time){
         type = DMA_WRITE;
     }
@@ -57,7 +57,7 @@ public:
 
 class DMAWaitEvent: public DMAEvent{
 public:
-    DMAWaitEvent(simevent * pkt, uint32_t host, uint64_t reqid, btime_t time):
+    DMAWaitEvent(simEvent * pkt, uint32_t host, uint64_t reqid, btime_t time):
         DMAEvent(pkt, 0, host, true, time){
         targetid = reqid;
         type = DMA_WAIT;
@@ -65,7 +65,7 @@ public:
 };
 
 
-class DMAmod: public SimModule {
+class DMAmod: public simModule {
 protected:
 
     std::vector<std::list<DMAEvent>>    uq;
@@ -107,16 +107,16 @@ public:
 
 
     virtual int registerHandlers(Simulator& sim){
-        sim.addHandler(this, DMA_WRITE, DMAmod::dispatch);
-        sim.addHandler(this, DMA_READ, DMAmod::dispatch);
-        sim.addHandler(this, DMA_WAIT, DMAmod::dispatch);        
+        sim.addEventHandler(this, DMA_WRITE, DMAmod::dispatch);
+        sim.addEventHandler(this, DMA_READ, DMAmod::dispatch);
+        sim.addEventHandler(this, DMA_WAIT, DMAmod::dispatch);        
         return 0;
     }
 
     virtual void printStatus();
     virtual size_t maxTime();
 
-    static int dispatch(SimModule* mod, simevent* ev);
+    static int dispatch(simModule* mod, simEvent* ev);
 
 };
 

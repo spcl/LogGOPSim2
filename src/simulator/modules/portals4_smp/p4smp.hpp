@@ -57,14 +57,14 @@ public:
 
     inline int recvpkt(HostDataPkt& pkt);
     inline int processHandlers(MatchedHostDataPkt& pkt);
-    static int dispatch(SimModule* mod, simevent* ev);
+    static int dispatch(simModule* mod, simEvent* ev);
 
     virtual int registerHandlers(Simulator& sim){
         P4Mod::registerHandlers(sim);
 
         if (gem5!=NULL){
-            sim.addHandler(this, HOST_DATA_PKT, P4SMPMod::dispatch);
-            sim.addHandler(this, MATCHED_HOST_DATA_PKT, P4SMPMod::dispatch);
+            sim.addEventHandler(this, HOST_DATA_PKT, P4SMPMod::dispatch);
+            sim.addEventHandler(this, MATCHED_HOST_DATA_PKT, P4SMPMod::dispatch);
         }
 
         return 0;

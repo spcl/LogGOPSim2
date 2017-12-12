@@ -187,9 +187,9 @@ BOOST_LDFLAGS = -L/usr/lib/x86_64-linux-gnu
 BOOST_REGEX_LIB = -lboost_regex
 CC = gcc
 CCDEPMODE = depmode=gcc3
-CFLAGS = -g -O2 -I/home/salvo/ETH/gem5/build/ARM
+CFLAGS = -g -O2
 CPP = gcc -E
-CPPFLAGS = -std=c++11 -I/home/salvo/ETH/gem5/build/ARM
+CPPFLAGS = -std=c++11
 CXX = g++
 CXXCPP = g++ -E
 CXXDEPMODE = depmode=gcc3
@@ -211,9 +211,9 @@ INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
-LDFLAGS =  -L/home/salvo/ETH/gem5/build/ARM/ -lgem5_opt -Wl,-rpath,/home/salvo/ETH/gem5/build/ARM /home/salvo/ETH/gem5/build/ARM/sim/cxx_config.os
+LDFLAGS = 
 LIBOBJS = 
-LIBS = -lgem5_opt -lcgraph -lps 
+LIBS = -lcgraph -lps 
 LTLIBOBJS = 
 MAKEINFO = ${SHELL} /home/salvo/ETH/github/LogGOPSim/missing makeinfo
 MKDIR_P = /bin/mkdir -p

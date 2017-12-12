@@ -17,21 +17,21 @@
 
 class Simulator;
 
-class SimModule{
+class simModule{
 public:
     virtual int registerHandlers(Simulator& sim)=0;
     virtual void printStatus()=0;
     virtual size_t maxTime()=0;
-    //virtual int dispatch(simevent* ev)=0;
-    virtual ~SimModule() { ; }
+    //virtual int dispatch(simEvent* ev)=0;
+    virtual ~simModule() { ; }
 };
 
 
 /* this is a comparison functor that can be used to compare and sort
- * simevent objects by time */
+ * simEvent objects by time */
 class aqcompare_func {
   public:
-  bool operator()(simevent* x, simevent* y) {
+  bool operator()(simEvent* x, simEvent* y) {
     if(x->time > y->time) return true;
     if(x->time == y->time && x->id > y->id) return true;
     return false;
@@ -39,11 +39,14 @@ class aqcompare_func {
 };
 
 //NOTE: Bad that evqueue_t contains pointers but needed if we want to allow different event typess :(
-typedef std::priority_queue<simevent*, std::vector<simevent*>, aqcompare_func> evqueue_t;
+typedef std::priority_queue<simEvent*, std::vector<simEvent*>, aqcompare_func> evqueue_t;
 typedef int ekey_t;
-typedef int (*efun_t) (SimModule*, simevent*);
-typedef std::unordered_map<ekey_t, std::pair<SimModule*, efun_t>> dispatch_map_t;
-//typedef std::unordered_map<ekey_t, SimModule*> dispatch_map_t;
+typedef uint32_t sim_signal_t;
+typedef int (*efun_t) (simModule*, simEvent*);
+typedef void * (*sfun_t) (simModule*, sim_signal_t, void*);
+
+typedef std::unordered_map<ekey_t, std::pair<simModule*, efun_t>> events_dispatch_map_t;
+typedef std::unordered_map<ekey_t, std::pair<simModule*, sfun_t>> signals_dispatch_map_t;
 
 
 
@@ -52,9 +55,11 @@ class Simulator : ISimulator{
 
 private:
     evqueue_t aq;
-    dispatch_map_t dmap;
+    events_dispatch_map_t dmap;
+    signals_dispatch_map_t dmap_signals;
 
-    std::vector<SimModule*> mods;
+
+    std::vector<simModule*> mods;
 #ifdef STATS
     uint64_t reinserted=0;
 #endif
@@ -65,13 +70,16 @@ public:
     gengetopt_args_info args_info;
     uint32_t ranks;
 
-    void addHandler(SimModule* mod, ekey_t key, efun_t fun);
-    virtual void addEvent(simevent* elem){
+    void addEventHandler(simModule* mod, ekey_t key, efun_t fun);
+    void addSignalHandler(simModule* mod, sim_signal_t signal, sfun_t fun);
+
+
+    virtual void addEvent(simEvent* elem){
         //printf("adding event: type; %i; id: %u; ptr: %p\n", elem->type, elem->id, elem);
         this->aq.push(elem);   
     }
 
-    virtual void reinsertEvent(simevent * elem){
+    virtual void reinsertEvent(simEvent * elem){
         //printf("reinserting event: type: %i; id: %u; ptr: %p\n", elem->type, elem->id, elem);
 
         elem->keepalive = true;
@@ -82,7 +90,7 @@ public:
     }
 
     inline int simulate(){
-        simevent* elem = aq.top();
+        simEvent* elem = aq.top();
         //printf("[SIM] ev ptr: %p\n", elem);
         //printf("[SIM] simulating event: %i with id: %u (%p); time: %lu aq size: %i\n", elem->type, elem->id, elem, elem->time, aq.size());
         assert(elem!=NULL);
@@ -102,9 +110,19 @@ public:
         return 0;
     }
 
+    /* Not timed interface */
+    inline void * signal(sim_signal_t signal, void * arg){
+        
+        if (dmap_signals.find(signal)==dmap_signals.end()) {
+            printf("Error: no handler for this event %i\n", signal);
+            return NULL;
+        }
+        return (*dmap_signals[signal].second)(dmap_signals[signal].first, signal, arg);
+    }
+
     int simulate(IParser& parser);
 
-    void addModule(SimModule* mod);
+    void addModule(simModule* mod);
 
     void printStatus();
 

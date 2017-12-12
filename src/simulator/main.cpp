@@ -35,8 +35,8 @@ int main(int argc, char * argv[]){
     bool gem5 = args_info.gem5_conf_file_given;
     
 
-    SimModule * lmod=NULL;
-    SimModule * dmamod=NULL;
+    simModule * lmod=NULL;
+    simModule * dmamod=NULL;
     NetMod * nmod=NULL;
 
 #ifdef HAVE_GEM5
@@ -63,7 +63,7 @@ int main(int argc, char * argv[]){
 
     if (!simplenet){
         nmod = new NetMod(sim, gem5);
-        sim.addModule((SimModule *) nmod);
+        sim.addModule((simModule *) nmod);
     }
 
     if(dmamod!=NULL) sim.addModule(dmamod);    
