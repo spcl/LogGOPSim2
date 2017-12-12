@@ -4,5 +4,5 @@ schedgen_mpi_SOURCES = buffer_element.cpp process_trace.cpp schedgen.cpp cmdline
 BUILT_SOURCES = cmdline.c
 
 cmdline.c: schedgen.ggo
-	gengetout < $(srcdir)/schedgen.ggo
+	gengetopt < $(srcdir)/schedgen.ggo
 
