@@ -1,18 +1,21 @@
+#ifndef __CHROMEVIS_HPP__
+#define __CHROMEVIS_HPP__
 
+ 
+#include "../../sim.hpp"
+#include "../../visualisation/visEvents.hpp"
 
+ 
 #include <fstream>
 #include <iostream>
 
-
-#include <json.hpp>
-
+#include "json.hpp"
 
 using json = nlohmann::json;
 
-
 enum unit_t : uint64_t  { milli=0, micro = 1, nano = 1000, pico = 1000000 }; 
 
-class ChromeViz{
+class ChromeViz : public visModule  {
 
     private:
 
@@ -116,6 +119,50 @@ class ChromeViz{
                 outfile.close();
             }
         }
+
+        int add_duration(HostDurationVisEvent ev){
+            write_x_duration_event(ev.event_name, ev.host, arc[ev.module_name],
+                                    convert_time(ev.stime),convert_time(ev.etime-ev.stime) );
+           
+            return 0; 
+        }
+
+        int add_instant(HostInstantVisEvent ev){
+          //  write_x_duration_event(ev.event_name, ev.host, arc[ev.module_name],
+           //                         convert_time(ev.stime),convert_time(ev.etime-ev.stime) );
+           
+            return -1; 
+        }
+
+
+        int add_simple_flow(HostSimpleFlowVisEvent ev){
+          //  write_x_duration_event(ev.event_name, ev.host, arc[ev.module_name],
+           //                         convert_time(ev.stime),convert_time(ev.etime-ev.stime) );
+           
+            return -1; 
+        }
+
+
+    static int dispatch(visModule* mod, visEvent* ev){
+
+        ChromeViz* lmod = (ChromeViz*) mod;
+        switch (ev->type){
+            /* simulation events */
+            case VIS_HOST_INST: return lmod->add_instant(*((HostInstantVisEvent *) ev));
+            case VIS_HOST_DUR: return lmod->add_duration(*((HostDurationVisEvent *) ev));
+            case VIS_HOST_SIMPLE_FLOW: return lmod->add_simple_flow(*((HostSimpleFlowVisEvent *) ev));
+         }
+    
+        return -1;
+    };
+
+    virtual int registerHandlers(Simulator& sim){
+         sim.addVisualisationHandler(this, VIS_HOST_INST, ChromeViz::dispatch);
+         sim.addVisualisationHandler(this, VIS_HOST_DUR, ChromeViz::dispatch);
+         sim.addVisualisationHandler(this, VIS_HOST_SIMPLE_FLOW, ChromeViz::dispatch);        
+        return 0;
+    }
+
 
         //FLOWs
         void add_simple_transmission(uint32_t source, uint32_t dest, uint64_t start_time, uint64_t end_time){
@@ -236,8 +283,8 @@ class ChromeViz{
             outfile<< std::setw(4) << j << ","<<std::endl;
         }
 
-
-
-
  
 };
+
+
+#endif

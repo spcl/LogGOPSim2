@@ -397,13 +397,13 @@ int GEM5Mod::executeHandler(MatchedHostDataPkt& pkt, btime_t& time){
     /* TODO: Konstantin, please try to use the same coding style used in the rest of the project (e..g, curly brackets) ;) */
     switch(pkt.currentHandler){
         case 1:
-            sim.tlviz->add_ohpu(host, pkt.start_hpu_time, hpu.time, hpu.hid, 0,0,1 );
+            //tara sim.tlviz->add_ohpu(host, pkt.start_hpu_time, hpu.time, hpu.hid, 0,0,1 );
             break;
         case 2:
-            sim.tlviz->add_ohpu(host, pkt.start_hpu_time, hpu.time, hpu.hid, 0,1,0);
+            //tara sim.tlviz->add_ohpu(host, pkt.start_hpu_time, hpu.time, hpu.hid, 0,1,0);
             break;
         case 3:
-            sim.tlviz->add_ohpu(host, pkt.start_hpu_time, hpu.time, hpu.hid, 1,0,0);
+            //tara sim.tlviz->add_ohpu(host, pkt.start_hpu_time, hpu.time, hpu.hid, 1,0,0);
             break;
     }
     
@@ -465,7 +465,7 @@ bool GEM5Mod::simcall(MatchedHostDataPkt& event, uint32_t num, void *data, btime
 
                 time += o_hpu;
 
-                sim.tlviz->add_nicop(host, time, time+DMA_L, 0,0.3,0.3,0.3);
+                //tara sim.tlviz->add_nicop(host, time, time+DMA_L, 0,0.3,0.3,0.3);
 
                 goalevent * nput = new goalevent(host, target, size, tag, type, time + 2*DMA_L,arg1);
               //  DMAReadEvent * dmaev = new DMAReadEvent(nput, size, host, true, time);

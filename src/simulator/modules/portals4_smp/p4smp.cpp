@@ -70,9 +70,9 @@ int P4SMPMod::recvpkt(HostDataPkt& pkt){
           // printf("PAcket id %u\n",pkt.id);
             //    
 
-        sim.tlviz->add_transmission(elem.target, host, pkt.starttime, pkt.time, pkt.size, G);
-        sim.tlviz->add_nicop(elem.host, pkt.time, pkt.time+(pkt.size-1)*G, elem.nic);
-        sim.tlviz->add_nicop(elem.host, pkt.time+(pkt.size-1)*G, nextgr[host][elem.nic] , elem.nic);
+        //tara sim.tlviz->add_transmission(elem.target, host, pkt.starttime, pkt.time, pkt.size, G);
+        //tara sim.tlviz->add_nicop(elem.host, pkt.time, pkt.time+(pkt.size-1)*G, elem.nic);
+        //tara sim.tlviz->add_nicop(elem.host, pkt.time+(pkt.size-1)*G, nextgr[host][elem.nic] , elem.nic);
     
         if (elem.type==OP_GETREPLY){
             
@@ -85,7 +85,7 @@ int P4SMPMod::recvpkt(HostDataPkt& pkt){
             else
                 triggertime += c_packet;   //small matching
 
-            sim.tlviz->add_nicop(elem.host, triggertime, triggertime+DMA_L, elem.nic,0.3,0.3,0.3);
+            //tara sim.tlviz->add_nicop(elem.host, triggertime, triggertime+DMA_L, elem.nic,0.3,0.3,0.3);
             TRIGGER_OPS(elem.host, elem.oct, triggertime+DMA_L)
 
             
@@ -183,7 +183,7 @@ int P4SMPMod::processHandlers(MatchedHostDataPkt& pkt){
             elemptr->starttime = current;
             sim.addEvent(new NetMsgEvent(elemptr, current));
         }
-        sim.tlviz->add_nicop(host, current, current+DMA_L, elem.nic, 0.3,0.3,0.3);
+        //tara sim.tlviz->add_nicop(host, current, current+DMA_L, elem.nic, 0.3,0.3,0.3);
         current+=DMA_L;
         if (print) printf("-- delivering full packet; trying to trigger new ops at: %lu\n", current);
       

@@ -88,7 +88,7 @@ int LogGOPmod::locop(goalevent& elem){
         parser.MarkNodeAsStarted(elem.host, elem.offset, elem.time);
         parser.MarkNodeAsDone(elem.host, elem.offset, elem.time);
         // add to timeline
-        sim.tlviz->add_loclop(elem.host, elem.time, elem.time+elem.size, elem.proc, 0.6, 0.2, 0.4);
+        //tara sim.tlviz->add_loclop(elem.host, elem.time, elem.time+elem.size, elem.proc, 0.6, 0.2, 0.4);
     } else {
         if(print) printf("[%i] -- locop local o not available -- reinserting\n", elem.host);
         elem.time=nexto[elem.host][elem.proc];
@@ -158,9 +158,9 @@ int LogGOPmod::receive_msg(goalevent& elem){
                     // satisfy local requires
                     parser.MarkNodeAsDone(elem.host, matched_elem.offset, elem.time);
 
-                    sim.tlviz->add_transmission(elem.target, elem.host, elem.starttime+o, elem.time, elem.size, G);
-                    sim.tlviz->add_orecv(elem.host, elem.time+(elem.size-1)*G-(elem.size-1)*O, elem.time+o+std::max((elem.size-1)*O,(elem.size-1)*G), elem.proc, (int) elem.tag);
-                    sim.tlviz->add_noise(elem.host, elem.time+o+std::max((elem.size-1)*O,(elem.size-1)*G), elem.time+o+noise+std::max((elem.size-1)*O,(elem.size-1)*G), elem.proc);
+                    //tara sim.tlviz->add_transmission(elem.target, elem.host, elem.starttime+o, elem.time, elem.size, G);
+                    //tara sim.tlviz->add_orecv(elem.host, elem.time+(elem.size-1)*G-(elem.size-1)*O, elem.time+o+std::max((elem.size-1)*O,(elem.size-1)*G), elem.proc, (int) elem.tag);
+                    //tara sim.tlviz->add_noise(elem.host, elem.time+o+std::max((elem.size-1)*O,(elem.size-1)*G), elem.time+o+noise+std::max((elem.size-1)*O,(elem.size-1)*G), elem.proc);
                 }
             } else { // not in RQ
     
@@ -224,8 +224,8 @@ int LogGOPmod::send(goalevent& elem){
             nexto[elem.host][elem.proc] = elem.time + o + ((uint64_t) elem.size-1)*O + noise;
             nextgs[elem.host][elem.nic] = elem.time + g; // TODO: G should be charged in network layer only
             if (print) printf("-- updated nexto: %lu - nextgs: %lu (g: %i; G: %i; (s-1)G: %lu)\n", nexto[elem.host][elem.proc], nextgs[elem.host][elem.nic], g, G, ((uint64_t) elem.size-1)*G);
-            sim.tlviz->add_osend(elem.host, elem.time, elem.time+o, elem.proc, (int) elem.tag);
-            sim.tlviz->add_noise(elem.host, elem.time + o, elem.time + o + noise, elem.proc);
+            //tara sim.tlviz->add_osend(elem.host, elem.time, elem.time+o, elem.proc, (int) elem.tag);
+            //tara sim.tlviz->add_noise(elem.host, elem.time + o, elem.time + o + noise, elem.proc);
 
             //override the msg size to 1B
             tosend = new NetMsgEvent(&elem, h, elem.target, 1, elem.time + o);
@@ -238,8 +238,8 @@ int LogGOPmod::send(goalevent& elem){
             nexto[elem.host][elem.proc] = elem.time + o + ((uint64_t) elem.size-1)*O+ noise;
             nextgs[elem.host][elem.nic] = elem.time + g + ((uint64_t) elem.size-1)*G; // TODO: G should be charged in network layer only
             if (print) printf("-- updated nexto: %lu - nextgs: %lu (g: %i; G: %i; (s-1)G: %lu)\n", nexto[elem.host][elem.proc], nextgs[elem.host][elem.nic], g, G, ((uint64_t) elem.size-1)*G);
-            sim.tlviz->add_osend(elem.host, elem.time, elem.time+o+ (elem.size-1)*O, elem.proc, (int) elem.tag);
-            sim.tlviz->add_noise(elem.host, elem.time+o+ (elem.size-1)*O, elem.time + o + (elem.size-1)*O+ noise, elem.proc);
+            //tara sim.tlviz->add_osend(elem.host, elem.time, elem.time+o+ (elem.size-1)*O, elem.proc, (int) elem.tag);
+            //tara sim.tlviz->add_noise(elem.host, elem.time+o+ (elem.size-1)*O, elem.time + o + (elem.size-1)*O+ noise, elem.proc);
 
             tosend = new NetMsgEvent(&elem, elem.time + o);
 
@@ -297,14 +297,14 @@ int LogGOPmod::receive(goalevent& elem){
             nexto[elem.host][elem.proc] = elem.time + o + noise;
             nextgs[elem.host][elem.nic] = elem.time + g;
  
-            sim.tlviz->add_orecv(elem.host, elem.time, elem.time+o, elem.proc, (int) elem.tag);
+            //tara sim.tlviz->add_orecv(elem.host, elem.time, elem.time+o, elem.proc, (int) elem.tag);
             //TODO: need to add sim.tlviz transmission of the RTR
            
         }else{
 
             addtorq=false;
-            sim.tlviz->add_orecv(elem.host, elem.time+(elem.size-1)*G-(elem.size-1)*O, elem.time+o+std::max((elem.size-1)*O,(elem.size-1)*G), elem.proc, (int) elem.tag);
-            sim.tlviz->add_transmission(elem.target, elem.host, matched_elem.starttime+o, elem.time, elem.size, G, 1, 1, 0);
+            //tara sim.tlviz->add_orecv(elem.host, elem.time+(elem.size-1)*G-(elem.size-1)*O, elem.time+o+std::max((elem.size-1)*O,(elem.size-1)*G), elem.proc, (int) elem.tag);
+            //tara sim.tlviz->add_transmission(elem.target, elem.host, matched_elem.starttime+o, elem.time, elem.size, G, 1, 1, 0);
             nexto[elem.host][elem.proc] = elem.time + o + noise + std::max(((uint64_t) elem.size-1)*O,((uint64_t) elem.size-1)*G);
             nextgr[elem.host][elem.nic] = elem.time + g + ((uint64_t) elem.size-1)*G; 
 

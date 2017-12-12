@@ -7,4 +7,4 @@ drawviz_LDADD = -lps -lboost_regex
 BUILT_SOURCES = cmdline.c
 
 cmdline.c: drawviz.ggo
-	gengetout < $(srcdir)/drawviz.ggo
+	gengetopt < $(srcdir)/drawviz.ggo

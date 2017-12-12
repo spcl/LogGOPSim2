@@ -9,8 +9,11 @@
 
 #include "simEvents.hpp"
 
+
+#include "visualisation/visEvents.hpp"
+
+
 #include "cmdline.h"
-#include "TimelineVisualization.hpp"
 
 
 #define STATS
@@ -24,6 +27,13 @@ public:
     virtual size_t maxTime()=0;
     //virtual int dispatch(simEvent* ev)=0;
     virtual ~simModule() { ; }
+};
+
+// interface for visualisation modules
+class visModule{
+public:
+    virtual int registerHandlers(Simulator& sim)=0;
+    virtual ~visModule() { ; }
 };
 
 
@@ -42,14 +52,24 @@ class aqcompare_func {
 typedef std::priority_queue<simEvent*, std::vector<simEvent*>, aqcompare_func> evqueue_t;
 typedef int ekey_t;
 typedef uint32_t sim_signal_t;
+typedef uint32_t vis_signal_t;
 typedef int (*efun_t) (simModule*, simEvent*);
 typedef void * (*sfun_t) (simModule*, sim_signal_t, void*);
 
 typedef std::unordered_map<ekey_t, std::pair<simModule*, efun_t>> events_dispatch_map_t;
 typedef std::unordered_map<ekey_t, std::pair<simModule*, sfun_t>> signals_dispatch_map_t;
 
-
-
+// for visualisation
+typedef int (*visfun_t) (visModule*, visEvent*);
+typedef std::unordered_map<
+                            vis_signal_t, 
+                            std::vector<
+                                        std::pair<
+                                                    visModule*, 
+                                                    visfun_t  
+                                                     >
+                                        >
+                            > visualisation_dispatch_map_t;
 
 class Simulator : ISimulator{
 
@@ -60,18 +80,23 @@ private:
 
 
     std::vector<simModule*> mods;
+
+    std::vector<visModule*> vismods;
+    visualisation_dispatch_map_t dmap_vis;
+    
 #ifdef STATS
     uint64_t reinserted=0;
 #endif
 
 public:
 
-    TimelineVisualization * tlviz;
+  //tara  TimelineVisualization * tlviz;
     gengetopt_args_info args_info;
     uint32_t ranks;
 
     void addEventHandler(simModule* mod, ekey_t key, efun_t fun);
     void addSignalHandler(simModule* mod, sim_signal_t signal, sfun_t fun);
+    void addVisualisationHandler(visModule* mod, vis_signal_t signal, visfun_t fun);
 
 
     virtual void addEvent(simEvent* elem){
@@ -120,9 +145,32 @@ public:
         return (*dmap_signals[signal].second)(dmap_signals[signal].first, signal, arg);
     }
 
+    // the main method for visualisation
+    inline void visualize(vis_signal_t signal, visEvent* event){
+        
+
+        auto it = dmap_vis.find (signal);
+
+
+        if (it==dmap_vis.end()) {
+            printf("Error: no visualisation for this event %i\n", signal);
+            return;
+        }
+        for (auto &mod : it->second) // access by reference to avoid copying
+        {
+            (*mod.second)(mod.first, event);
+        }
+
+        if (event != NULL) delete event;  
+        
+     
+    }
+
     int simulate(IParser& parser);
 
     void addModule(simModule* mod);
+
+    void addVisModule(visModule* mod);
 
     void printStatus();
 
@@ -131,11 +179,15 @@ public:
     Simulator(int argc, char * argv[], uint32_t ranks): ranks(ranks){
     
         cmdline_parser(argc, argv, &args_info);
-        tlviz = new TimelineVisualization(args_info.vizfile_arg, args_info.vizfile_given, ranks);
+      //tara  tlviz = new TimelineVisualization(args_info.vizfile_arg, args_info.vizfile_given, ranks);
     }
 
     ~Simulator(){
-        delete tlviz;
+    
+      // for (int i = 0; i < vismods.size(); i++) {
+     //     delete vismods[i];
+     //  }  
+     //  vismods.clear();
     }
 
 };

@@ -18,6 +18,10 @@
 
 #include "modules/dma/dma.hpp"
 
+
+
+#include "visualisation/ChromeViz/chrome_viz.hpp"
+
 gengetopt_args_info args_info;
 
 int main(int argc, char * argv[]){
@@ -67,6 +71,12 @@ int main(int argc, char * argv[]){
     }
 
     if(dmamod!=NULL) sim.addModule(dmamod);    
+
+    //TODO; include vis modules
+    // write constructors and args_info
+    // add calls in the code
+    // delete modules here
+    //TimelineVisualization * tlviz = new TimelineVisualization(args_info.vizfile_arg, args_info.vizfile_given, ranks);
 
     sim.simulate(parser);
 

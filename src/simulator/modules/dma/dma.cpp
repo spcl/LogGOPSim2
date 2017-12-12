@@ -76,8 +76,8 @@ int DMAmod::handleDMARequest(DMAEvent& elem){
         if (print) printf("-- DMA completed @%lu\n", elem.time);
 
 
-        sim.tlviz->add_odma(elem.host, starttime, std::max(nextgs[elem.host],elem.time));
-        //sim.tlviz->add_odma(elem.host, elem.time, elem.time + g);
+        //tara sim.tlviz->add_odma(elem.host, starttime, std::max(nextgs[elem.host],elem.time));
+        ////tara sim.tlviz->add_odma(elem.host, elem.time, elem.time + g);
 
 
         if(elem.isBlocking){ // blocking 
