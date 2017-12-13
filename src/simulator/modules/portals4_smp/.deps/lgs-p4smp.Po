@@ -1,9 +1,0 @@
-modules/portals4_smp/lgs-p4smp.o: modules/portals4_smp/p4smp.cpp \
- /usr/include/stdc-predef.h modules/portals4_smp/p4smp.hpp \
- modules/portals4_smp/../../../config.h
-
-/usr/include/stdc-predef.h:
-
-modules/portals4_smp/p4smp.hpp:
-
-modules/portals4_smp/../../../config.h:

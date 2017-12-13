@@ -71,7 +71,7 @@ int main(int argc, char * argv[]){
  
 
      if(args_info.chromefile_given){
-       ChromeViz* vis = new  ChromeViz(args_info.chromefile_arg,1,false,4);
+       ChromeViz* vis = new  ChromeViz(args_info.chromefile_arg,1,false); // in microsec
        sim.addVisModule(vis);
      }
 

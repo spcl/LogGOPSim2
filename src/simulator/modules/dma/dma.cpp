@@ -3,6 +3,10 @@
 
 #include <algorithm>
 
+
+
+#define SET_DMA "DMA"
+
 void DMAmod::printStatus(){
     printf("DMA times:\n");
 
@@ -75,9 +79,11 @@ int DMAmod::handleDMARequest(DMAEvent& elem){
 
         if (print) printf("-- DMA completed @%lu\n", elem.time);
 
-
-        //tara sim.tlviz->add_odma(elem.host, starttime, std::max(nextgs[elem.host],elem.time));
-        ////tara sim.tlviz->add_odma(elem.host, elem.time, elem.time + g);
+       sim.visualize( VIS_HOST_DUR ,
+            new HostDurationVisEvent("Name:odma",elem.host,SET_DMA,starttime, std::max(nextgs[elem.host],elem.time))
+            );
+        //+tara sim.tlviz->add_odma(elem.host, starttime, std::max(nextgs[elem.host],elem.time));
+        // sim.tlviz->add_odma(elem.host, elem.time, elem.time + g);
 
 
         if(elem.isBlocking){ // blocking 

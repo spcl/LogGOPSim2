@@ -213,19 +213,17 @@ class TimelineVisualization : public visModule  {
         }
 
         int add_duration(HostDurationVisEvent ev){
-
-           if (ev.module_name == "CPU"){
+           //TODO parse also an integer and ev.name
+           if (ev.module_name.find("CPU") != std::string::npos){
              add_loclop(ev.host, ev.stime, ev.etime, 0 ); 
-            } else  if (ev.module_name == "NIC"){
+            } else  if (ev.module_name.find("NIC") != std::string::npos){
              add_nicop(ev.host, ev.stime, ev.etime, 0 );
-            }else  if (ev.module_name == "DMA"){
+            }else  if (ev.module_name.find("DMA") != std::string::npos){
              add_odma(ev.host, ev.stime, ev.etime, 0 );
-            }else  if (ev.module_name == "HPU"){
+            }else  if (ev.module_name.find("DMA") != std::string::npos){
              add_ohpu(ev.host, ev.stime, ev.etime, 0 );
             }
  
-          
-
            return 0; 
         }
 
