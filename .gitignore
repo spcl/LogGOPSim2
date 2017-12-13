@@ -4,3 +4,15 @@
 *.json
 *.vis
 
+
+config.guess
+test.bin
+stamp-h1
+goal2bin
+lgs
+cmdline.c
+cmdline.h
+schedgen_mpi
+drawviz
+Makefile
+Makefile.in
