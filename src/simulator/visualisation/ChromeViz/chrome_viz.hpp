@@ -138,8 +138,15 @@ class ChromeViz : public visModule  {
         int add_simple_flow(HostSimpleFlowVisEvent ev){
           //  write_x_duration_event(ev.event_name, ev.host, arc[ev.module_name],
            //                         convert_time(ev.stime),convert_time(ev.etime-ev.stime) );
-           
-            return -1; 
+           // printf("%s %s \n", ev.imodule_name.c_str(), ev.rmodule_name.c_str());
+           // printf("%d %d \n", arc[ev.imodule_name], arc[ev.rmodule_name] );
+
+            write_begin_flow_event(ev.event_name, ev.ihost, arc[ev.imodule_name], convert_time(ev.stime), flow_id);
+            write_end_flow_event(ev.event_name, ev.rhost, arc[ev.rmodule_name], convert_time(ev.etime),  flow_id);
+
+            flow_id++;
+
+            return 0; 
         }
 
 
@@ -273,7 +280,7 @@ class ChromeViz : public visModule  {
 
         void write_end_flow_event(std::string name, uint32_t dest, uint32_t dest_elem, std::string time, uint64_t id){
             json j;
-             j["cat"] = "test,cat";
+            j["cat"] = "test,cat";
             j["name"] = name;
             j["ph"] = "f";
             j["id"] = id;

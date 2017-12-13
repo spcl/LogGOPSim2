@@ -76,7 +76,7 @@ public:
     btime_t etime;   // end time
    
     HostSimpleFlowVisEvent(std::string event_name, uint32_t ihost,uint32_t rhost, std::string imodule_name, std::string rmodule_name, btime_t stime,btime_t etime): 
-    visEvent(event_name), imodule_name(imodule_name), rmodule_name(rmodule_name), stime(stime), etime(etime)
+    visEvent(event_name), ihost(ihost), rhost(rhost), imodule_name(imodule_name), rmodule_name(rmodule_name), stime(stime), etime(etime)
     {
         this->type = VIS_HOST_SIMPLE_FLOW;
     }
