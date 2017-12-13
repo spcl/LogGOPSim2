@@ -1,2 +1,6 @@
 *.o
 *.Po
+*.ps
+*.json
+*.vis
+
