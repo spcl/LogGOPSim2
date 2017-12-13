@@ -1,21 +1,17 @@
-#include <string>
-#include <math.h>
-#include <sstream>
-#include <fstream>
-#include <stdio.h>
-#include <assert.h>
-#include <vector>
+#ifndef __TIMELINEVIS_HPP__
+#define __TIMELINEVIS_HPP__
+
+ 
+#include "../../sim.hpp"
+#include "../../visualisation/visEvents.hpp"
 
 
+class TimelineVisualization : public visModule  {
 
-#define P4EXT
+    private:
 
-class TimelineVisualization {
-
-	private:
-	std::string content;
-  bool enable;
-	std::string filename;
+ std::string content;
+    std::string filename;
 
     int _todraw = -2;
 
@@ -116,21 +112,6 @@ class TimelineVisualization {
   }
 
 
-	public:
-
-  TimelineVisualization(char * _filename, bool _enable, int p) {
-    enable = _enable;
-    if (!enable) return;
-
-    filename = _filename;
-    add_ranknum(p);
-  }
-
-  ~TimelineVisualization() {
-    if(!enable) return;
-
-    write_events(false);
-  }
  void set_to_draw(int host){
     _todraw = host;
  }
@@ -151,7 +132,7 @@ class TimelineVisualization {
 
 
   void add_osend(int rank, int start, int end, int cpu, float r=0.0, float g=0.0, float b=1.0) {
-    if(!enable || !todraw(rank)) return;
+    if(!todraw(rank)) return;
 
     std::stringstream outstream;
     outstream << "osend " << rank << " " << cpu << " " << start << " " << end << " " << r << " " << g << " " << b << ";\n";
@@ -160,7 +141,7 @@ class TimelineVisualization {
   }
 
   void add_ohpu(int rank, int start, int end, int hpu, float r=0.0, float g=0.0, float b=1.0) {
-    if(!enable || !todraw(rank)) return;
+    if(!todraw(rank)) return;
 
     std::stringstream outstream;
     outstream << "ohpu " << rank << " " << hpu << " " << start << " " << end << " " << r << " " << g << " " << b << ";\n";
@@ -170,7 +151,7 @@ class TimelineVisualization {
 
 
   void add_orecv(int rank, int start, int end, int cpu, float r=0.6, float g=0.5, float b=0.3) {
-    if(!enable || !todraw(rank)) return;
+    if( !todraw(rank)) return;
 
     std::stringstream os;
     os << "orecv " << rank << " " << cpu << " " << start << " " << end << " " << r << " " << g << " " << b << ";\n";
@@ -179,7 +160,7 @@ class TimelineVisualization {
   }
 
   void add_odma(int rank, int start, int end, float r=0.6, float g=0.5, float b=0.3) {
-    if(!enable || !todraw(rank)) return;
+    if( !todraw(rank)) return;
 
     std::stringstream os;
     os << "odma " << rank << " " << start << " " << end << " " << r << " " << g << " " << b << ";\n";
@@ -189,7 +170,6 @@ class TimelineVisualization {
 
 
   void add_loclop(int rank, int start, int end, int cpu, float r=1.0, float g=0.0, float b=0.0) {
-    if(!enable) return;
 
     std::stringstream os;
     os << "loclop " << rank << " " << cpu << " " << start << " " << end << " " << r << " " << g << " " << b << ";\n";
@@ -197,18 +177,14 @@ class TimelineVisualization {
 
   }
 
- #ifdef P4EXT
  void add_nicop(int rank, int start, int end, int nic, float r=1.0, float g=0.5, float b=0.0) {
-    if(!enable) return;
 
     std::stringstream os;
     os << "nicop " << rank << " " << nic << " " << start << " " << end << " " << r << " " << g << " " << b << ";\n";
     this->content.append(os.str());
 }
- #endif // P4EXT
 
   void add_noise(int rank, int start, int end, int cpu, float r=0.0, float g=1.0, float b=0.0) {
-    if(!enable) return;
 
     std::stringstream os;
     os << "noise " << rank << " " << cpu << " " << start << " " << end << " " << r << " " << g << " " << b << ";\n";
@@ -217,11 +193,78 @@ class TimelineVisualization {
   }
 
   void add_transmission(int source, int dest, int starttime, int endtime, int size, int G, float r=0.0, float g=0.0, float b=1.0) {
-    if(!enable || !todraw(source, dest)) return;
+    if(!todraw(source, dest)) return;
 
     std::stringstream os;
     os << "transmission " << source << " " << dest << " " << starttime << " ";
     os << endtime << " " << size << " " << G <<  " " << r << " " << g << " " << b << ";\n";
     this->content.append(os.str());
   }
+
+    public:
+        TimelineVisualization(char * _filename,  int p) {
+            filename = _filename;
+            add_ranknum(p);
+        }
+
+        ~TimelineVisualization() {
+
+            write_events(false);
+        }
+
+        int add_duration(HostDurationVisEvent ev){
+
+           if (ev.module_name == "CPU"){
+             add_loclop(ev.host, ev.stime, ev.etime, 0 ); 
+            } else  if (ev.module_name == "NIC"){
+             add_nicop(ev.host, ev.stime, ev.etime, 0 );
+            }else  if (ev.module_name == "DMA"){
+             add_odma(ev.host, ev.stime, ev.etime, 0 );
+            }else  if (ev.module_name == "HPU"){
+             add_ohpu(ev.host, ev.stime, ev.etime, 0 );
+            }
+ 
+          
+
+           return 0; 
+        }
+
+        int add_instant(HostInstantVisEvent ev){
+
+            return 0; 
+        }
+
+
+        int add_complex_flow(HostComplexFlowVisEvent ev){
+
+            add_transmission(ev.ihost,ev.rhost, ev.stime, ev.etime, ev.size, ev.G);
+ 
+            return 0; 
+        }
+
+
+        static int dispatch(visModule* mod, visEvent* ev){
+            TimelineVisualization* lmod = (TimelineVisualization*) mod;
+            switch (ev->type){
+                /* visualisation events */
+                case VIS_HOST_INST: return lmod->add_instant(*((HostInstantVisEvent *) ev));
+                case VIS_HOST_DUR: return lmod->add_duration(*((HostDurationVisEvent *) ev));
+                case VIS_HOST_FLOW: return lmod->add_complex_flow(*((HostComplexFlowVisEvent *) ev));
+             }
+        
+            return -1;
+        };
+
+        virtual int registerHandlers(Simulator& sim){
+             sim.addVisualisationHandler(this, VIS_HOST_INST, TimelineVisualization::dispatch);
+             sim.addVisualisationHandler(this, VIS_HOST_DUR, TimelineVisualization::dispatch);
+             sim.addVisualisationHandler(this, VIS_HOST_FLOW, TimelineVisualization::dispatch);        
+            return 0;
+        }
+
+
+     
 };
+
+
+#endif

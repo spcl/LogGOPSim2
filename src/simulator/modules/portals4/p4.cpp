@@ -389,8 +389,8 @@ int P4Mod::putgetmsg(goalevent& elem){
 
         if (print) printf("-- msgsize: %u from %i to %i\n", msg_size, elem.target, elem.host);
 
-        sim.visualize( VIS_HOST_SIMPLE_FLOW ,
-            new HostSimpleFlowVisEvent("Name:add_transmission",elem.target, elem.host,"NIC","NIC", elem.starttime, elem.time)
+        sim.visualize( VIS_HOST_FLOW ,
+            new HostComplexFlowVisEvent("Name:add_transmission",elem.target, elem.host,"NIC","NIC", elem.starttime,elem.time,msg_size,srate)
         );
         //+tara sim.tlviz->add_transmission(elem.target, elem.host, elem.starttime, elem.time, msg_size, srate);
 
@@ -509,8 +509,8 @@ int P4Mod::getreply(goalevent& elem){
 
         //tlviz.add_nicop(elem.host, elem.time+(elem.size-1)*srate, elem.time + (elem.size-1)*srate + (elem.size-1)*C, elem.nic, 0, 0, 0);
 
-        sim.visualize( VIS_HOST_SIMPLE_FLOW ,
-            new HostSimpleFlowVisEvent("Name:add_transmission",elem.target, elem.host,"NIC","NIC", elem.starttime, elem.time)
+        sim.visualize( VIS_HOST_FLOW ,
+            new HostComplexFlowVisEvent("Name:add_transmission",elem.target, elem.host,"NIC","NIC", elem.starttime, elem.time,elem.size, srate )
         );
         //+tara sim.tlviz->add_transmission(elem.target, elem.host, elem.starttime, elem.time, elem.size, srate);
 

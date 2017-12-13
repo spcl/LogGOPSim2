@@ -13,5 +13,5 @@ if [[ "$2" == "-V" ]]; then
 	#./drawviz -i $1.vis -o $1.ps
 	#evince $1.ps
 else
-	./lgs -f $1.bin --network-pktsize=4096  --gem5-conf-file=config.ini -v
+	./lgs -f $1.bin --network-pktsize=4096  --gem5-conf-file=config.ini -v -V test.vis --chromefile=final.json
 fi

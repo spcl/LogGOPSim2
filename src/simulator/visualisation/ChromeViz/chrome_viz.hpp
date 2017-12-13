@@ -46,8 +46,6 @@ class ChromeViz : public visModule  {
             write_begin_duration_event("DUMP",0,arc["CPU"],convert_time(0));
             write_end_duration_event("DUMP",0,arc["CPU"],convert_time(0));
 
-           // write_begin_duration_event("CPU",0,arc["CPU"],"1");
-          //  write_end_duration_event("CPU",0,arc["CPU"],"2");
 
         }
 
@@ -128,18 +126,12 @@ class ChromeViz : public visModule  {
         }
 
         int add_instant(HostInstantVisEvent ev){
-          //  write_x_duration_event(ev.event_name, ev.host, arc[ev.module_name],
-           //                         convert_time(ev.stime),convert_time(ev.etime-ev.stime) );
-           
+
             return -1; 
         }
 
 
         int add_simple_flow(HostSimpleFlowVisEvent ev){
-          //  write_x_duration_event(ev.event_name, ev.host, arc[ev.module_name],
-           //                         convert_time(ev.stime),convert_time(ev.etime-ev.stime) );
-           // printf("%s %s \n", ev.imodule_name.c_str(), ev.rmodule_name.c_str());
-           // printf("%d %d \n", arc[ev.imodule_name], arc[ev.rmodule_name] );
 
             write_begin_flow_event(ev.event_name, ev.ihost, arc[ev.imodule_name], convert_time(ev.stime), flow_id);
             write_end_flow_event(ev.event_name, ev.rhost, arc[ev.rmodule_name], convert_time(ev.etime),  flow_id);
@@ -150,25 +142,25 @@ class ChromeViz : public visModule  {
         }
 
 
-    static int dispatch(visModule* mod, visEvent* ev){
+        static int dispatch(visModule* mod, visEvent* ev){
 
-        ChromeViz* lmod = (ChromeViz*) mod;
-        switch (ev->type){
-            /* simulation events */
-            case VIS_HOST_INST: return lmod->add_instant(*((HostInstantVisEvent *) ev));
-            case VIS_HOST_DUR: return lmod->add_duration(*((HostDurationVisEvent *) ev));
-            case VIS_HOST_SIMPLE_FLOW: return lmod->add_simple_flow(*((HostSimpleFlowVisEvent *) ev));
-         }
-    
-        return -1;
-    };
+            ChromeViz* lmod = (ChromeViz*) mod;
+            switch (ev->type){
+                /* simulation events */
+                case VIS_HOST_INST: return lmod->add_instant(*((HostInstantVisEvent *) ev));
+                case VIS_HOST_DUR: return lmod->add_duration(*((HostDurationVisEvent *) ev));
+                case VIS_HOST_FLOW: return lmod->add_simple_flow(*((HostSimpleFlowVisEvent *) ev));
+             }
+        
+            return -1;
+        };
 
-    virtual int registerHandlers(Simulator& sim){
-         sim.addVisualisationHandler(this, VIS_HOST_INST, ChromeViz::dispatch);
-         sim.addVisualisationHandler(this, VIS_HOST_DUR, ChromeViz::dispatch);
-         sim.addVisualisationHandler(this, VIS_HOST_SIMPLE_FLOW, ChromeViz::dispatch);        
-        return 0;
-    }
+        virtual int registerHandlers(Simulator& sim){
+             sim.addVisualisationHandler(this, VIS_HOST_INST, ChromeViz::dispatch);
+             sim.addVisualisationHandler(this, VIS_HOST_DUR, ChromeViz::dispatch);
+             sim.addVisualisationHandler(this, VIS_HOST_FLOW, ChromeViz::dispatch);        
+            return 0;
+        }
 
 
         //FLOWs

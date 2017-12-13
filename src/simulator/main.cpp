@@ -21,6 +21,8 @@
 
 
 #include "visualisation/ChromeViz/chrome_viz.hpp"
+#include "visualisation/DrawViz/TimelineVisualization.hpp"
+#include "visualisation/EmptyViz/empty_viz.hpp"
 
 gengetopt_args_info args_info;
 
@@ -38,15 +40,14 @@ int main(int argc, char * argv[]){
     bool gem5 = args_info.gem5_conf_file_given;
       
     simModule * lmod=NULL;
-    simModule * dmamod=NULL;
-    NetMod * nmod=NULL;
 
 #ifdef HAVE_GEM5
     
     if (gem5 && !simplenet){
         //printf("SMP\n");
         lmod = new P4SMPMod(sim, parser, simplenet);
-        dmamod = new DMAmod(sim, parser.schedules.size());
+        DMAmod *dmamod = new DMAmod(sim, parser.schedules.size());
+        sim.addModule(dmamod);  
     }else{
         lmod = new P4Mod(sim, parser, simplenet);
     }
@@ -64,31 +65,24 @@ int main(int argc, char * argv[]){
     sim.addModule(lmod);    
    
     if (!simplenet){
-        nmod = new NetMod(sim, gem5);
+        NetMod * nmod = new NetMod(sim, gem5);
         sim.addModule((simModule *) nmod);
     }  
-    if(dmamod!=NULL) sim.addModule(dmamod);    
+ 
 
-    //TODO; include vis modules
-    // write constructors and args_info
-    // add calls in the code
-    // delete modules here
-   // TimelineVisualization * tlviz = new TimelineVisualization(args_info.vizfile_arg, args_info.vizfile_given, ranks);
-    printf("before creating \n");
-     ChromeViz* vis = new  ChromeViz("test.json",1,false,4);
-     sim.addVisModule(vis);
+     if(args_info.chromefile_given){
+       ChromeViz* vis = new  ChromeViz(args_info.chromefile_arg,1,false,4);
+       sim.addVisModule(vis);
+     }
+
+     if(args_info.vizfile_given){
+        TimelineVisualization* tlviz = new  TimelineVisualization(args_info.vizfile_arg, parser.schedules.size());
+        sim.addVisModule(tlviz);
+     }
+     
 
     sim.simulate(parser);
-
-
     sim.printStatus(); 
-
-
-
-    if (nmod!=NULL) delete nmod; 
-    if (lmod!=NULL) delete lmod; 
-    if (dmamod!=NULL) delete dmamod;
-    delete vis;
 
 }
 

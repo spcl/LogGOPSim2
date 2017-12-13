@@ -13,6 +13,7 @@ option "network-mapping" - "Input file mapping ranks to hosts" string optional
 option "filename"       f  "Prefix for the filenames which contain the schedules" string
 option "save-mem"       -  "Map the schedules as MAP_SHARED to enable processing of large schedule (larger than main memory). This will invalidate the schedules during simulation." flag off
 option "vizfile"        V  "Name of the output file for visualization data" string optional
+option "chromefile"     -  "Name of the output file for chrome tracing visualization data" string optional
 option "verbose"        v  "Enable more verbose output" optional
 option "progress"       -  "print progress" optional
 option "batchmode"      b  "enable batchmode (never print detailed host info)" optional

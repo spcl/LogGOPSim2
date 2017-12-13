@@ -8,8 +8,7 @@ typedef uint64_t btime_t;
 // define vis types
 static const uint32_t VIS_HOST_INST = 1;
 static const uint32_t VIS_HOST_DUR = 2;
-static const uint32_t VIS_HOST_SIMPLE_FLOW = 3;
-static const uint32_t VIS_HOST_COMPLEX_FLOW = 4;
+static const uint32_t VIS_HOST_FLOW = 3;
  
 
 
@@ -78,9 +77,25 @@ public:
     HostSimpleFlowVisEvent(std::string event_name, uint32_t ihost,uint32_t rhost, std::string imodule_name, std::string rmodule_name, btime_t stime,btime_t etime): 
     visEvent(event_name), ihost(ihost), rhost(rhost), imodule_name(imodule_name), rmodule_name(rmodule_name), stime(stime), etime(etime)
     {
-        this->type = VIS_HOST_SIMPLE_FLOW;
+        this->type = VIS_HOST_FLOW;
     }
 };
+
+
+class HostComplexFlowVisEvent: public HostSimpleFlowVisEvent{
+public:
+    uint32_t size; // size of message
+    uint32_t G; // id of the receiver host . 
+
+   
+    HostComplexFlowVisEvent(std::string event_name, uint32_t ihost,uint32_t rhost, std::string imodule_name, std::string rmodule_name, btime_t stime,btime_t etime, int size, int G): 
+    HostSimpleFlowVisEvent(event_name, ihost, rhost, imodule_name, rmodule_name, stime, etime), size(size), G(G)
+    {
+        this->type = VIS_HOST_FLOW;
+    }
+};
+
+
 
 
 

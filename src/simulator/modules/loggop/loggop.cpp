@@ -161,8 +161,8 @@ int LogGOPmod::receive_msg(goalevent& elem){
                     // satisfy local requires
                     parser.MarkNodeAsDone(elem.host, matched_elem.offset, elem.time);
 
-                    sim.visualize( VIS_HOST_SIMPLE_FLOW ,
-                        new HostSimpleFlowVisEvent("Name:add_transmission",elem.target, elem.host,"NIC","NIC", elem.starttime+o, elem.time)
+                    sim.visualize( VIS_HOST_FLOW ,
+                        new HostComplexFlowVisEvent("Name:add_transmission",elem.target, elem.host,"NIC","NIC", elem.starttime+o, elem.time, elem.size,G)
                     );
                     //+tara sim.tlviz->add_transmission(elem.target, elem.host, elem.starttime+o, elem.time, elem.size, G);
                     sim.visualize( VIS_HOST_DUR ,
@@ -339,8 +339,8 @@ int LogGOPmod::receive(goalevent& elem){
             );
             //+tara sim.tlviz->add_orecv(elem.host, elem.time+(elem.size-1)*G-(elem.size-1)*O, elem.time+o+std::max((elem.size-1)*O,(elem.size-1)*G), elem.proc, (int) elem.tag);
             
-            sim.visualize( VIS_HOST_SIMPLE_FLOW ,
-                new HostSimpleFlowVisEvent("Name:add_transmission",elem.target, elem.host,"NIC","NIC", matched_elem.starttime+o, elem.time)
+            sim.visualize( VIS_HOST_FLOW ,
+                new HostComplexFlowVisEvent("Name:add_transmission",elem.target, elem.host,"NIC","NIC", matched_elem.starttime+o, elem.time,elem.size,g)
             );
             //+tara sim.tlviz->add_transmission(elem.target, elem.host, matched_elem.starttime+o, elem.time, elem.size, G, 1, 1, 0);
             

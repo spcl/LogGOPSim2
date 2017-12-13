@@ -147,20 +147,17 @@ public:
     // the main method for visualisation
     inline void visualize(vis_signal_t signal, visEvent* event){
         
-
         auto it = dmap_vis.find (signal);
-
 
         if (it==dmap_vis.end()) {
             printf("Error: no visualisation for this event %i\n", signal);
             return;
         }
-        for (auto &mod : it->second) // access by reference to avoid copying
-        {
+        for (auto &mod : it->second){// access by reference to avoid copying
             (*mod.second)(mod.first, event);
         }
 
-       delete event;  
+        delete event;  
         
      
     }
@@ -181,11 +178,18 @@ public:
     }
 
     ~Simulator(){
-    
-      // for (int i = 0; i < vismods.size(); i++) {
-     //     delete vismods[i];
-     //  }  
-     //  vismods.clear();
+        printf("Destructor is called \n");
+
+        for (int i = 0; i < vismods.size(); i++) {
+           delete vismods[i];
+        }  
+        vismods.clear();
+
+        for (int i = 0; i < mods.size(); i++) {
+           delete mods[i];
+        }  
+        mods.clear();
+
     }
 
 };
