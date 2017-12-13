@@ -90,7 +90,6 @@ private:
 
 public:
 
-  //tara  TimelineVisualization * tlviz;
     gengetopt_args_info args_info;
     uint32_t ranks;
 
@@ -161,7 +160,7 @@ public:
             (*mod.second)(mod.first, event);
         }
 
-        if (event != NULL) delete event;  
+       delete event;  
         
      
     }
@@ -179,7 +178,6 @@ public:
     Simulator(int argc, char * argv[], uint32_t ranks): ranks(ranks){
     
         cmdline_parser(argc, argv, &args_info);
-      //tara  tlviz = new TimelineVisualization(args_info.vizfile_arg, args_info.vizfile_given, ranks);
     }
 
     ~Simulator(){

@@ -87,7 +87,10 @@ int LogGOPmod::locop(goalevent& elem){
         //parser.schedules[elem.host].remove_node(elem.node);
         parser.MarkNodeAsStarted(elem.host, elem.offset, elem.time);
         parser.MarkNodeAsDone(elem.host, elem.offset, elem.time);
-        // add to timeline
+        // add to timeline()
+        sim.visualize( VIS_HOST_DUR ,
+            new HostDurationVisEvent("Name:loclop",elem.host,"CPU",elem.time, elem.time+elem.size)
+            );
         //tara sim.tlviz->add_loclop(elem.host, elem.time, elem.time+elem.size, elem.proc, 0.6, 0.2, 0.4);
     } else {
         if(print) printf("[%i] -- locop local o not available -- reinserting\n", elem.host);
@@ -159,6 +162,9 @@ int LogGOPmod::receive_msg(goalevent& elem){
                     parser.MarkNodeAsDone(elem.host, matched_elem.offset, elem.time);
 
                     //tara sim.tlviz->add_transmission(elem.target, elem.host, elem.starttime+o, elem.time, elem.size, G);
+                           sim.visualize( VIS_HOST_DUR ,
+            new HostDurationVisEvent("Name:add_orecv",elem.host,"CPU", elem.time+(elem.size-1)*G-(elem.size-1)*O, elem.time+o+std::max((elem.size-1)*O,(elem.size-1)*G))
+            );
                     //tara sim.tlviz->add_orecv(elem.host, elem.time+(elem.size-1)*G-(elem.size-1)*O, elem.time+o+std::max((elem.size-1)*O,(elem.size-1)*G), elem.proc, (int) elem.tag);
                     //tara sim.tlviz->add_noise(elem.host, elem.time+o+std::max((elem.size-1)*O,(elem.size-1)*G), elem.time+o+noise+std::max((elem.size-1)*O,(elem.size-1)*G), elem.proc);
                 }

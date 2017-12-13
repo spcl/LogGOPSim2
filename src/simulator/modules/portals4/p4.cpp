@@ -282,6 +282,10 @@ int P4Mod::nicputget(goalevent& elem){
         //Insert into the network layer (in order to simulate congestion)
         //net.insert(elem.time, elem.host, elem.target, msg_size, &elem.handle);
         //printf("nput op STARTED\n");
+        sim.visualize( VIS_HOST_DUR ,
+            new HostDurationVisEvent("Name:add_nicop",elem.host,"NIC", elem.time, elem.time+(msg_size-1)*srate)
+            );
+
         //tara sim.tlviz->add_nicop(elem.host, elem.time, elem.time+(msg_size-1)*srate, elem.nic);
         //tara sim.tlviz->add_nicop(elem.host, elem.time+(msg_size-1)*srate, elem.time+(msg_size-1)*srate+g, elem.nic);
    

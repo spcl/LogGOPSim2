@@ -31,14 +31,12 @@ int main(int argc, char * argv[]){
         fprintf(stderr, "Couldn't parse command line arguments!\n");
         throw(10);
 	}
-
     Parser parser(args_info.filename_arg, args_info.save_mem_given);
     Simulator sim(argc, argv, parser.schedules.size());
 
     bool simplenet = !args_info.network_file_given;
     bool gem5 = args_info.gem5_conf_file_given;
-    
-
+      
     simModule * lmod=NULL;
     simModule * dmamod=NULL;
     NetMod * nmod=NULL;
@@ -62,21 +60,23 @@ int main(int argc, char * argv[]){
 
 
 #endif
-
+   
     sim.addModule(lmod);    
-
+   
     if (!simplenet){
         nmod = new NetMod(sim, gem5);
         sim.addModule((simModule *) nmod);
-    }
-
+    }  
     if(dmamod!=NULL) sim.addModule(dmamod);    
 
     //TODO; include vis modules
     // write constructors and args_info
     // add calls in the code
     // delete modules here
-    //TimelineVisualization * tlviz = new TimelineVisualization(args_info.vizfile_arg, args_info.vizfile_given, ranks);
+   // TimelineVisualization * tlviz = new TimelineVisualization(args_info.vizfile_arg, args_info.vizfile_given, ranks);
+    printf("before creating \n");
+     ChromeViz* vis = new  ChromeViz("test.json",1,false,4);
+     sim.addVisModule(vis);
 
     sim.simulate(parser);
 
@@ -88,6 +88,7 @@ int main(int argc, char * argv[]){
     if (nmod!=NULL) delete nmod; 
     if (lmod!=NULL) delete lmod; 
     if (dmamod!=NULL) delete dmamod;
+    delete vis;
 
 }
 

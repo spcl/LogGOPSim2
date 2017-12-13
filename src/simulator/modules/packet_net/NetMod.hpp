@@ -117,7 +117,7 @@ private:
 public:
     NetMod(Simulator& sim, bool deliver_single_packets=false): 
         sim(sim), deliver_single_packets(deliver_single_packets) {
-
+      
         ptime = sim.args_info.network_ptime_arg;
         latency = sim.args_info.network_latency_arg;
 
@@ -129,9 +129,10 @@ public:
 
         G = sim.args_info.LogGOPS_G_arg;
         print = sim.args_info.verbose_given;
-
+        printf("NetMod\n");
         topology = new TopoGraph(filename, mapping_file, print);
-
+        printf("NetMod\n");
+  
         int p = topology->get_size();
     
         printf("NetMod: nodes: %i; ptime: %u; latency: %u; max_credits: %u;  \
