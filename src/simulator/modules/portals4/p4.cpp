@@ -9,6 +9,9 @@
 #define GET_MSG_SIZE 5
 
 
+#define SET_NIC(id) "NIC"+std::to_string(id)
+#define SET_CPU(id) "CPU"+std::to_string(id)
+
 
 
 int P4Mod::dispatch(simModule* mod, simEvent* _elem){
@@ -116,7 +119,10 @@ int P4Mod::append(goalevent& elem){
             btime_t noise = osnoise->get_noise(elem.host, elem.time, elem.time+o);
             //if (noise>0) printf("append noise: %lu\n", noise);
             nexto[elem.host][elem.proc] = elem.time + o + noise;
-            sim.tlviz->add_loclop(elem.host, elem.time, elem.time+o, elem.proc);
+            sim.visualize( VIS_HOST_DUR ,
+                        new HostDurationVisEvent("Name:add_loclop",elem.host,SET_CPU(elem.proc), elem.time, elem.time+o)
+            );
+            //+tara sim.tlviz->add_loclop(elem.host, elem.time, elem.time+o, elem.proc);
         }else{
             //NAPPEND: is the triggered append operations (executed on the NIC)
             //The cost of this operations is charged on nextgs because while
@@ -126,7 +132,10 @@ int P4Mod::append(goalevent& elem){
             //The cost c is necessary to scan the unexpected list in order to find
             //unexpected messages.
             nextgs[elem.host][elem.nic] = elem.time + c;
-            sim.tlviz->add_nicop(elem.host, elem.time, elem.time+c, elem.nic);
+            sim.visualize( VIS_HOST_DUR ,
+                        new HostDurationVisEvent("Name:add_nicop",elem.host,SET_NIC(elem.nic), elem.time, elem.time+c)
+            );
+            //+tara sim.tlviz->add_nicop(elem.host, elem.time, elem.time+c, elem.nic);
         }
         parser.MarkNodeAsStarted(elem.host, elem.offset, elem.time); //useless?
 
@@ -151,7 +160,10 @@ int P4Mod::append(goalevent& elem){
                     if (elem.type==OP_APPEND) {
                         //Accounting of unex. msg copy cost disabled to be comparable with the MPI case (where it's not accounted)
                         //nexto[elem.host][elem.proc] += (matched_elem.msg.size)*C; //latency?
-                        sim.tlviz->add_loclop(elem.host, elem.time+o, elem.time+o+(matched_elem.msg.size)*C, elem.proc, 0, 0, 0);
+                        sim.visualize( VIS_HOST_DUR ,
+                           new HostDurationVisEvent("Name:add_loclop",elem.host,SET_CPU(elem.proc), elem.time+o, elem.time+o+(matched_elem.msg.size)*C)
+                        );
+                        //+tara sim.tlviz->add_loclop(elem.host, elem.time+o, elem.time+o+(matched_elem.msg.size)*C, elem.proc, 0, 0, 0);
                     }
 
                 }else{
@@ -231,7 +243,10 @@ int P4Mod::putget(goalevent& elem){
         nexto[elem.host][elem.proc] = elem.time + o + noise;
         //if (noise>0) printf("put noise: %lu\n", noise);
 
-        sim.tlviz->add_loclop(elem.host, elem.time, elem.time+o, elem.proc);
+        sim.visualize( VIS_HOST_DUR ,
+           new HostDurationVisEvent("Name:add_loclop",elem.host,SET_CPU(elem.proc), elem.time, elem.time+o)
+        );
+        //+tara sim.tlviz->add_loclop(elem.host, elem.time, elem.time+o, elem.proc);
 
         elem.time = elem.time + o;
 
@@ -240,7 +255,11 @@ int P4Mod::putget(goalevent& elem){
         else elem.type = OP_NGET;
         if (elem.isParsed) parser.MarkNodeAsDone(elem.host, elem.offset, elem.time);
 
-        sim.tlviz->add_nicop(elem.host, elem.time, elem.time+DMA_L, elem.nic,0.3,0.3,0.3);
+        sim.visualize( VIS_HOST_DUR ,
+           new HostDurationVisEvent("Name:add_nicop",elem.host,SET_NIC(elem.nic), elem.time, elem.time+DMA_L)
+        );
+        //+tara sim.tlviz->add_nicop(elem.host, elem.time, elem.time+DMA_L, elem.nic,0.3,0.3,0.3);
+        
         elem.time += DMA_L; //ktaranov
 
     }else{
@@ -282,8 +301,14 @@ int P4Mod::nicputget(goalevent& elem){
         //Insert into the network layer (in order to simulate congestion)
         //net.insert(elem.time, elem.host, elem.target, msg_size, &elem.handle);
         //printf("nput op STARTED\n");
-        sim.tlviz->add_nicop(elem.host, elem.time, elem.time+(msg_size-1)*srate, elem.nic);
-        sim.tlviz->add_nicop(elem.host, elem.time+(msg_size-1)*srate, elem.time+(msg_size-1)*srate+g, elem.nic);
+        sim.visualize( VIS_HOST_DUR ,
+            new HostDurationVisEvent("Name:add_nicop",elem.host,SET_NIC(elem.nic), elem.time, elem.time+(msg_size-1)*srate)
+            );
+        //+tara sim.tlviz->add_nicop(elem.host, elem.time, elem.time+(msg_size-1)*srate, elem.nic);
+        sim.visualize( VIS_HOST_DUR ,
+            new HostDurationVisEvent("Name:add_nicop",elem.host,SET_NIC(elem.nic), elem.time+(msg_size-1)*srate, elem.time+(msg_size-1)*srate+g)
+            );
+        //+tara sim.tlviz->add_nicop(elem.host, elem.time+(msg_size-1)*srate, elem.time+(msg_size-1)*srate+g, elem.nic);
    
       
         //With the GET the operations are triggered on the event PTL_MD_EVENT_REPLY (when we receive the reply)
@@ -356,12 +381,21 @@ int P4Mod::putgetmsg(goalevent& elem){
 
 
         int srate = std::max(G, C);
-
-        sim.tlviz->add_nicop(elem.host, elem.time, elem.time+(msg_size-1)*srate, elem.nic, 0.5, 0.5, 0.5);
-        sim.tlviz->add_nicop(elem.host, elem.time+(msg_size-1)*srate, elem.time+(msg_size-1)*srate+c, elem.nic);
+        sim.visualize( VIS_HOST_DUR ,
+            new HostDurationVisEvent("Name:add_nicop",elem.host,SET_NIC(elem.nic), elem.time, elem.time+(msg_size-1)*srate)
+            );
+        //+tara sim.tlviz->add_nicop(elem.host, elem.time, elem.time+(msg_size-1)*srate, elem.nic, 0.5, 0.5, 0.5);
+        sim.visualize( VIS_HOST_DUR ,
+            new HostDurationVisEvent("Name:add_nicop",elem.host,SET_NIC(elem.nic), elem.time+(msg_size-1)*srate, elem.time+(msg_size-1)*srate+c)
+            );
+        //+tara sim.tlviz->add_nicop(elem.host, elem.time+(msg_size-1)*srate, elem.time+(msg_size-1)*srate+c, elem.nic);
 
         if (print) printf("-- msgsize: %u from %i to %i\n", msg_size, elem.target, elem.host);
-        sim.tlviz->add_transmission(elem.target, elem.host, elem.starttime, elem.time, msg_size, srate);
+
+        sim.visualize( VIS_HOST_FLOW ,
+            new HostComplexFlowVisEvent("Name:add_transmission",elem.target, elem.host,SET_NIC(elem.nic),SET_NIC(0), elem.starttime,elem.time,msg_size,srate)
+        );
+        //+tara sim.tlviz->add_transmission(elem.target, elem.host, elem.starttime, elem.time, msg_size, srate);
 
         if (!nomatch) {
             btime_t triggertime;
@@ -390,7 +424,10 @@ int P4Mod::putgetmsg(goalevent& elem){
                 nextgs[elem.host][elem.proc] = elem.time + g + (elem.size-1)*srate;
 
                 //Visualize the sending step
-                sim.tlviz->add_nicop(elem.host, elem.time, elem.time+(elem.size-1)*srate, elem.nic);
+                sim.visualize( VIS_HOST_DUR ,
+                 new HostDurationVisEvent("Name:add_nicop",elem.host,SET_NIC(elem.nic), elem.time, elem.time+(elem.size-1)*srate)
+                );
+                //+tara sim.tlviz->add_nicop(elem.host, elem.time, elem.time+(elem.size-1)*srate, elem.nic);
 
                 //Insert into the network layer (in order to simulate congestion)
                 //net.insert(elem.time, elem.host, elem.target, elem.size, &elem.handle);
@@ -403,7 +440,10 @@ int P4Mod::putgetmsg(goalevent& elem){
                 elem.starttime = elem.time;
                 sim.addEvent(new NetMsgEvent(&elem, elem.time));
             }
-            sim.tlviz->add_nicop(elem.host, triggertime, triggertime+DMA_L, elem.nic,0.3,0.3,0.3);
+            sim.visualize( VIS_HOST_DUR ,
+                 new HostDurationVisEvent("Name:add_nicop",elem.host,SET_NIC(elem.nic),  triggertime, triggertime+DMA_L)
+            );
+            //+tara sim.tlviz->add_nicop(elem.host, triggertime, triggertime+DMA_L, elem.nic,0.3,0.3,0.3);
             triggertime+=DMA_L; //ktaranov
 
             if (print) printf("-- MSG: matched.src: %i; counter: %i; time: %lu;\n", matched.src, matched.counter, triggertime);
@@ -449,7 +489,11 @@ int P4Mod::getreply(goalevent& elem){
         nextgr[elem.host][elem.nic] = elem.time + g + (elem.size-1)*srate;// + (elem.size-1)*C;
 
         btime_t triggertime = elem.time + (elem.size-1)*srate + c ;
-        sim.tlviz->add_nicop(elem.host, triggertime, triggertime+DMA_L, elem.nic,0.3,0.3,0.3);
+        sim.visualize( VIS_HOST_DUR ,
+             new HostDurationVisEvent("Name:add_nicop",elem.host,SET_NIC(elem.nic), triggertime, triggertime+DMA_L)
+        );
+
+        //+tara sim.tlviz->add_nicop(elem.host, triggertime, triggertime+DMA_L, elem.nic,0.3,0.3,0.3);
         TRIGGER_OPS(elem.host, elem.oct, triggertime+DMA_L)
 
         if (print) printf("-- Triggering new ops at time: %lu\n", triggertime+DMA_L);
@@ -457,12 +501,21 @@ int P4Mod::getreply(goalevent& elem){
        
 
         
-
-        sim.tlviz->add_nicop(elem.host, elem.time, elem.time + (elem.size-1)*srate, elem.nic, 0.5, 0.5, 0.5);
-        sim.tlviz->add_nicop(elem.host, elem.time+(elem.size-1)*srate, elem.time+(elem.size-1)*srate+c, elem.nic);
+        sim.visualize( VIS_HOST_DUR ,
+             new HostDurationVisEvent("Name:add_nicop",elem.host,SET_NIC(elem.nic), elem.time, elem.time + (elem.size-1)*srate)
+        );
+        //+tara sim.tlviz->add_nicop(elem.host, elem.time, elem.time + (elem.size-1)*srate, elem.nic, 0.5, 0.5, 0.5);
+        sim.visualize( VIS_HOST_DUR ,
+             new HostDurationVisEvent("Name:add_nicop",elem.host,SET_NIC(elem.nic), elem.time+(elem.size-1)*srate, elem.time+(elem.size-1)*srate+c)
+        );
+        //+tara sim.tlviz->add_nicop(elem.host, elem.time+(elem.size-1)*srate, elem.time+(elem.size-1)*srate+c, elem.nic);
 
         //tlviz.add_nicop(elem.host, elem.time+(elem.size-1)*srate, elem.time + (elem.size-1)*srate + (elem.size-1)*C, elem.nic, 0, 0, 0);
-        sim.tlviz->add_transmission(elem.target, elem.host, elem.starttime, elem.time, elem.size, srate);
+
+        sim.visualize( VIS_HOST_FLOW ,
+            new HostComplexFlowVisEvent("Name:add_transmission",elem.target, elem.host,SET_NIC(elem.nic),SET_NIC(0), elem.starttime, elem.time,elem.size, srate )
+        );
+        //+tara sim.tlviz->add_transmission(elem.target, elem.host, elem.starttime, elem.time, elem.size, srate);
 
     }else{
         elem.time = nextgr[elem.target][elem.nic];
@@ -488,7 +541,11 @@ int P4Mod::tops(goalevent& elem){
 
         if (print) printf("[%i] triggered op setup: type: %i; ct: %i; threshold: %lu; time: %lu\n", elem.host, elem.type, elem.ct, elem.threshold, elem.time);
 
-        sim.tlviz->add_loclop(elem.host, elem.time, elem.time+o, elem.proc, 0.5, 0.7, 1);
+        sim.visualize( VIS_HOST_DUR ,
+           new HostDurationVisEvent("Name:add_loclop",elem.host,SET_CPU(elem.proc),  elem.time, elem.time+o)
+        );  
+        //+tara sim.tlviz->add_loclop(elem.host, elem.time, elem.time+o, elem.proc, 0.5, 0.7, 1);
+        
         btime_t noise = osnoise->get_noise(elem.host, elem.time, elem.time+o);
         elem.time = elem.time+o+noise;
         elem.keepalive=true;
