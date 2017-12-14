@@ -58,10 +58,10 @@ int main(int argc, char **argv) {
 			boost::regex orecv("orecv (\\d+) (\\d+) (\\d+) (\\d+) (\\d+(?:.\\d+)?) (\\d+(?:.\\d+)?) (\\d+(?:.\\d+)?);");
 			boost::regex loclop("loclop (\\d+) (\\d+) (\\d+) (\\d+) (\\d+(?:.\\d+)?) (\\d+(?:.\\d+)?) (\\d+(?:.\\d+)?);");
 
+#ifdef SPIN
 			boost::regex ohpu("ohpu (\\d+) (\\d+) (\\d+) (\\d+) (\\d+(?:.\\d+)?) (\\d+(?:.\\d+)?) (\\d+(?:.\\d+)?);");
-
 			boost::regex odma("odma (\\d+) (\\d+) (\\d+) (\\d+(?:.\\d+)?) (\\d+(?:.\\d+)?) (\\d+(?:.\\d+)?);");
-
+#endif
 
 			#ifdef P4EXT
 			boost::regex nicop("nicop (\\d+) (\\d+) (\\d+) (\\d+) (\\d+(?:.\\d+)?) (\\d+(?:.\\d+)?) (\\d+(?:.\\d+)?);");
@@ -91,6 +91,7 @@ int main(int argc, char **argv) {
 				}
 			}
 
+#ifdef SPIN
             else if (boost::regex_match(line.c_str(), matches, ohpu)) {
                 
 				std::string ranks = matches[1];
@@ -125,7 +126,7 @@ int main(int argc, char **argv) {
 				}
 	
             }
-	
+#endif
 
 			else if (boost::regex_match(line.c_str(), matches, orecv)) {
 

@@ -18,7 +18,7 @@
 #include <libps/pslib.h>
 
 #include "TimelineDrawing.hpp"
-
+#include <string.h>
 
 void TimelineDrawing::init_graph(int numranks, int numcpus, int numhpus, int width = 800, int height = 800, std::string filename = "timeline.ps") {
 
@@ -41,7 +41,8 @@ void TimelineDrawing::init_graph(int numranks, int numcpus, int numhpus, int wid
 	this->psdoc = PS_new();
 	PS_open_file(this->psdoc, filename.c_str());
 	PS_begin_page(this->psdoc, (this->numranks+2)*this->ranksep, (this->numranks+2)*this->ranksep);
-	this->psfont = PS_findfont(this->psdoc, "Helvetica", "", 0);
+
+	this->psfont = PS_findfont(this->psdoc, "Helvetica", "builtin", 0);
 	PS_setfont(psdoc, psfont, this->fontsize);
 
 }
@@ -160,10 +161,11 @@ void TimelineDrawing::draw_ranklines() {
 		PS_moveto(psdoc, this->leftmargin, (i+2)*ranksep);
 		PS_lineto(psdoc, this->width - this->leftmargin , (i+2)*ranksep);
 
+#ifdef SPIN
         //hpu line
 		PS_moveto(psdoc, this->leftmargin, (i+2)*ranksep + (numhpus+2)*cpusep);
 		PS_lineto(psdoc, this->width - this->leftmargin , (i+2)*ranksep + (numhpus+2)*cpusep);
-
+#endif
 
 
 		PS_stroke(psdoc);
@@ -179,11 +181,11 @@ void TimelineDrawing::draw_ranklines() {
 		#endif // P4EXT
 
 
+#ifdef SPIN
         snprintf(textbuffer, 128, "DMA");
 		PS_setfont(psdoc, this->psfont, this->fontsize);
 		PS_show_xy(psdoc, textbuffer, 5, (i+2)*ranksep + cpusep + (numhpus+1)*cpusep);
 
-		
         for (int j=0; j<numhpus; j++){
             snprintf(textbuffer, 128, "HPU %i", j);
 		    PS_setfont(psdoc, this->psfont, this->fontsize);
@@ -192,6 +194,7 @@ void TimelineDrawing::draw_ranklines() {
 		    PS_lineto(psdoc, this->width - this->leftmargin, (i+2)*ranksep + (j+2)*cpusep);
 			PS_stroke(psdoc);
         }
+#endif
 
 		for (int j=1; j<numcpus; j++) {
 			PS_setfont(psdoc, this->psfont, this->fontsize/1.75);

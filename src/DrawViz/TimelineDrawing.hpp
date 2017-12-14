@@ -18,6 +18,7 @@
 
 #define P4EXT
 #define DRAWNIC
+//#define SPIN
 
 class overh {
 	public:
