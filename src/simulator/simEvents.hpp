@@ -1,7 +1,7 @@
 #ifndef __SIMEVENTS_HPP__
 #define __SIMEVENTS_HPP__
 
-typedef uint64_t btime_t;
+#include "loggopsim.h"
 
 class simEvent {
 public:

@@ -2,7 +2,7 @@
 #ifndef __VISEVENTS_HPP__
 #define __VISEVENTS_HPP__
 
-typedef uint64_t btime_t;
+#include "../loggopsim.h"
 
 
 // define vis types
