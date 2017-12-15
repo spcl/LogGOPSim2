@@ -3,155 +3,151 @@
 
 typedef uint64_t btime_t;
 
-class simEvent{
+class simEvent {
 public:
-    btime_t time;
-    uint32_t type;
-    bool keepalive;
-    uint64_t id;
-    static uint64_t gid;
-    simEvent * payload;
+  btime_t time;
+  uint32_t type;
+  bool keepalive;
+  uint64_t id;
+  static uint64_t gid;
+  simEvent *payload;
 
-       
-    simEvent(simEvent * _payload=NULL){ 
-        keepalive=false; 
-        id=gid++;
-        payload = _payload;
-        //printf("simEvent: new: id: %u;\n", id);
-    }
+  simEvent(simEvent *_payload = NULL) {
+    keepalive = false;
+    id = gid++;
+    payload = _payload;
+    // printf("simEvent: new: id: %u;\n", id);
+  }
 
-    bool hasPayload(){ return payload!=NULL; }
-    bool getPayload(){ return payload; }
+  bool hasPayload() { return payload != NULL; }
+  bool getPayload() { return payload; }
 
-    /*simEvent(const simEvent& ev){
-        time = ev.time;
-        type = ev.type;
-        keepalive = ev.keepalive;
-        id = gid++;
-    }*/
+  /*simEvent(const simEvent& ev){
+      time = ev.time;
+      type = ev.type;
+      keepalive = ev.keepalive;
+      id = gid++;
+  }*/
 };
 
-
-/* used to resolve a duplicate definition of the cmdline.h btw the sim and txt2bin (differnt content, same names)*/
-class ISimulator{
+/* used to resolve a duplicate definition of the cmdline.h btw the sim and
+ * txt2bin (differnt content, same names)*/
+class ISimulator {
 public:
-    virtual void addEvent(simEvent * ev)=0;
+  virtual void addEvent(simEvent *ev) = 0;
 };
 
-class IParser{
+class IParser {
 public:
-    virtual void addRootNodes(ISimulator * sim)=0;
-    virtual void addNewNodes(ISimulator * sim)=0;
-    virtual uint32_t getHostCount()=0;
-
+  virtual void addRootNodes(ISimulator *sim) = 0;
+  virtual void addNewNodes(ISimulator *sim) = 0;
+  virtual uint32_t getHostCount() = 0;
 };
 
-
-class LogGPBaseEvent: public simEvent{
+class LogGPBaseEvent : public simEvent {
 public:
-    uint32_t host;
-    uint32_t target;
-    uint16_t proc;
-    uint16_t nic;
-    uint32_t size;
-    uint32_t tag;
-    uint32_t offset;
+  uint32_t host;
+  uint32_t target;
+  uint16_t proc;
+  uint16_t nic;
+  uint32_t size;
+  uint32_t tag;
+  uint32_t offset;
 
-    LogGPBaseEvent(LogGPBaseEvent g, int type, btime_t time): simEvent(){
-        host = g.host;
-        target = g.target;
-        proc = g.proc;
-        nic = g.nic;
-        size = g.size;
-        tag = g.tag;
-        offset = g.offset;
-        this->time = time;
-        this->type = type;
-    }
+  LogGPBaseEvent(LogGPBaseEvent g, int type, btime_t time) : simEvent() {
+    host = g.host;
+    target = g.target;
+    proc = g.proc;
+    nic = g.nic;
+    size = g.size;
+    tag = g.tag;
+    offset = g.offset;
+    this->time = time;
+    this->type = type;
+  }
 
-    LogGPBaseEvent(): simEvent(){;}
+  LogGPBaseEvent() : simEvent() { ; }
 
-    //LogGPBaseEvent(const LogGPBaseEvent& ev): simEvent(ev) {;}
-
-
+  // LogGPBaseEvent(const LogGPBaseEvent& ev): simEvent(ev) {;}
 };
-
-
-
-
 
 class goalevent : public LogGPBaseEvent {
 
 public:
-    btime_t starttime;         // only used for MSGs to identify start times
+  btime_t starttime; // only used for MSGs to identify start times
 #ifdef HOSTSYNC
-    btime_t syncstart;
+  btime_t syncstart;
 #endif
 #ifdef STRICT_ORDER
-    btime_t ts; /* this is a timestamp that determines the (original) insertion order of
-                  elements in the queue, it is increased for every new element, not for
-                  re-insertions! Needed for correctness. */
+  btime_t ts; /* this is a timestamp that determines the (original) insertion
+                order of
+                elements in the queue, it is increased for every new element,
+                not for
+                re-insertions! Needed for correctness. */
 #endif
-    //uint64_t size;						// number of bytes to send, recv, or time to spend in loclop
-    //uint32_t target;					// partner for send/recv
-    //uint32_t host;            // owning host
-    //uint32_t offset;          // for Parser (to identify schedule element)
-    //uint32_t tag;							// tag for send/recv
-    uint32_t handle;          // handle for network layer :-/
-    //uint8_t proc;							// processing element for this operation
-    //uint8_t nic;							// network interface for this operation
-    uint32_t oct;
-    uint32_t ct;
-    uint64_t threshold;
-    char options;
-    uint32_t hh, ph, ch;
-    uint32_t mem;
+  // uint64_t size;						// number of bytes to send, recv, or time
+  // to spend in loclop
+  // uint32_t target;					// partner for send/recv
+  // uint32_t host;            // owning host
+  // uint32_t offset;          // for Parser (to identify schedule element)
+  // uint32_t tag;							// tag for
+  // send/recv
+  uint32_t handle; // handle for network layer :-/
+  // uint8_t proc;							// processing element for this
+  // operation
+  // uint8_t nic;							// network interface for this
+  // operation
+  uint32_t oct;
+  uint32_t ct;
+  uint64_t threshold;
+  char options;
+  uint32_t hh, ph, ch;
+  uint32_t mem;
 
-    uint64_t arg[4];
+  uint64_t arg[4];
 
-    bool isParsed=true;    
+  bool isParsed = true;
 
-    goalevent(uint32_t host, uint32_t target, uint32_t size, uint32_t tag, uint32_t type, btime_t time): LogGPBaseEvent()
-    {
+  goalevent(uint32_t host, uint32_t target, uint32_t size, uint32_t tag,
+            uint32_t type, btime_t time)
+      : LogGPBaseEvent() {
 
-        this->host=host;
-        this->target = target;
-        this->size = size;
-        this->tag = tag;
-        this->type = type;
-        this->oct = (uint32_t) -1;
-        this->ct = (uint32_t) -1;
-        this->time = time;
+    this->host = host;
+    this->target = target;
+    this->size = size;
+    this->tag = tag;
+    this->type = type;
+    this->oct = (uint32_t)-1;
+    this->ct = (uint32_t)-1;
+    this->time = time;
 
-        this->nic=0;
-        this->proc=0;
-        isParsed=false;
-    }
+    this->nic = 0;
+    this->proc = 0;
+    isParsed = false;
+  }
 
-    goalevent(uint32_t host, uint32_t target, uint32_t size, uint32_t tag, uint32_t type, btime_t time, uint64_t arg1): LogGPBaseEvent()
-    {
+  goalevent(uint32_t host, uint32_t target, uint32_t size, uint32_t tag,
+            uint32_t type, btime_t time, uint64_t arg1)
+      : LogGPBaseEvent() {
 
-        this->host=host;
-        this->target = target;
-        this->size = size;
-        this->tag = tag;
-        this->type = type;
-        this->oct = (uint32_t) -1;
-        this->ct = (uint32_t) -1;
-        this->time = time;
-        this->arg[0] = arg1;
-        this->nic=0;
-        this->proc=0;
-        isParsed=false;
-    }
+    this->host = host;
+    this->target = target;
+    this->size = size;
+    this->tag = tag;
+    this->type = type;
+    this->oct = (uint32_t)-1;
+    this->ct = (uint32_t)-1;
+    this->time = time;
+    this->arg[0] = arg1;
+    this->nic = 0;
+    this->proc = 0;
+    isParsed = false;
+  }
 
-    goalevent(): LogGPBaseEvent(){;}
+  goalevent() : LogGPBaseEvent() { ; }
 
-    
-    //goalevent(const goalevent& ev): LogGPBaseEvent(ev) {;}
+  // goalevent(const goalevent& ev): LogGPBaseEvent(ev) {;}
 };
-
-
 
 // mnemonic defines for op type
 static const int OP_SEND = 1;
@@ -188,7 +184,6 @@ static const int DMA_WAIT = 27;
 
 static const int GEM5_SIM_REQUEST = 28;
 
-
 static const int SIG_SEND_COMPLETE = 29;
 static const int SIG_PKT_RECEIVED = 30;
 
@@ -198,16 +193,15 @@ static const int OP_MSG_RTS = 32;
 static const uint32_t ANY_SOURCE = ~0;
 static const uint32_t ANY_TAG = ~0;
 
-
 /* this is a comparison functor that can be used to compare and sort
  * operation types of graph_node_properties */
 class gnp_op_comp_func {
-  public:
-  bool operator()(simEvent * x, simEvent * y) {
-    if(x->type < y->type) return true;
+public:
+  bool operator()(simEvent *x, simEvent *y) {
+    if (x->type < y->type)
+      return true;
     return false;
   }
 };
-
 
 #endif /* __SIMEVENTS_HPP__ */
