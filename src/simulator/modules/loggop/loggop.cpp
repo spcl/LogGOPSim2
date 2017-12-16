@@ -132,17 +132,32 @@ int LogGOPmod::receive_msg(goalevent &elem) {
   // target)
 
   if (print)
-    printf("[%i] found msg from %i, t: %lu (CPU: %i)\n", elem.target, elem.host,
+    printf("[%i] found msg from %i, t: %lu (sender CPU: %i)\n", elem.target, elem.host,
            elem.time, elem.proc);
 
-  // this is broken: proc & nic should be of the matching receive, not of the
-  // incoming message
-  int nicavail_recv = nextgr[elem.target][elem.nic] <= elem.time;
-  int nicavail_send = nextgs[elem.target][elem.proc] <= elem.time;
-  int hostavail = nexto[elem.target][elem.proc] <= elem.time;
+  ruqelem_t matched_elem;
+  bool matched = match(elem, &rq[elem.host], &matched_elem, false);
 
-  if (nicavail_recv && ((elem.type != OP_MSG_RTR && hostavail) ||
-                        (elem.type == OP_MSG_RTR && nicavail_send))) {
+  //int nicavail_recv = nextgr[elem.target][elem.nic] <= elem.time;
+  //int nicavail_send = nextgs[elem.target][elem.proc] <= elem.time;
+  //int hostavail = nexto[elem.target][elem.proc] <= elem.time;
+ 
+  //if it's RTR, then this is the sender. elem.proc contains the right cpu.
+  bool accept_if_rtr = (elem.type == OP_MSG_RTR && 
+                        nextgs[elem.target][elem.proc] <= elem.time && 
+                        nextgr[elem.target][elem.nic] <= elem.time);
+
+  bool accept_if_not_matched = (elem.type!=OP_MSG_RTR && !matched);
+  bool accept_otw = (elem.type!=OP_MSG_RTR && matched &&
+                     nextgs[elem.target][matched_elem.proc] <= elem.time && 
+                     nextgr[elem.target][matched_elem.nic] <= elem.time);
+                     
+
+                    
+  if (accept_if_rtr || accept_if_not_matched || accept_otw){
+  
+  //if (nicavail_recv && ((elem.type != OP_MSG_RTR && hostavail) ||
+  //                      (elem.type == OP_MSG_RTR && nicavail_send))) {
 
     if (print)
       printf("-- msg o,g available (nexto: %lu, nextgr: %lu; nextgs: %lu)\n",
@@ -154,7 +169,6 @@ int LogGOPmod::receive_msg(goalevent &elem) {
     elem.host = elem.target;
     elem.target = tmp;
 
-    ruqelem_t matched_elem;
 
     if (elem.type ==
         OP_MSG_RTR) { /* we don't pay the o here (like it is a get from the
@@ -180,14 +194,13 @@ int LogGOPmod::receive_msg(goalevent &elem) {
                 elem.type != OP_MSG_RTS)) { // found it in RQ (do not remove the
                                             // matching from the queue if it's a
                                             // RTS)
-        if (print)
-          printf("-- found in RQ\n");
+        if (print) printf("-- found in RQ\n");
         btime_t noise = osnoise->get_noise(elem.host, elem.time, elem.time + o);
 
         if (elem.type == OP_MSG_RTS) { // rendezvous - send RTR back
 
-          nexto[elem.host][elem.proc] = elem.time + o + noise;
-          nextgr[elem.host][elem.nic] = elem.time + g;
+          nexto[elem.host][matched_elem.proc] = elem.time + o + noise;
+          nextgr[elem.host][matched_elem.nic] = elem.time + g;
 
           elem.type = OP_MSG_RTR;
           sim.addEvent(
@@ -196,17 +209,17 @@ int LogGOPmod::receive_msg(goalevent &elem) {
             printf("-- sending RTR to: %i\n", elem.target);
         } else { // eager or rendezvous data
 
-          nexto[elem.host][elem.proc] =
+          nexto[elem.host][matched_elem.proc] =
               elem.time + o + noise + std::max(((uint64_t)elem.size - 1) * O,
                                                ((uint64_t)elem.size - 1) * G);
           /* message is only received after G is charged !!
           TODO: consuming o seems a bit odd in the LogGP model but well in
           practice */
-          nextgr[elem.host][elem.nic] =
+          nextgr[elem.host][matched_elem.nic] =
               elem.time + g + ((uint64_t)elem.size - 1) * G;
 
           // satisfy local requires
-          parser.MarkNodeAsDone(elem.host, matched_elem.offset, nexto[elem.host][elem.proc]);
+          parser.MarkNodeAsDone(elem.host, matched_elem.offset, nexto[elem.host][matched_elem.proc]);
 
           sim.visualize(VIS_HOST_FLOW,
                         new HostComplexFlowVisEvent(
@@ -218,7 +231,7 @@ int LogGOPmod::receive_msg(goalevent &elem) {
           sim.visualize(
               VIS_HOST_DUR,
               new HostDurationVisEvent(
-                  "Name:add_orecv", elem.host, SET_CPU(elem.proc),
+                  "Name:add_orecv", elem.host, SET_CPU(matched_elem.proc),
                   elem.time + (elem.size - 1) * G - (elem.size - 1) * O,
                   elem.time + o +
                       std::max((elem.size - 1) * O, (elem.size - 1) * G)));
@@ -229,7 +242,7 @@ int LogGOPmod::receive_msg(goalevent &elem) {
           sim.visualize(
               VIS_HOST_DUR,
               new HostDurationVisEvent(
-                  "Name:add_noise", elem.host, SET_CPU(elem.proc),
+                  "Name:add_noise", elem.host, SET_CPU(matched_elem.proc),
                   elem.time + o +
                       std::max((elem.size - 1) * O, (elem.size - 1) * G),
                   elem.time + o + noise +
@@ -243,8 +256,7 @@ int LogGOPmod::receive_msg(goalevent &elem) {
 
         // assert(elem.size<=S || elem.type==OP_MSG_RTR);
         assert(elem.size <= S || elem.type == OP_MSG_RTS);
-        if (print)
-          printf("-- not found in RQ - add to UQ\n");
+        if (print) printf("-- not found in RQ - add to UQ\n");
         ruqelem_t nelem;
         nelem.size = elem.size;
         nelem.src = elem.target;
@@ -479,6 +491,8 @@ int LogGOPmod::receive(goalevent &elem) {
     nelem.src = elem.target;
     nelem.tag = elem.tag;
     nelem.offset = elem.offset;
+    nelem.proc = elem.proc;
+    nelem.nic = elem.nic;
     rq[elem.host].push_back(nelem);
   }
   return 0;

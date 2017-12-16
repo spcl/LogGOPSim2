@@ -11,7 +11,7 @@
 typedef struct {
   // TODO: src and tag can go in case of hashmap matching
   btime_t starttime; // only for visualization
-  uint32_t size, src, tag, offset;
+  uint32_t size, src, tag, offset, proc, nic;
   simEvent *origin_elem;
 } ruqelem_t;
 
