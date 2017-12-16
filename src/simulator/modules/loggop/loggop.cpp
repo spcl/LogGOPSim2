@@ -206,7 +206,7 @@ int LogGOPmod::receive_msg(goalevent &elem) {
               elem.time + g + ((uint64_t)elem.size - 1) * G;
 
           // satisfy local requires
-          parser.MarkNodeAsDone(elem.host, matched_elem.offset, elem.time);
+          parser.MarkNodeAsDone(elem.host, matched_elem.offset, nexto[elem.host][elem.proc]);
 
           sim.visualize(VIS_HOST_FLOW,
                         new HostComplexFlowVisEvent(
@@ -453,7 +453,7 @@ int LogGOPmod::receive(goalevent &elem) {
                     new HostComplexFlowVisEvent(
                         "Name:add_transmission", elem.target, elem.host,
                         SET_NIC(0), SET_NIC(0), matched_elem.starttime + o,
-                        elem.time, elem.size, g));
+                        elem.time, elem.size, G));
       //+tara sim.tlviz->add_transmission(elem.target, elem.host,
       //matched_elem.starttime+o, elem.time, elem.size, G, 1, 1, 0);
 
@@ -464,7 +464,7 @@ int LogGOPmod::receive(goalevent &elem) {
           elem.time + g + ((uint64_t)elem.size - 1) * G;
 
       // satisfy local requires
-      parser.MarkNodeAsDone(elem.host, elem.offset, elem.time);
+      parser.MarkNodeAsDone(elem.host, elem.offset, nexto[elem.host][elem.proc]);
       if (print)
         printf("-- satisfy local requires\n");
     }
