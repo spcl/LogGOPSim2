@@ -9,9 +9,9 @@ bool LogGOPmod::match(const LogGPBaseEvent &elem, ruq_t *q, ruqelem_t *retelem,
 
   // std::cout << "UQ size " << q->size() << "\n";
 
-  if (print)
-    printf("++ [%i] searching matching queue for src %i tag %i\n", elem.host,
-           elem.target, elem.tag);
+  //if (print)
+  //  printf("++ [%i] searching matching queue for src %i tag %i\n", elem.host,
+  //         elem.target, elem.tag);
   for (ruq_t::iterator iter = q->begin(); iter != q->end(); ++iter) {
     if (elem.target == ANY_SOURCE || iter->src == ANY_SOURCE ||
         iter->src == elem.target) {
@@ -136,7 +136,7 @@ int LogGOPmod::receive_msg(goalevent &elem) {
            elem.time, elem.proc);
 
   ruqelem_t matched_elem;
-  bool matched = match(elem, &rq[elem.host], &matched_elem, false);
+  bool matched = match(elem, &rq[elem.target] /* not inverted yet*/, &matched_elem, false);
 
   //int nicavail_recv = nextgr[elem.target][elem.nic] <= elem.time;
   //int nicavail_send = nextgs[elem.target][elem.proc] <= elem.time;
@@ -144,12 +144,12 @@ int LogGOPmod::receive_msg(goalevent &elem) {
  
   //if it's RTR, then this is the sender. elem.proc contains the right cpu.
   bool accept_if_rtr = (elem.type == OP_MSG_RTR && 
-                        nextgs[elem.target][elem.proc] <= elem.time && 
+                        nextgs[elem.target][elem.nic] <= elem.time && 
                         nextgr[elem.target][elem.nic] <= elem.time);
 
   bool accept_if_not_matched = (elem.type!=OP_MSG_RTR && !matched);
   bool accept_otw = (elem.type!=OP_MSG_RTR && matched &&
-                     nextgs[elem.target][matched_elem.proc] <= elem.time && 
+                     nexto[elem.target][matched_elem.proc] <= elem.time && 
                      nextgr[elem.target][matched_elem.nic] <= elem.time);
                      
 
@@ -274,16 +274,21 @@ int LogGOPmod::receive_msg(goalevent &elem) {
     }
   } else {
 
-    elem.time =
-        std::max(nextgr[elem.target][elem.nic],
-                 elem.type == OP_MSG_RTR ? nextgs[elem.target][elem.proc]
-                                         : nexto[elem.target][elem.proc]);
+    uint32_t proc = elem.type!=OP_MSG_RTR && matched ? matched_elem.proc : elem.proc;
+    uint32_t nic = elem.type!=OP_MSG_RTR && matched ? matched_elem.nic : elem.nic;
+
+    
+    elem.time = 
+            std::max(nextgr[elem.target][nic],
+                 elem.type == OP_MSG_RTR ? nextgs[elem.target][nic]
+                                         : nexto[elem.target][proc]);
+    
+    
 
     // elem.time=std::max(nexto[elem.target][elem.proc],
     // nextgr[elem.target][elem.nic]);
     if (print)
-      printf("-- msg o,g not available -- reinserting with time: %lu\n",
-             elem.time);
+      printf("-- msg o,g not available -- reinserting with time: %lu (host: %u; proc: %u; nic: %u;) isRTR: %i\n", elem.time, elem.target, elem.proc, elem.nic, elem.type==OP_MSG_RTR);
     sim.reinsertEvent(&elem);
   }
   return 0;
