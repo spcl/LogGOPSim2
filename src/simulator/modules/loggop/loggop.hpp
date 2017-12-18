@@ -133,7 +133,7 @@ public:
 
   void *complete_send(goalevent &elem);
 
-  bool match(const LogGPBaseEvent &elem, ruq_t *q, ruqelem_t *retelem = NULL,
+  bool match(uint32_t source, uint32_t tag, ruq_t *q, ruqelem_t *retelem = NULL,
              bool erase = true);
 
   virtual int registerHandlers(Simulator &sim) {

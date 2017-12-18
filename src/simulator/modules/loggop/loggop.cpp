@@ -4,23 +4,14 @@
 #define SET_NIC(id) "NIC" + std::to_string(id)
 #define SET_CPU(id) "CPU" + std::to_string(id)
 
-bool LogGOPmod::match(const LogGPBaseEvent &elem, ruq_t *q, ruqelem_t *retelem,
+bool LogGOPmod::match(uint32_t source, uint32_t tag, ruq_t *q, ruqelem_t *retelem,
                       bool erase) {
 
-  // std::cout << "UQ size " << q->size() << "\n";
-
-  //if (print)
-  //  printf("++ [%i] searching matching queue for src %i tag %i\n", elem.host,
-  //         elem.target, elem.tag);
   for (ruq_t::iterator iter = q->begin(); iter != q->end(); ++iter) {
-    if (elem.target == ANY_SOURCE || iter->src == ANY_SOURCE ||
-        iter->src == elem.target) {
-      if (elem.tag == ANY_TAG || iter->tag == ANY_TAG ||
-          iter->tag == elem.tag) {
-        if (retelem)
-          *retelem = *iter;
-        if (erase)
-          q->erase(iter);
+    if (iter->src == ANY_SOURCE ||iter->src == source) {
+      if (iter->tag == ANY_TAG ||iter->tag == tag) {
+        if (retelem) *retelem = *iter;
+        if (erase) q->erase(iter);
         return true;
       }
     }
@@ -128,20 +119,13 @@ int LogGOPmod::locop(goalevent &elem) {
 
 int LogGOPmod::receive_msg(goalevent &elem) {
 
-  // elem.invert(); //to be compliant with the old code (it inverts host and
-  // target)
-
   if (print)
     printf("[%i] found msg from %i, t: %lu (sender CPU: %i)\n", elem.target, elem.host,
            elem.time, elem.proc);
 
   ruqelem_t matched_elem;
-  bool matched = match(elem, &rq[elem.target] /* not inverted yet*/, &matched_elem, false);
+  bool matched = match(elem.host, elem.tag, &rq[elem.target] /* not inverted yet*/, &matched_elem, false);
 
-  //int nicavail_recv = nextgr[elem.target][elem.nic] <= elem.time;
-  //int nicavail_send = nextgs[elem.target][elem.proc] <= elem.time;
-  //int hostavail = nexto[elem.target][elem.proc] <= elem.time;
- 
   //if it's RTR, then this is the sender. elem.proc contains the right cpu.
   bool accept_if_rtr = (elem.type == OP_MSG_RTR && 
                         nextgs[elem.target][elem.nic] <= elem.time && 
@@ -152,45 +136,45 @@ int LogGOPmod::receive_msg(goalevent &elem) {
                      nexto[elem.target][matched_elem.proc] <= elem.time && 
                      nextgr[elem.target][matched_elem.nic] <= elem.time);
                      
+  uint32_t proc = elem.type!=OP_MSG_RTR && matched ? matched_elem.proc : elem.proc;
+  uint32_t nic = elem.type!=OP_MSG_RTR && matched ? matched_elem.nic : elem.nic;
 
-                    
+  printf("-- matched: %i; isRTR: %i; proc: %i; nic: %i\n", matched, elem.type==OP_MSG_RTR, proc, nic);
+
   if (accept_if_rtr || accept_if_not_matched || accept_otw){
   
-  //if (nicavail_recv && ((elem.type != OP_MSG_RTR && hostavail) ||
-  //                      (elem.type == OP_MSG_RTR && nicavail_send))) {
-
-    if (print)
-      printf("-- msg o,g available (nexto: %lu, nextgr: %lu; nextgs: %lu)\n",
-             (long unsigned int)nexto[elem.host][elem.proc],
-             (long unsigned int)nextgr[elem.host][elem.nic],
-             nextgs[elem.host][elem.nic]);
-
     uint32_t tmp = elem.host;
     elem.host = elem.target;
     elem.target = tmp;
+
+    if (print)
+      printf("-- msg o,g available (host: %u, nexto[%u]: %lu, nextgr[%u]: %lu; nextgs[%u]: %lu)\n",
+             elem.host, proc, (long unsigned int)nexto[elem.host][proc],
+             nic, (long unsigned int)nextgr[elem.host][nic],
+             nic, nextgs[elem.host][nic]);
 
 
     if (elem.type ==
         OP_MSG_RTR) { /* we don't pay the o here (like it is a get from the
                          receiver */
 
-      nextgs[elem.host][elem.nic] =
+      nextgs[elem.host][nic] =
           elem.time + g + ((uint64_t)elem.size - 1) * G;
-      nextgr[elem.host][elem.nic] = elem.time + g;
+      nextgr[elem.host][nic] = elem.time + g;
 
       elem.type = OP_MSG;
       sim.addEvent(new NetMsgEvent(&elem, elem.time /* + something? */));
       if (print)
         printf("-- got RTR, sending DATA to: %i; elem.time: %lu; nextgs: %lu; "
                "size: %u (%u, %u)\n",
-               elem.target, elem.time, nextgs[elem.host][elem.nic], elem.size,
-               elem.host, elem.nic);
+               elem.target, elem.time, nextgs[elem.host][nic], elem.size,
+               elem.host, nic);
 
       /* now this is done in complete_send */
       // parser.MarkNodeAsDone(elem.host, elem.offset, elem.time);
 
     } else {
-      if (match(elem, &rq[elem.host], &matched_elem,
+      if (match(elem.target, elem.tag, &rq[elem.host], &matched_elem,
                 elem.type != OP_MSG_RTS)) { // found it in RQ (do not remove the
                                             // matching from the queue if it's a
                                             // RTS)
@@ -199,8 +183,8 @@ int LogGOPmod::receive_msg(goalevent &elem) {
 
         if (elem.type == OP_MSG_RTS) { // rendezvous - send RTR back
 
-          nexto[elem.host][matched_elem.proc] = elem.time + o + noise;
-          nextgr[elem.host][matched_elem.nic] = elem.time + g;
+          nexto[elem.host][proc] = elem.time + o + noise;
+          nextgr[elem.host][nic] = elem.time + g;
 
           elem.type = OP_MSG_RTR;
           sim.addEvent(
@@ -209,17 +193,17 @@ int LogGOPmod::receive_msg(goalevent &elem) {
             printf("-- sending RTR to: %i\n", elem.target);
         } else { // eager or rendezvous data
 
-          nexto[elem.host][matched_elem.proc] =
+          nexto[elem.host][proc] =
               elem.time + o + noise + std::max(((uint64_t)elem.size - 1) * O,
                                                ((uint64_t)elem.size - 1) * G);
           /* message is only received after G is charged !!
           TODO: consuming o seems a bit odd in the LogGP model but well in
           practice */
-          nextgr[elem.host][matched_elem.nic] =
+          nextgr[elem.host][nic] =
               elem.time + g + ((uint64_t)elem.size - 1) * G;
 
           // satisfy local requires
-          parser.MarkNodeAsDone(elem.host, matched_elem.offset, nexto[elem.host][matched_elem.proc]);
+          parser.MarkNodeAsDone(elem.host, matched_elem.offset, nexto[elem.host][proc]);
 
           sim.visualize(VIS_HOST_FLOW,
                         new HostComplexFlowVisEvent(
@@ -231,7 +215,7 @@ int LogGOPmod::receive_msg(goalevent &elem) {
           sim.visualize(
               VIS_HOST_DUR,
               new HostDurationVisEvent(
-                  "Name:add_orecv", elem.host, SET_CPU(matched_elem.proc),
+                  "Name:add_orecv", elem.host, SET_CPU(proc),
                   elem.time + (elem.size - 1) * G - (elem.size - 1) * O,
                   elem.time + o +
                       std::max((elem.size - 1) * O, (elem.size - 1) * G)));
@@ -242,7 +226,7 @@ int LogGOPmod::receive_msg(goalevent &elem) {
           sim.visualize(
               VIS_HOST_DUR,
               new HostDurationVisEvent(
-                  "Name:add_noise", elem.host, SET_CPU(matched_elem.proc),
+                  "Name:add_noise", elem.host, SET_CPU(proc),
                   elem.time + o +
                       std::max((elem.size - 1) * O, (elem.size - 1) * G),
                   elem.time + o + noise +
@@ -274,8 +258,6 @@ int LogGOPmod::receive_msg(goalevent &elem) {
     }
   } else {
 
-    uint32_t proc = elem.type!=OP_MSG_RTR && matched ? matched_elem.proc : elem.proc;
-    uint32_t nic = elem.type!=OP_MSG_RTR && matched ? matched_elem.nic : elem.nic;
 
     
     elem.time = 
@@ -288,7 +270,7 @@ int LogGOPmod::receive_msg(goalevent &elem) {
     // elem.time=std::max(nexto[elem.target][elem.proc],
     // nextgr[elem.target][elem.nic]);
     if (print)
-      printf("-- msg o,g not available -- reinserting with time: %lu (host: %u; proc: %u; nic: %u;) isRTR: %i\n", elem.time, elem.target, elem.proc, elem.nic, elem.type==OP_MSG_RTR);
+      printf("-- msg o,g not available -- reinserting with time: %lu (host: %u; proc: %u; nic: %u;) isRTR: %i\n", elem.time, elem.target, proc, nic, elem.type==OP_MSG_RTR);
     sim.reinsertEvent(&elem);
   }
   return 0;
@@ -422,7 +404,7 @@ int LogGOPmod::receive(goalevent &elem) {
   bool addtorq = true;
 
   ruqelem_t matched_elem;
-  if (match(elem, &uq[elem.host], &matched_elem)) { // found it in local UQ
+  if (match(elem.target, elem.tag, &uq[elem.host], &matched_elem)) { // found it in local UQ
     if (print)
       printf("-- found in local UQ\n");
 
