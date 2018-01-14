@@ -1,8 +1,8 @@
 
 #include "loggop.hpp"
 
-#define SET_NIC(id) "NIC" + std::to_string(id)
-#define SET_CPU(id) "CPU" + std::to_string(id)
+#define SET_NIC_LABEL(id) "NIC" + std::to_string(id)
+#define SET_CPU_LABEL(id) "CPU" + std::to_string(id)
 
 bool LogGOPmod::match(uint32_t source, uint32_t tag, ruq_t *q, ruqelem_t *retelem,
                       bool erase) {
@@ -104,7 +104,7 @@ int LogGOPmod::locop(goalevent &elem) {
     // add to timeline()
     sim.visualize(VIS_HOST_DUR,
                   new HostDurationVisEvent("Name:loclop", elem.host,
-                                           SET_CPU(elem.proc), elem.time,
+                                           SET_CPU_LABEL(elem.proc), elem.time,
                                            elem.time + elem.size));
     //+tara sim.tlviz->add_loclop(elem.host, elem.time, elem.time+elem.size,
     //elem.proc, 0.6, 0.2, 0.4);
@@ -208,14 +208,14 @@ int LogGOPmod::receive_msg(goalevent &elem) {
           sim.visualize(VIS_HOST_FLOW,
                         new HostComplexFlowVisEvent(
                             "Name:add_transmission", elem.target, elem.host,
-                            SET_NIC(0), SET_NIC(0), elem.starttime + o,
+                            SET_NIC_LABEL(0), SET_NIC_LABEL(0), elem.starttime + o,
                             elem.time, elem.size, G));
           //+tara sim.tlviz->add_transmission(elem.target, elem.host,
           //elem.starttime+o, elem.time, elem.size, G);
           sim.visualize(
               VIS_HOST_DUR,
               new HostDurationVisEvent(
-                  "Name:add_orecv", elem.host, SET_CPU(proc),
+                  "Name:add_orecv", elem.host, SET_CPU_LABEL(proc),
                   elem.time + (elem.size - 1) * G - (elem.size - 1) * O,
                   elem.time + o +
                       std::max((elem.size - 1) * O, (elem.size - 1) * G)));
@@ -226,7 +226,7 @@ int LogGOPmod::receive_msg(goalevent &elem) {
           sim.visualize(
               VIS_HOST_DUR,
               new HostDurationVisEvent(
-                  "Name:add_noise", elem.host, SET_CPU(proc),
+                  "Name:add_noise", elem.host, SET_CPU_LABEL(proc),
                   elem.time + o +
                       std::max((elem.size - 1) * O, (elem.size - 1) * G),
                   elem.time + o + noise +
@@ -321,13 +321,13 @@ int LogGOPmod::send(goalevent &elem) {
 
       sim.visualize(VIS_HOST_DUR,
                     new HostDurationVisEvent("Name:add_osend", elem.host,
-                                             SET_CPU(elem.proc), elem.time,
+                                             SET_CPU_LABEL(elem.proc), elem.time,
                                              elem.time + o));
       //+tara sim.tlviz->add_osend(elem.host, elem.time, elem.time+o, elem.proc,
       //(int) elem.tag);
       sim.visualize(VIS_HOST_DUR,
                     new HostDurationVisEvent("Name:add_noise", elem.host,
-                                             SET_CPU(elem.proc), elem.time + o,
+                                             SET_CPU_LABEL(elem.proc), elem.time + o,
                                              elem.time + o + noise));
       //+tara sim.tlviz->add_noise(elem.host, elem.time + o, elem.time + o +
       //noise, elem.proc);
@@ -353,13 +353,13 @@ int LogGOPmod::send(goalevent &elem) {
             ((uint64_t)elem.size - 1) * G);
       sim.visualize(VIS_HOST_DUR,
                     new HostDurationVisEvent(
-                        "Name:add_osend", elem.host, SET_CPU(elem.proc),
+                        "Name:add_osend", elem.host, SET_CPU_LABEL(elem.proc),
                         elem.time, elem.time + o + (elem.size - 1) * O));
       //+tara sim.tlviz->add_osend(elem.host, elem.time, elem.time+o+
       //(elem.size-1)*O, elem.proc, (int) elem.tag);
       sim.visualize(VIS_HOST_DUR,
                     new HostDurationVisEvent(
-                        "Name:add_noise", elem.host, SET_CPU(elem.proc),
+                        "Name:add_noise", elem.host, SET_CPU_LABEL(elem.proc),
                         elem.time + o + (elem.size - 1) * O,
                         elem.time + o + (elem.size - 1) * O + noise));
       //+tara sim.tlviz->add_noise(elem.host, elem.time+o+ (elem.size-1)*O,
@@ -426,7 +426,7 @@ int LogGOPmod::receive(goalevent &elem) {
 
       sim.visualize(VIS_HOST_DUR,
                     new HostDurationVisEvent("Name:add_orecv", elem.host,
-                                             SET_CPU(elem.proc), elem.time,
+                                             SET_CPU_LABEL(elem.proc), elem.time,
                                              elem.time + o));
       //+tara sim.tlviz->add_orecv(elem.host, elem.time, elem.time+o, elem.proc,
       //(int) elem.tag);
@@ -439,7 +439,7 @@ int LogGOPmod::receive(goalevent &elem) {
 
       sim.visualize(VIS_HOST_DUR,
                     new HostDurationVisEvent(
-                        "Name:add_orecv", elem.host, SET_CPU(elem.proc),
+                        "Name:add_orecv", elem.host, SET_CPU_LABEL(elem.proc),
                         elem.time + (elem.size - 1) * G - (elem.size - 1) * O,
                         elem.time + o + std::max((elem.size - 1) * O,
                                                  (elem.size - 1) * G)));
@@ -451,7 +451,7 @@ int LogGOPmod::receive(goalevent &elem) {
       sim.visualize(VIS_HOST_FLOW,
                     new HostComplexFlowVisEvent(
                         "Name:add_transmission", elem.target, elem.host,
-                        SET_NIC(0), SET_NIC(0), matched_elem.starttime + o,
+                        SET_NIC_LABEL(0), SET_NIC_LABEL(0), matched_elem.starttime + o,
                         elem.time, elem.size, G));
       //+tara sim.tlviz->add_transmission(elem.target, elem.host,
       //matched_elem.starttime+o, elem.time, elem.size, G, 1, 1, 0);

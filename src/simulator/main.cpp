@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
 
   if (args_info.chromefile_given) {
     ChromeViz *vis =
-        new ChromeViz(args_info.chromefile_arg, 1, false); // in microsec
+        new ChromeViz(args_info.chromefile_arg, args_info.timemult_arg); // default in microsec
     sim.addVisModule(vis);
   }
 
