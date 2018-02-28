@@ -32,7 +32,9 @@ option "LogGOPS_O"	      O  "The overhead per byte in LogGOP" int default="0" op
 
 option "LogGOPS_C"	C  "P4: Time to transfer 1byte from the main memory to the NIC memory" int default="1" optional
 option "LogGOPS_c"	c  "P4: Time required from the NIC to process one incoming message" int default="100" optional
-option "sPIN_c_packet"		-  "P4: Time required from the NIC to match one packet but the first" int default="10" optional
+option "sPIN_c_packet"  -  "P4: Time required from the NIC to match one packet but the first" int default="10" optional
+
+option "timemult"  -  "Vis: Time multiplier. It states how many millisec in 1 unit. (default 1 unit = 1 millisec).\n\tExample:\n\t  1000.0 : 1 unit = 1 sec\n\t 0.001 : 1 unit = 1 microsec" float default="1.0" optional
 
 
 option "gem5-conf-file"	    -  "P4: GEM5 configuration file" string optional

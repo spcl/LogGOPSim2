@@ -2,8 +2,8 @@
 
 #ifdef HAVE_GEM5
 
-#define SET_NIC(id) "NIC" + std::to_string(id)
-#define SET_CPU(id) "CPU" + std::to_string(id)
+#define SET_NIC_LABEL(id) "NIC" + std::to_string(id)
+#define SET_CPU_LABEL(id) "CPU" + std::to_string(id)
 
 int P4SMPMod::dispatch(simModule *mod, simEvent *_elem) {
 
@@ -76,19 +76,19 @@ int P4SMPMod::recvpkt(HostDataPkt &pkt) {
 
     sim.visualize(VIS_HOST_FLOW,
                   new HostComplexFlowVisEvent(
-                      "Name:add_transmission", elem.target, host, SET_NIC(0),
-                      SET_NIC(0), pkt.starttime, pkt.time, pkt.size, G));
+                      "Name:add_transmission", elem.target, host, SET_NIC_LABEL(0),
+                      SET_NIC_LABEL(0), pkt.starttime, pkt.time, pkt.size, G));
     //+tara sim.tlviz->add_transmission(elem.target, host, pkt.starttime,
     //pkt.time, pkt.size, G);
     sim.visualize(VIS_HOST_DUR,
                   new HostDurationVisEvent("Name:add_nicop", elem.host,
-                                           SET_NIC(elem.nic), pkt.time,
+                                           SET_NIC_LABEL(elem.nic), pkt.time,
                                            pkt.time + (pkt.size - 1) * G));
     //+tara sim.tlviz->add_nicop(elem.host, pkt.time, pkt.time+(pkt.size-1)*G,
     //elem.nic);
     sim.visualize(VIS_HOST_DUR,
                   new HostDurationVisEvent(
-                      "Name:add_nicop", elem.host, SET_NIC(elem.nic),
+                      "Name:add_nicop", elem.host, SET_NIC_LABEL(elem.nic),
                       pkt.time + (pkt.size - 1) * G, nextgr[host][elem.nic]));
     //+tara sim.tlviz->add_nicop(elem.host, pkt.time+(pkt.size-1)*G,
     //nextgr[host][elem.nic] , elem.nic);
@@ -108,7 +108,7 @@ int P4SMPMod::recvpkt(HostDataPkt &pkt) {
 
       sim.visualize(VIS_HOST_DUR,
                     new HostDurationVisEvent("Name:add_nicop", elem.host,
-                                             SET_NIC(elem.nic), triggertime,
+                                             SET_NIC_LABEL(elem.nic), triggertime,
                                              triggertime + DMA_L));
       //+tara sim.tlviz->add_nicop(elem.host, triggertime, triggertime+DMA_L,
       //elem.nic,0.3,0.3,0.3);
@@ -225,7 +225,7 @@ int P4SMPMod::processHandlers(MatchedHostDataPkt &pkt) {
 
     sim.visualize(VIS_HOST_DUR,
                   new HostDurationVisEvent("Name:add_nicop", elem.host,
-                                           SET_NIC(elem.nic), current,
+                                           SET_NIC_LABEL(elem.nic), current,
                                            current + DMA_L));
     //+tara sim.tlviz->add_nicop(host, current, current+DMA_L, elem.nic,
     //0.3,0.3,0.3);

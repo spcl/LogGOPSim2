@@ -23,11 +23,14 @@ public:
 
     visEvent(){ 
         gid++;
+        comment="";
+        event_name="";
     }
 
 
     visEvent(std::string event_name): event_name(event_name){ 
         gid++;
+        comment="";
     }
 
 

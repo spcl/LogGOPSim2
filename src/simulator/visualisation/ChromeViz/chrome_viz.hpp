@@ -13,8 +13,6 @@
 
 using json = nlohmann::json;
 
-//enum unit_t : uint64_t  { milli=0, micro = 1, nano = 1000, pico = 1000000 }; 
-
 class ChromeViz : public visModule  {
 
     private:
@@ -22,8 +20,7 @@ class ChromeViz : public visModule  {
         std::ofstream outfile;
         std::string outfilename;
 
-        uint64_t time_unit_multiplyer;  
-        bool time_unit_smaller_than_micro;
+        double time_unit_multiplyer;  
 
         std::map<std::string, int32_t> arc;
 
@@ -35,11 +32,8 @@ class ChromeViz : public visModule  {
     public:
     
 
-     ChromeViz(std::string outfilename, uint64_t time_unit_multiplyer,bool time_unit_smaller_than_micro ){
+     ChromeViz(std::string outfilename, double time_unit_multiplyer){
 
-            // if time_unit_smaller_than_micro than we multiply by time_unit_multiplyer
-            //otherwise we will devide by it
-            this->time_unit_smaller_than_micro = time_unit_smaller_than_micro;
             this->time_unit_multiplyer = time_unit_multiplyer;
 
 
@@ -149,12 +143,13 @@ class ChromeViz : public visModule  {
         std::string convert_time(uint64_t time){
 
             std::string norm_time;
-            if (time_unit_smaller_than_micro){
+            /*if (time_unit_smaller_than_micro){
                 norm_time = std::to_string(time/time_unit_multiplyer) +  "." + std::to_string(time%time_unit_multiplyer); 
             } 
             else {
                 norm_time = std::to_string(time*time_unit_multiplyer);
-            }
+            }*/
+            norm_time = std::to_string(time*time_unit_multiplyer);
             return norm_time;
 
         }

@@ -27,7 +27,7 @@
 
 #include "clientlib/portals.h"
 
-#define SET_HPU(id) "HPU"+std::to_string(id)
+#define SET_HPU_LABEL(id) "HPU"+std::to_string(id)
 
 
 #include <map>
@@ -397,19 +397,19 @@ int GEM5Mod::executeHandler(MatchedHostDataPkt& pkt, btime_t& time){
     switch(pkt.currentHandler){
         case 1:
             sim.visualize( VIS_HOST_DUR ,
-                new HostDurationVisEvent("Name:HHEADER",host,SET_HPU(hpu.hid),pkt.start_hpu_time, hpu.time)
+                new HostDurationVisEvent("Name:HHEADER",host,SET_HPU_LABEL(hpu.hid),pkt.start_hpu_time, hpu.time)
             );
             //+tara sim.tlviz->add_ohpu(host, pkt.start_hpu_time, hpu.time, hpu.hid, 0,0,1 );
             break;
         case 2:
             sim.visualize( VIS_HOST_DUR ,
-                new HostDurationVisEvent("Name:HPAYLOAD",host,SET_HPU(hpu.hid),pkt.start_hpu_time, hpu.time)
+                new HostDurationVisEvent("Name:HPAYLOAD",host,SET_HPU_LABEL(hpu.hid),pkt.start_hpu_time, hpu.time)
             );
             //+tara sim.tlviz->add_ohpu(host, pkt.start_hpu_time, hpu.time, hpu.hid, 0,1,0);
             break;
         case 3:
             sim.visualize( VIS_HOST_DUR ,
-                new HostDurationVisEvent("Name:HCOMPLETION",host,SET_HPU(hpu.hid),pkt.start_hpu_time, hpu.time)
+                new HostDurationVisEvent("Name:HCOMPLETION",host,SET_HPU_LABEL(hpu.hid),pkt.start_hpu_time, hpu.time)
             );
             //+tara sim.tlviz->add_ohpu(host, pkt.start_hpu_time, hpu.time, hpu.hid, 1,0,0);
             break;
