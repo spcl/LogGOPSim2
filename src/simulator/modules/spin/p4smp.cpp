@@ -2,7 +2,11 @@
 
 #include "../gem5/gem5Mod_events.hpp"
 
-#ifdef HAVE_GEM5
+#ifdef HAS_GEM5
+
+
+static void copyCurrentHandlerData(void * ref, void *dest, size_t mem_size);
+
 
 int P4SMPMod::dispatch(simModule *mod, simEvent *_elem) {
   P4Mod::dispatch(mod, _elem);
@@ -156,11 +160,13 @@ int P4SMPMod::processHandlers(MatchedHostDataPkt &pkt) {
 
     gem5SimRequest * request = new gem5SimRequest(host, pkt.currentHandlerIdx(), pkt.time);
     request->payload = &pkt;    
+    request->setCopyFun(copyCurrentHandlerData, &pkt);
     sim.addEvent(request);   
 
     return 0;
   }
 
+  //printf("Message handlers completed!\n");
   //handlers completed -> finalize message reception
 
   pkt.header->toreceive--;
@@ -253,6 +259,49 @@ size_t P4SMPMod::maxTime() {
   return a;
   //size_t b = gem5->maxTime();
   //return a > b ? a : b;
+}
+
+
+static void copyCurrentHandlerData(void * ref, void *dest, size_t mem_size) {
+  MatchedHostDataPkt * pkt = (MatchedHostDataPkt *) ref;
+
+  goalevent elem = *((goalevent *)pkt->header->getPayload());
+  void *state = (void *)&(((uint32_t *)dest)[MEM_MESSAGE]);
+  if (pkt->matched.mem) {
+    memcpy(state, pkt->matched.shared_mem, pkt->matched.mem);
+  }
+
+  ptl_header_t *h = (ptl_header_t *)dest;
+  ptl_payload_t *p = (ptl_payload_t *)dest;
+  switch (pkt->currentHandler) {
+    case HHEADER: {
+      h->type = elem.type;
+      h->length = elem.size;
+      h->target_id = elem.target;
+      h->source_id = elem.host;
+      h->match_bits = elem.tag;
+      h->offset = 0;
+      h->hdr_data = 0;
+
+      for (int i = 0; i < 4; i++) {
+        h->user_hdr.arg[i] = elem.arg[i];
+        // printf("LGS: arg[%d]=%lu,%lu \n",i,elem.arg[i],h->user_hdr.arg[i]);
+      }
+
+    break;
+    }
+    case HPAYLOAD: {
+      p->length = pkt->size;
+      p->offset = pkt->pktoffset;
+      break;
+    }
+    case HCOMPLETION: {
+      // printf("elem.target %u \n",elem.target);
+      // printf("elem.host %u \n",elem.host);
+      ((uint32_t *)dest)[0] = elem.host;
+      break;
+    }
+  }
 }
 
 #endif

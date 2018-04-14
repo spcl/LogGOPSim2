@@ -213,7 +213,7 @@ lgs-main.o: main.cpp /usr/include/stdc-predef.h cmdline.h config.h \
  modules/spin/../portals4/../../sim.hpp \
  modules/spin/../portals4/../loggop/loggop.hpp \
  modules/spin/../portals4/../packet_net/NetMod.hpp \
- modules/spin/p4smp_events.hpp modules/spin/clientlib/portals.h \
+ modules/spin/p4smp_events.hpp modules/spin/clientlib/spin.h \
  modules/gem5/gem5Mod.hpp /home/salvo/ETH/gem5/build/ARM/cpu/base.hh \
  /home/salvo/ETH/gem5/build/ARM/config/the_isa.hh \
  /home/salvo/ETH/gem5/build/ARM/arch/interrupts.hh \
@@ -1017,7 +1017,7 @@ modules/spin/../portals4/../packet_net/NetMod.hpp:
 
 modules/spin/p4smp_events.hpp:
 
-modules/spin/clientlib/portals.h:
+modules/spin/clientlib/spin.h:
 
 modules/gem5/gem5Mod.hpp:
 

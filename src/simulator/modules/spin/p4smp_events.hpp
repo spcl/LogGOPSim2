@@ -4,7 +4,7 @@
 
 #include "../portals4/p4.hpp"
 
-#include "clientlib/portals.h"
+#include "clientlib/spin.h"
 
 #define ISSET(X) (X != (uint32_t)-1)
 
@@ -14,7 +14,7 @@
 #define HCOMPLETION 3
 #define NOHANDLER 4
 
-static char *handler_ret_code[] = {
+static const char *handler_ret_code[] = {
     "SUCCESS", "PROCEED",      "PROCESS_DATA",   "PROCESS_DATA_PENDING",
     "DROP",    "DROP_PENDING", "SUCCESS_PENDING"};
 
@@ -84,45 +84,6 @@ class MatchedHostDataPkt : public HostDataPkt {
     // nextHandler();
   }
 
-  void copyCurrentHandlerData(void *dest) {
-    goalevent elem = *((goalevent *)header->getPayload());
-    void *state = (void *)&(((uint32_t *)dest)[MEM_MESSAGE]);
-    if (matched.mem) {
-      memcpy(state, matched.shared_mem, matched.mem);
-    }
-
-    ptl_header_t *h = (ptl_header_t *)dest;
-    ptl_payload_t *p = (ptl_payload_t *)dest;
-    switch (currentHandler) {
-      case HHEADER: {
-        h->type = elem.type;
-        h->length = elem.size;
-        h->target_id = elem.target;
-        h->source_id = elem.host;
-        h->match_bits = elem.tag;
-        h->offset = 0;
-        h->hdr_data = 0;
-
-        for (int i = 0; i < 4; i++) {
-          h->user_hdr.arg[i] = elem.arg[i];
-          // printf("LGS: arg[%d]=%lu,%lu \n",i,elem.arg[i],h->user_hdr.arg[i]);
-        }
-
-        break;
-      }
-      case HPAYLOAD: {
-        p->length = size;
-        p->offset = pktoffset;
-        break;
-      }
-      case HCOMPLETION: {
-        // printf("elem.target %u \n",elem.target);
-        // printf("elem.host %u \n",elem.host);
-        ((uint32_t *)dest)[0] = elem.host;
-        break;
-      }
-    }
-  }
 
   void processHandlerReturn(void *syscall_data, void *dest) {
     void *state = (void *)&(((uint32_t *)dest)[MEM_MESSAGE]);

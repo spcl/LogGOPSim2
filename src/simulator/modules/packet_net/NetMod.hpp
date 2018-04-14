@@ -223,10 +223,16 @@ public:
         bool endswitch = sw==msg.destid;
 
         if (print) {
-            printf("[NET %s] forwarding packet: %i->%i(%i); msg.time: %lu; \
-                    nexto[%i]: %lu\n", topology->get_nodename(sw).c_str(), \
-                    msg.header->source, msg.destid, msg.id, msg.time, sw, \
-                    nexto[sw]);
+            //printf("sw: %u\n", sw);
+            //printf("name: %s\n", topology->get_nodename(sw).c_str());
+            //printf("source: %i\n", msg.header->source);
+    
+            if (!msg.is_credit){
+                printf("[NET %s] forwarding packet: %i->%i(%i); msg.time: %lu; nexto[%i]: %lu\n", 
+                        topology->get_nodename(sw).c_str(), 
+                        msg.header->source, msg.destid, msg.id, msg.time, sw, 
+                        nexto[sw]);
+            }
         }
 
         /* check if there is time */

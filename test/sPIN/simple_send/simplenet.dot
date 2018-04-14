@@ -1,0 +1,10 @@
+digraph mycoolnetwork {
+    H0 -> S1 [comment="H1,H2,H3"];
+    H1 -> S1 [comment="H0,H2,H3"];
+    H2 -> S1 [comment="H0,H1,H3"];
+    H3 -> S1 [comment="H0,H1,H2"];
+    S1 -> H0 [comment="H0"];
+    S1 -> H1 [comment="H1"];
+    S1 -> H2 [comment="H2"];
+    S1 -> H3 [comment="H3"];
+}

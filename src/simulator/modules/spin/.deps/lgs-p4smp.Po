@@ -219,7 +219,7 @@ modules/spin/lgs-p4smp.o: modules/spin/p4smp.cpp \
  modules/spin/../portals4/../packet_net/../../sim.hpp \
  modules/spin/../portals4/../packet_net/../../simEvents.hpp \
  modules/spin/../portals4/../packet_net/../loggop/loggop.hpp \
- modules/spin/p4smp_events.hpp modules/spin/clientlib/portals.h \
+ modules/spin/p4smp_events.hpp modules/spin/clientlib/spin.h \
  modules/spin/../gem5/gem5Mod_events.hpp \
  modules/spin/../gem5/../../simEvents.hpp
 
@@ -783,7 +783,7 @@ modules/spin/../portals4/../packet_net/../loggop/loggop.hpp:
 
 modules/spin/p4smp_events.hpp:
 
-modules/spin/clientlib/portals.h:
+modules/spin/clientlib/spin.h:
 
 modules/spin/../gem5/gem5Mod_events.hpp:
 
