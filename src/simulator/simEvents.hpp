@@ -21,7 +21,7 @@ public:
     }
 
     bool hasPayload(){ return payload!=NULL; }
-    bool getPayload(){ return payload; }
+    simEvent * getPayload(){ return payload; }
 
     /*simEvent(const simEvent& ev){
         time = ev.time;
