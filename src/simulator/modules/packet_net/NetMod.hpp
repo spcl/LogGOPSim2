@@ -87,7 +87,7 @@ public:
 };
 
 
-class NetMod: simModule {
+class NetMod: public simModule {
 private:
     Simulator& sim;
 

@@ -5,8 +5,8 @@ MODULES = modules/dma/dma.cpp \
           modules/packet_net/NetMod.cpp \
           modules/portals4/p4.cpp \
           modules/gem5/gem5Mod.cpp \
-          modules/gem5/stats.cpp
-
+          modules/gem5/stats.cpp \
+          modules/spin/p4smp.cpp
           #modules/portals4_smp/p4smp.cpp
 
 

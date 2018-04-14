@@ -208,11 +208,248 @@ lgs-main.o: main.cpp /usr/include/stdc-predef.h cmdline.h config.h \
  /usr/include/graphviz/cgraph.h /usr/include/graphviz/cdt.h \
  modules/packet_net/../../cmdline.h modules/packet_net/../../sim.hpp \
  modules/packet_net/../../simEvents.hpp \
- modules/packet_net/../loggop/loggop.hpp modules/portals4/p4.hpp \
- modules/portals4/../../sim.hpp modules/portals4/../loggop/loggop.hpp \
- modules/portals4/../packet_net/NetMod.hpp modules/dma/dma.hpp \
- modules/dma/../../sim.hpp modules/dma/../../simEvents.hpp \
- modules/dma/../../cmdline.h
+ modules/packet_net/../loggop/loggop.hpp modules/spin/p4smp.hpp \
+ modules/spin/../../../config.h modules/spin/../portals4/p4.hpp \
+ modules/spin/../portals4/../../sim.hpp \
+ modules/spin/../portals4/../loggop/loggop.hpp \
+ modules/spin/../portals4/../packet_net/NetMod.hpp \
+ modules/spin/p4smp_events.hpp modules/spin/clientlib/portals.h \
+ modules/gem5/gem5Mod.hpp /home/salvo/ETH/gem5/build/ARM/cpu/base.hh \
+ /home/salvo/ETH/gem5/build/ARM/config/the_isa.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/interrupts.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/arm/interrupts.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/arm/faults.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/arm/miscregs.hh \
+ /usr/include/c++/6/bitset \
+ /home/salvo/ETH/gem5/build/ARM/base/bitunion.hh \
+ /home/salvo/ETH/gem5/build/ARM/base/bitfield.hh \
+ /usr/include/c++/6/cassert /usr/include/c++/6/cstddef \
+ /home/salvo/ETH/gem5/build/ARM/base/compiler.hh \
+ /usr/include/c++/6/memory /usr/include/c++/6/bits/stl_raw_storage_iter.h \
+ /usr/include/c++/6/typeinfo /usr/include/c++/6/ext/concurrence.h \
+ /usr/include/c++/6/functional /usr/include/c++/6/bits/unique_ptr.h \
+ /usr/include/c++/6/bits/shared_ptr.h \
+ /usr/include/c++/6/bits/shared_ptr_base.h \
+ /usr/include/c++/6/bits/shared_ptr_atomic.h \
+ /usr/include/c++/6/bits/atomic_base.h \
+ /usr/include/c++/6/backward/auto_ptr.h \
+ /home/salvo/ETH/gem5/build/ARM/arch/arm/pagetable.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/arm/isa_traits.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/arm/types.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/generic/types.hh \
+ /home/salvo/ETH/gem5/build/ARM/base/trace.hh \
+ /home/salvo/ETH/gem5/build/ARM/base/cprintf.hh \
+ /home/salvo/ETH/gem5/build/ARM/base/cprintf_formats.hh \
+ /usr/include/c++/6/cstring /home/salvo/ETH/gem5/build/ARM/base/debug.hh \
+ /home/salvo/ETH/gem5/build/ARM/base/match.hh \
+ /home/salvo/ETH/gem5/build/ARM/base/types.hh \
+ /home/salvo/ETH/gem5/build/ARM/base/refcnt.hh \
+ /home/salvo/ETH/gem5/build/ARM/sim/core.hh \
+ /home/salvo/ETH/gem5/build/ARM/sim/eventq.hh /usr/include/c++/6/climits \
+ /usr/include/c++/6/mutex /usr/include/c++/6/chrono \
+ /usr/include/c++/6/ratio /usr/include/c++/6/ctime \
+ /usr/include/c++/6/bits/parse_numbers.h \
+ /usr/include/c++/6/bits/std_mutex.h \
+ /home/salvo/ETH/gem5/build/ARM/base/flags.hh \
+ /home/salvo/ETH/gem5/build/ARM/debug/Event.hh \
+ /home/salvo/ETH/gem5/build/ARM/sim/serialize.hh /usr/include/c++/6/stack \
+ /usr/include/c++/6/bits/stl_stack.h /usr/include/c++/6/set \
+ /usr/include/c++/6/bits/stl_set.h /usr/include/c++/6/bits/stl_multiset.h \
+ /home/salvo/ETH/gem5/build/ARM/base/misc.hh \
+ /home/salvo/ETH/gem5/build/ARM/debug/Decoder.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/static_inst_fwd.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/arm/utility.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/static_inst.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/registers.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/arm/registers.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/arm/ccregs.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/arm/generated/max_inst_regs.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/arm/intregs.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/generic/vec_reg.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/types.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/op_class.hh \
+ /home/salvo/ETH/gem5/build/ARM/enums/OpClass.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/reg_class.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/reg_class_impl.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/thread_context.hh \
+ /home/salvo/ETH/gem5/build/ARM/enums/StaticInstFlags.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/arm/vtophys.hh \
+ /home/salvo/ETH/gem5/build/ARM/sim/faults.hh \
+ /home/salvo/ETH/gem5/build/ARM/sim/stats.hh \
+ /home/salvo/ETH/gem5/build/ARM/base/statistics.hh \
+ /home/salvo/ETH/gem5/build/ARM/base/stats/info.hh \
+ /home/salvo/ETH/gem5/build/ARM/base/stats/types.hh \
+ /home/salvo/ETH/gem5/build/ARM/base/stats/output.hh \
+ /home/salvo/ETH/gem5/build/ARM/base/cast.hh \
+ /home/salvo/ETH/gem5/build/ARM/base/intmath.hh \
+ /home/salvo/ETH/gem5/build/ARM/base/str.hh /usr/include/c++/6/locale \
+ /usr/include/c++/6/bits/locale_facets_nonio.h \
+ /usr/include/x86_64-linux-gnu/c++/6/bits/time_members.h \
+ /usr/include/x86_64-linux-gnu/c++/6/bits/messages_members.h \
+ /usr/include/libintl.h /usr/include/c++/6/bits/locale_facets_nonio.tcc \
+ /usr/include/c++/6/bits/locale_conv.h \
+ /usr/include/c++/6/bits/stringfwd.h /usr/include/c++/6/bits/allocator.h \
+ /usr/include/c++/6/bits/codecvt.h /usr/include/c++/6/bits/unique_ptr.h \
+ /home/salvo/ETH/gem5/build/ARM/sim/full_system.hh \
+ /home/salvo/ETH/gem5/build/ARM/debug/Interrupt.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/ArmInterrupts.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/SimObject.hh \
+ /home/salvo/ETH/gem5/build/ARM/sim/sim_object.hh \
+ /home/salvo/ETH/gem5/build/ARM/sim/drain.hh /usr/include/c++/6/atomic \
+ /home/salvo/ETH/gem5/build/ARM/sim/eventq_impl.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/isa_traits.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/microcode_rom.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/arm/microcode_rom.hh \
+ /home/salvo/ETH/gem5/build/ARM/sim/microcode_rom.hh \
+ /home/salvo/ETH/gem5/build/ARM/mem/mem_object.hh \
+ /home/salvo/ETH/gem5/build/ARM/mem/port.hh \
+ /home/salvo/ETH/gem5/build/ARM/base/addr_range.hh \
+ /home/salvo/ETH/gem5/build/ARM/mem/packet.hh \
+ /home/salvo/ETH/gem5/build/ARM/base/printable.hh \
+ /home/salvo/ETH/gem5/build/ARM/mem/request.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/inst_seq.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/MemObject.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/ClockedObject.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/ClockDomain.hh \
+ /home/salvo/ETH/gem5/build/ARM/enums/PwrState.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/PowerModel.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/PowerModelState.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/SubSystem.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/ThermalDomain.hh \
+ /home/salvo/ETH/gem5/build/ARM/sim/clocked_object.hh \
+ /home/salvo/ETH/gem5/build/ARM/base/callback.hh \
+ /home/salvo/ETH/gem5/build/ARM/sim/clock_domain.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/DerivedClockDomain.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/SrcClockDomain.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/VoltageDomain.hh \
+ /home/salvo/ETH/gem5/build/ARM/sim/insttracer.hh \
+ /home/salvo/ETH/gem5/build/ARM/base/bigint.hh \
+ /home/salvo/ETH/gem5/build/ARM/sim/probe/pmu.hh \
+ /home/salvo/ETH/gem5/build/ARM/sim/probe/probe.hh \
+ /home/salvo/ETH/gem5/build/ARM/sim/system.hh \
+ /home/salvo/ETH/gem5/build/ARM/base/loader/symtab.hh \
+ /home/salvo/ETH/gem5/build/ARM/enums/MemoryMode.hh \
+ /home/salvo/ETH/gem5/build/ARM/mem/physical.hh \
+ /home/salvo/ETH/gem5/build/ARM/base/addr_range_map.hh \
+ /home/salvo/ETH/gem5/build/ARM/mem/port_proxy.hh \
+ /home/salvo/ETH/gem5/build/ARM/sim/byteswap.hh /usr/include/byteswap.h \
+ /home/salvo/ETH/gem5/build/ARM/params/System.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/AbstractMemory.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/ThermalModel.hh \
+ /home/salvo/ETH/gem5/build/ARM/sim/futex_map.hh \
+ /home/salvo/ETH/gem5/build/ARM/sim/se_signal.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/pc_event.hh \
+ /home/salvo/ETH/gem5/build/ARM/debug/Mwait.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/o3/deriv.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/o3/cpu.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/o3/comm.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/o3/cpu_policy.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/o3/commit.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/exetrace.hh \
+ /home/salvo/ETH/gem5/build/ARM/debug/ExecEnable.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/ExeTracer.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/InstTracer.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/timebuf.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/o3/decode.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/o3/fetch.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/decoder.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/arm/decoder.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/generic/decode_cache.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/decode_cache.hh \
+ /home/salvo/ETH/gem5/build/ARM/enums/DecoderFlavour.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/utility.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/pred/bpred_unit.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/pred/btb.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/pred/indirect.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/pred/ras.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/BranchPredictor.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/translation.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/generic/tlb.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/o3/free_list.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/o3/regfile.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/kernel_stats.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/arm/kernel_stats.hh \
+ /home/salvo/ETH/gem5/build/ARM/kern/kernel_stats.hh \
+ /home/salvo/ETH/gem5/build/ARM/debug/IEW.hh \
+ /home/salvo/ETH/gem5/build/ARM/enums/VecRegRenameMode.hh \
+ /home/salvo/ETH/gem5/build/ARM/debug/FreeList.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/o3/iew.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/o3/lsq.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/o3/lsq_unit.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/generic/debugfaults.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/locked_mem.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/arm/locked_mem.hh \
+ /home/salvo/ETH/gem5/build/ARM/debug/LLSC.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/mmapped_ipr.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/arm/mmapped_ipr.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/generic/mmapped_ipr.hh \
+ /home/salvo/ETH/gem5/build/ARM/debug/LSQUnit.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/o3/scoreboard.hh \
+ /home/salvo/ETH/gem5/build/ARM/debug/Scoreboard.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/o3/inst_queue.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/o3/dep_graph.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/o3/mem_dep_unit.hh \
+ /home/salvo/ETH/gem5/build/ARM/debug/MemDepUnit.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/o3/rename.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/o3/rename_map.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/o3/rob.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/o3/store_set.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/o3/thread_state.hh \
+ /home/salvo/ETH/gem5/build/ARM/base/output.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/thread_state.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/profile.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/stacktrace.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/arm/stacktrace.hh \
+ /home/salvo/ETH/gem5/build/ARM/debug/Stack.hh \
+ /home/salvo/ETH/gem5/build/ARM/sim/process.hh \
+ /home/salvo/ETH/gem5/build/ARM/mem/se_translating_port_proxy.hh \
+ /home/salvo/ETH/gem5/build/ARM/sim/fd_array.hh \
+ /home/salvo/ETH/gem5/build/ARM/sim/fd_entry.hh \
+ /home/salvo/ETH/gem5/build/ARM/sim/mem_state.hh \
+ /home/salvo/ETH/gem5/build/ARM/sim/sim_exit.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/activity.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/simple_thread.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/isa.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/arm/isa.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/arm/isa_device.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/arm/system.hh \
+ /home/salvo/ETH/gem5/build/ARM/kern/linux/events.hh \
+ /home/salvo/ETH/gem5/build/ARM/kern/system_events.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/ArmSystem.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/GenericArmSystem.hh \
+ /home/salvo/ETH/gem5/build/ARM/enums/ArmMachineType.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/arm/tlb.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/ArmTLB.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/ArmTableWalker.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/generic/traits.hh \
+ /home/salvo/ETH/gem5/build/ARM/debug/Checkpoint.hh \
+ /home/salvo/ETH/gem5/build/ARM/arch/tlb.hh \
+ /home/salvo/ETH/gem5/build/ARM/debug/CCRegs.hh \
+ /home/salvo/ETH/gem5/build/ARM/debug/FloatRegs.hh \
+ /home/salvo/ETH/gem5/build/ARM/debug/IntRegs.hh \
+ /home/salvo/ETH/gem5/build/ARM/debug/VecRegs.hh \
+ /home/salvo/ETH/gem5/build/ARM/mem/page_table.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/DerivO3CPU.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/FUPool.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/FUDesc.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/OpDesc.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/BaseCPU.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/ArmStage2MMU.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/ArmISA.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/ArmPMU.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/Platform.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/IntrControl.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/Process.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/EmulatedDriver.hh \
+ /home/salvo/ETH/gem5/build/ARM/cpu/o3/impl.hh \
+ /home/salvo/ETH/gem5/build/ARM/mem/cache/dummy_cache.hh \
+ /home/salvo/ETH/gem5/build/ARM/params/DummyCache.hh \
+ /home/salvo/ETH/gem5/build/ARM/sim/cxx_manager.hh \
+ /home/salvo/ETH/gem5/build/ARM/sim/cxx_config.hh \
+ modules/gem5/../../sim.hpp modules/gem5/../../simEvents.hpp \
+ modules/gem5/gem5Mod_events.hpp modules/portals4/p4.hpp \
+ modules/dma/dma.hpp modules/dma/../../sim.hpp \
+ modules/dma/../../simEvents.hpp modules/dma/../../cmdline.h
 
 /usr/include/stdc-predef.h:
 
@@ -766,13 +1003,529 @@ modules/packet_net/../../simEvents.hpp:
 
 modules/packet_net/../loggop/loggop.hpp:
 
+modules/spin/p4smp.hpp:
+
+modules/spin/../../../config.h:
+
+modules/spin/../portals4/p4.hpp:
+
+modules/spin/../portals4/../../sim.hpp:
+
+modules/spin/../portals4/../loggop/loggop.hpp:
+
+modules/spin/../portals4/../packet_net/NetMod.hpp:
+
+modules/spin/p4smp_events.hpp:
+
+modules/spin/clientlib/portals.h:
+
+modules/gem5/gem5Mod.hpp:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/base.hh:
+
+/home/salvo/ETH/gem5/build/ARM/config/the_isa.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/interrupts.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/arm/interrupts.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/arm/faults.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/arm/miscregs.hh:
+
+/usr/include/c++/6/bitset:
+
+/home/salvo/ETH/gem5/build/ARM/base/bitunion.hh:
+
+/home/salvo/ETH/gem5/build/ARM/base/bitfield.hh:
+
+/usr/include/c++/6/cassert:
+
+/usr/include/c++/6/cstddef:
+
+/home/salvo/ETH/gem5/build/ARM/base/compiler.hh:
+
+/usr/include/c++/6/memory:
+
+/usr/include/c++/6/bits/stl_raw_storage_iter.h:
+
+/usr/include/c++/6/typeinfo:
+
+/usr/include/c++/6/ext/concurrence.h:
+
+/usr/include/c++/6/functional:
+
+/usr/include/c++/6/bits/unique_ptr.h:
+
+/usr/include/c++/6/bits/shared_ptr.h:
+
+/usr/include/c++/6/bits/shared_ptr_base.h:
+
+/usr/include/c++/6/bits/shared_ptr_atomic.h:
+
+/usr/include/c++/6/bits/atomic_base.h:
+
+/usr/include/c++/6/backward/auto_ptr.h:
+
+/home/salvo/ETH/gem5/build/ARM/arch/arm/pagetable.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/arm/isa_traits.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/arm/types.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/generic/types.hh:
+
+/home/salvo/ETH/gem5/build/ARM/base/trace.hh:
+
+/home/salvo/ETH/gem5/build/ARM/base/cprintf.hh:
+
+/home/salvo/ETH/gem5/build/ARM/base/cprintf_formats.hh:
+
+/usr/include/c++/6/cstring:
+
+/home/salvo/ETH/gem5/build/ARM/base/debug.hh:
+
+/home/salvo/ETH/gem5/build/ARM/base/match.hh:
+
+/home/salvo/ETH/gem5/build/ARM/base/types.hh:
+
+/home/salvo/ETH/gem5/build/ARM/base/refcnt.hh:
+
+/home/salvo/ETH/gem5/build/ARM/sim/core.hh:
+
+/home/salvo/ETH/gem5/build/ARM/sim/eventq.hh:
+
+/usr/include/c++/6/climits:
+
+/usr/include/c++/6/mutex:
+
+/usr/include/c++/6/chrono:
+
+/usr/include/c++/6/ratio:
+
+/usr/include/c++/6/ctime:
+
+/usr/include/c++/6/bits/parse_numbers.h:
+
+/usr/include/c++/6/bits/std_mutex.h:
+
+/home/salvo/ETH/gem5/build/ARM/base/flags.hh:
+
+/home/salvo/ETH/gem5/build/ARM/debug/Event.hh:
+
+/home/salvo/ETH/gem5/build/ARM/sim/serialize.hh:
+
+/usr/include/c++/6/stack:
+
+/usr/include/c++/6/bits/stl_stack.h:
+
+/usr/include/c++/6/set:
+
+/usr/include/c++/6/bits/stl_set.h:
+
+/usr/include/c++/6/bits/stl_multiset.h:
+
+/home/salvo/ETH/gem5/build/ARM/base/misc.hh:
+
+/home/salvo/ETH/gem5/build/ARM/debug/Decoder.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/static_inst_fwd.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/arm/utility.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/static_inst.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/registers.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/arm/registers.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/arm/ccregs.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/arm/generated/max_inst_regs.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/arm/intregs.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/generic/vec_reg.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/types.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/op_class.hh:
+
+/home/salvo/ETH/gem5/build/ARM/enums/OpClass.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/reg_class.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/reg_class_impl.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/thread_context.hh:
+
+/home/salvo/ETH/gem5/build/ARM/enums/StaticInstFlags.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/arm/vtophys.hh:
+
+/home/salvo/ETH/gem5/build/ARM/sim/faults.hh:
+
+/home/salvo/ETH/gem5/build/ARM/sim/stats.hh:
+
+/home/salvo/ETH/gem5/build/ARM/base/statistics.hh:
+
+/home/salvo/ETH/gem5/build/ARM/base/stats/info.hh:
+
+/home/salvo/ETH/gem5/build/ARM/base/stats/types.hh:
+
+/home/salvo/ETH/gem5/build/ARM/base/stats/output.hh:
+
+/home/salvo/ETH/gem5/build/ARM/base/cast.hh:
+
+/home/salvo/ETH/gem5/build/ARM/base/intmath.hh:
+
+/home/salvo/ETH/gem5/build/ARM/base/str.hh:
+
+/usr/include/c++/6/locale:
+
+/usr/include/c++/6/bits/locale_facets_nonio.h:
+
+/usr/include/x86_64-linux-gnu/c++/6/bits/time_members.h:
+
+/usr/include/x86_64-linux-gnu/c++/6/bits/messages_members.h:
+
+/usr/include/libintl.h:
+
+/usr/include/c++/6/bits/locale_facets_nonio.tcc:
+
+/usr/include/c++/6/bits/locale_conv.h:
+
+/usr/include/c++/6/bits/stringfwd.h:
+
+/usr/include/c++/6/bits/allocator.h:
+
+/usr/include/c++/6/bits/codecvt.h:
+
+/usr/include/c++/6/bits/unique_ptr.h:
+
+/home/salvo/ETH/gem5/build/ARM/sim/full_system.hh:
+
+/home/salvo/ETH/gem5/build/ARM/debug/Interrupt.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/ArmInterrupts.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/SimObject.hh:
+
+/home/salvo/ETH/gem5/build/ARM/sim/sim_object.hh:
+
+/home/salvo/ETH/gem5/build/ARM/sim/drain.hh:
+
+/usr/include/c++/6/atomic:
+
+/home/salvo/ETH/gem5/build/ARM/sim/eventq_impl.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/isa_traits.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/microcode_rom.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/arm/microcode_rom.hh:
+
+/home/salvo/ETH/gem5/build/ARM/sim/microcode_rom.hh:
+
+/home/salvo/ETH/gem5/build/ARM/mem/mem_object.hh:
+
+/home/salvo/ETH/gem5/build/ARM/mem/port.hh:
+
+/home/salvo/ETH/gem5/build/ARM/base/addr_range.hh:
+
+/home/salvo/ETH/gem5/build/ARM/mem/packet.hh:
+
+/home/salvo/ETH/gem5/build/ARM/base/printable.hh:
+
+/home/salvo/ETH/gem5/build/ARM/mem/request.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/inst_seq.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/MemObject.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/ClockedObject.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/ClockDomain.hh:
+
+/home/salvo/ETH/gem5/build/ARM/enums/PwrState.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/PowerModel.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/PowerModelState.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/SubSystem.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/ThermalDomain.hh:
+
+/home/salvo/ETH/gem5/build/ARM/sim/clocked_object.hh:
+
+/home/salvo/ETH/gem5/build/ARM/base/callback.hh:
+
+/home/salvo/ETH/gem5/build/ARM/sim/clock_domain.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/DerivedClockDomain.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/SrcClockDomain.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/VoltageDomain.hh:
+
+/home/salvo/ETH/gem5/build/ARM/sim/insttracer.hh:
+
+/home/salvo/ETH/gem5/build/ARM/base/bigint.hh:
+
+/home/salvo/ETH/gem5/build/ARM/sim/probe/pmu.hh:
+
+/home/salvo/ETH/gem5/build/ARM/sim/probe/probe.hh:
+
+/home/salvo/ETH/gem5/build/ARM/sim/system.hh:
+
+/home/salvo/ETH/gem5/build/ARM/base/loader/symtab.hh:
+
+/home/salvo/ETH/gem5/build/ARM/enums/MemoryMode.hh:
+
+/home/salvo/ETH/gem5/build/ARM/mem/physical.hh:
+
+/home/salvo/ETH/gem5/build/ARM/base/addr_range_map.hh:
+
+/home/salvo/ETH/gem5/build/ARM/mem/port_proxy.hh:
+
+/home/salvo/ETH/gem5/build/ARM/sim/byteswap.hh:
+
+/usr/include/byteswap.h:
+
+/home/salvo/ETH/gem5/build/ARM/params/System.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/AbstractMemory.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/ThermalModel.hh:
+
+/home/salvo/ETH/gem5/build/ARM/sim/futex_map.hh:
+
+/home/salvo/ETH/gem5/build/ARM/sim/se_signal.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/pc_event.hh:
+
+/home/salvo/ETH/gem5/build/ARM/debug/Mwait.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/o3/deriv.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/o3/cpu.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/o3/comm.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/o3/cpu_policy.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/o3/commit.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/exetrace.hh:
+
+/home/salvo/ETH/gem5/build/ARM/debug/ExecEnable.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/ExeTracer.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/InstTracer.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/timebuf.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/o3/decode.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/o3/fetch.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/decoder.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/arm/decoder.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/generic/decode_cache.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/decode_cache.hh:
+
+/home/salvo/ETH/gem5/build/ARM/enums/DecoderFlavour.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/utility.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/pred/bpred_unit.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/pred/btb.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/pred/indirect.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/pred/ras.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/BranchPredictor.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/translation.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/generic/tlb.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/o3/free_list.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/o3/regfile.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/kernel_stats.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/arm/kernel_stats.hh:
+
+/home/salvo/ETH/gem5/build/ARM/kern/kernel_stats.hh:
+
+/home/salvo/ETH/gem5/build/ARM/debug/IEW.hh:
+
+/home/salvo/ETH/gem5/build/ARM/enums/VecRegRenameMode.hh:
+
+/home/salvo/ETH/gem5/build/ARM/debug/FreeList.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/o3/iew.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/o3/lsq.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/o3/lsq_unit.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/generic/debugfaults.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/locked_mem.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/arm/locked_mem.hh:
+
+/home/salvo/ETH/gem5/build/ARM/debug/LLSC.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/mmapped_ipr.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/arm/mmapped_ipr.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/generic/mmapped_ipr.hh:
+
+/home/salvo/ETH/gem5/build/ARM/debug/LSQUnit.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/o3/scoreboard.hh:
+
+/home/salvo/ETH/gem5/build/ARM/debug/Scoreboard.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/o3/inst_queue.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/o3/dep_graph.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/o3/mem_dep_unit.hh:
+
+/home/salvo/ETH/gem5/build/ARM/debug/MemDepUnit.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/o3/rename.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/o3/rename_map.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/o3/rob.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/o3/store_set.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/o3/thread_state.hh:
+
+/home/salvo/ETH/gem5/build/ARM/base/output.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/thread_state.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/profile.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/stacktrace.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/arm/stacktrace.hh:
+
+/home/salvo/ETH/gem5/build/ARM/debug/Stack.hh:
+
+/home/salvo/ETH/gem5/build/ARM/sim/process.hh:
+
+/home/salvo/ETH/gem5/build/ARM/mem/se_translating_port_proxy.hh:
+
+/home/salvo/ETH/gem5/build/ARM/sim/fd_array.hh:
+
+/home/salvo/ETH/gem5/build/ARM/sim/fd_entry.hh:
+
+/home/salvo/ETH/gem5/build/ARM/sim/mem_state.hh:
+
+/home/salvo/ETH/gem5/build/ARM/sim/sim_exit.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/activity.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/simple_thread.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/isa.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/arm/isa.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/arm/isa_device.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/arm/system.hh:
+
+/home/salvo/ETH/gem5/build/ARM/kern/linux/events.hh:
+
+/home/salvo/ETH/gem5/build/ARM/kern/system_events.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/ArmSystem.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/GenericArmSystem.hh:
+
+/home/salvo/ETH/gem5/build/ARM/enums/ArmMachineType.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/arm/tlb.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/ArmTLB.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/ArmTableWalker.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/generic/traits.hh:
+
+/home/salvo/ETH/gem5/build/ARM/debug/Checkpoint.hh:
+
+/home/salvo/ETH/gem5/build/ARM/arch/tlb.hh:
+
+/home/salvo/ETH/gem5/build/ARM/debug/CCRegs.hh:
+
+/home/salvo/ETH/gem5/build/ARM/debug/FloatRegs.hh:
+
+/home/salvo/ETH/gem5/build/ARM/debug/IntRegs.hh:
+
+/home/salvo/ETH/gem5/build/ARM/debug/VecRegs.hh:
+
+/home/salvo/ETH/gem5/build/ARM/mem/page_table.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/DerivO3CPU.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/FUPool.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/FUDesc.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/OpDesc.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/BaseCPU.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/ArmStage2MMU.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/ArmISA.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/ArmPMU.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/Platform.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/IntrControl.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/Process.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/EmulatedDriver.hh:
+
+/home/salvo/ETH/gem5/build/ARM/cpu/o3/impl.hh:
+
+/home/salvo/ETH/gem5/build/ARM/mem/cache/dummy_cache.hh:
+
+/home/salvo/ETH/gem5/build/ARM/params/DummyCache.hh:
+
+/home/salvo/ETH/gem5/build/ARM/sim/cxx_manager.hh:
+
+/home/salvo/ETH/gem5/build/ARM/sim/cxx_config.hh:
+
+modules/gem5/../../sim.hpp:
+
+modules/gem5/../../simEvents.hpp:
+
+modules/gem5/gem5Mod_events.hpp:
+
 modules/portals4/p4.hpp:
-
-modules/portals4/../../sim.hpp:
-
-modules/portals4/../loggop/loggop.hpp:
-
-modules/portals4/../packet_net/NetMod.hpp:
 
 modules/dma/dma.hpp:
 

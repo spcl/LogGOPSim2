@@ -5,69 +5,49 @@
 
 #ifdef HAVE_GEM5
 
-
 #include "../portals4/p4.hpp"
-#include "gem5/GEM5Mod.hpp"
 #include "p4smp_events.hpp"
 
-#include <unordered_map>
 #include <queue>
+#include <unordered_map>
 
+class P4SMPMod : public P4Mod {
+ private:
+  uint32_t c_packet;
 
-
-
-
-
-
-class P4SMPMod: public P4Mod {
-
-private:
-    uint32_t c_packet;
-    GEM5Mod * gem5;
-    
-public:
-    P4SMPMod(Simulator& sim, Parser& parser, bool simplenet=true): P4Mod(sim, parser, simplenet) {
-
-
-    
-
-        if (sim.args_info.gem5_conf_file_given && simplenet){
-            printf("Warning: cannot use gem5 with simplenet (ignoring gem5 option)\n");
-        }else{
-            c_packet = sim.args_info.sPIN_c_packet_arg;// 0;
-        }
-
+ public:
+  P4SMPMod(Simulator& sim, Parser& parser, bool simplenet = true)
+      : P4Mod(sim, parser, simplenet) {
+    if (sim.args_info.gem5_conf_file_given && simplenet) {
+      printf(
+          "Warning: cannot use gem5 with simplenet (ignoring gem5 option)\n");
+    } else {
+      c_packet = sim.args_info.sPIN_c_packet_arg;  // 0;
     }
+  }
 
-    ~P4SMPMod(){
-        if (gem5!=NULL) delete gem5;
-    }
+  ~P4SMPMod() {
+  }
 
+  inline int recvpkt(HostDataPkt& pkt);
+  inline int processHandlers(MatchedHostDataPkt& pkt);
+  static int dispatch(simModule* mod, simEvent* ev);
 
-    inline int recvpkt(HostDataPkt& pkt);
-    inline int processHandlers(MatchedHostDataPkt& pkt);
-    static int dispatch(simModule* mod, simEvent* ev);
-
-    virtual int registerHandlers(Simulator& sim){
-        P4Mod::registerHandlers(sim);
-
-        if (gem5!=NULL){
-            sim.addEventHandler(this, HOST_DATA_PKT, P4SMPMod::dispatch);
-            sim.addEventHandler(this, MATCHED_HOST_DATA_PKT, P4SMPMod::dispatch);
-        }
-
-        return 0;
-    }
+  virtual int registerHandlers(Simulator& sim) {
+    P4Mod::registerHandlers(sim);
 
 
-    void erase_matching_entry(uint32_t host, uint32_t header_id);
-    void reset_matching_entry(uint32_t host, uint32_t header_id);
+    sim.addEventHandler(this, HOST_DATA_PKT, P4SMPMod::dispatch);
+    sim.addEventHandler(this, MATCHED_HOST_DATA_PKT, P4SMPMod::dispatch);
 
+    return 0;
+  }
 
-    virtual void printStatus();
-    virtual size_t maxTime();
+  void erase_matching_entry(uint32_t host, uint32_t header_id);
+  void reset_matching_entry(uint32_t host, uint32_t header_id);
 
-
+  virtual void printStatus();
+  virtual size_t maxTime();
 };
 
 #endif

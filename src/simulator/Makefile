@@ -109,7 +109,8 @@ am__objects_1 = modules/dma/lgs-dma.$(OBJEXT) \
 	modules/packet_net/lgs-NetMod.$(OBJEXT) \
 	modules/portals4/lgs-p4.$(OBJEXT) \
 	modules/gem5/lgs-gem5Mod.$(OBJEXT) \
-	modules/gem5/lgs-stats.$(OBJEXT)
+	modules/gem5/lgs-stats.$(OBJEXT) \
+	modules/spin/lgs-p4smp.$(OBJEXT)
 am_lgs_OBJECTS = lgs-sim.$(OBJEXT) lgs-cmdline.$(OBJEXT) \
 	lgs-main.$(OBJEXT) $(am__objects_1)
 lgs_OBJECTS = $(am_lgs_OBJECTS)
@@ -301,7 +302,8 @@ MODULES = modules/dma/dma.cpp \
           modules/packet_net/NetMod.cpp \
           modules/portals4/p4.cpp \
           modules/gem5/gem5Mod.cpp \
-          modules/gem5/stats.cpp
+          modules/gem5/stats.cpp \
+          modules/spin/p4smp.cpp
 
 lgs_SOURCES = sim.cpp cmdline.c main.cpp ${MODULES}
 lgs_CPPFLAGS = -std=c++11
@@ -426,6 +428,14 @@ modules/gem5/lgs-gem5Mod.$(OBJEXT): modules/gem5/$(am__dirstamp) \
 	modules/gem5/$(DEPDIR)/$(am__dirstamp)
 modules/gem5/lgs-stats.$(OBJEXT): modules/gem5/$(am__dirstamp) \
 	modules/gem5/$(DEPDIR)/$(am__dirstamp)
+modules/spin/$(am__dirstamp):
+	@$(MKDIR_P) modules/spin
+	@: > modules/spin/$(am__dirstamp)
+modules/spin/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) modules/spin/$(DEPDIR)
+	@: > modules/spin/$(DEPDIR)/$(am__dirstamp)
+modules/spin/lgs-p4smp.$(OBJEXT): modules/spin/$(am__dirstamp) \
+	modules/spin/$(DEPDIR)/$(am__dirstamp)
 
 lgs$(EXEEXT): $(lgs_OBJECTS) $(lgs_DEPENDENCIES) $(EXTRA_lgs_DEPENDENCIES) 
 	@rm -f lgs$(EXEEXT)
@@ -438,6 +448,7 @@ mostlyclean-compile:
 	-rm -f modules/loggop/*.$(OBJEXT)
 	-rm -f modules/packet_net/*.$(OBJEXT)
 	-rm -f modules/portals4/*.$(OBJEXT)
+	-rm -f modules/spin/*.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
@@ -451,6 +462,7 @@ include modules/gem5/$(DEPDIR)/lgs-stats.Po
 include modules/loggop/$(DEPDIR)/lgs-loggop.Po
 include modules/packet_net/$(DEPDIR)/lgs-NetMod.Po
 include modules/portals4/$(DEPDIR)/lgs-p4.Po
+include modules/spin/$(DEPDIR)/lgs-p4smp.Po
 
 .c.o:
 	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -610,6 +622,20 @@ modules/gem5/lgs-stats.obj: modules/gem5/stats.cpp
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lgs_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o modules/gem5/lgs-stats.obj `if test -f 'modules/gem5/stats.cpp'; then $(CYGPATH_W) 'modules/gem5/stats.cpp'; else $(CYGPATH_W) '$(srcdir)/modules/gem5/stats.cpp'; fi`
 
+modules/spin/lgs-p4smp.o: modules/spin/p4smp.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lgs_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT modules/spin/lgs-p4smp.o -MD -MP -MF modules/spin/$(DEPDIR)/lgs-p4smp.Tpo -c -o modules/spin/lgs-p4smp.o `test -f 'modules/spin/p4smp.cpp' || echo '$(srcdir)/'`modules/spin/p4smp.cpp
+	$(AM_V_at)$(am__mv) modules/spin/$(DEPDIR)/lgs-p4smp.Tpo modules/spin/$(DEPDIR)/lgs-p4smp.Po
+#	$(AM_V_CXX)source='modules/spin/p4smp.cpp' object='modules/spin/lgs-p4smp.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lgs_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o modules/spin/lgs-p4smp.o `test -f 'modules/spin/p4smp.cpp' || echo '$(srcdir)/'`modules/spin/p4smp.cpp
+
+modules/spin/lgs-p4smp.obj: modules/spin/p4smp.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lgs_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT modules/spin/lgs-p4smp.obj -MD -MP -MF modules/spin/$(DEPDIR)/lgs-p4smp.Tpo -c -o modules/spin/lgs-p4smp.obj `if test -f 'modules/spin/p4smp.cpp'; then $(CYGPATH_W) 'modules/spin/p4smp.cpp'; else $(CYGPATH_W) '$(srcdir)/modules/spin/p4smp.cpp'; fi`
+	$(AM_V_at)$(am__mv) modules/spin/$(DEPDIR)/lgs-p4smp.Tpo modules/spin/$(DEPDIR)/lgs-p4smp.Po
+#	$(AM_V_CXX)source='modules/spin/p4smp.cpp' object='modules/spin/lgs-p4smp.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(lgs_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o modules/spin/lgs-p4smp.obj `if test -f 'modules/spin/p4smp.cpp'; then $(CYGPATH_W) 'modules/spin/p4smp.cpp'; else $(CYGPATH_W) '$(srcdir)/modules/spin/p4smp.cpp'; fi`
+
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
 tags: tags-am
@@ -737,6 +763,8 @@ distclean-generic:
 	-rm -f modules/packet_net/$(am__dirstamp)
 	-rm -f modules/portals4/$(DEPDIR)/$(am__dirstamp)
 	-rm -f modules/portals4/$(am__dirstamp)
+	-rm -f modules/spin/$(DEPDIR)/$(am__dirstamp)
+	-rm -f modules/spin/$(am__dirstamp)
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
@@ -747,7 +775,7 @@ clean: clean-am
 clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
-	-rm -rf ./$(DEPDIR) modules/dma/$(DEPDIR) modules/gem5/$(DEPDIR) modules/loggop/$(DEPDIR) modules/packet_net/$(DEPDIR) modules/portals4/$(DEPDIR)
+	-rm -rf ./$(DEPDIR) modules/dma/$(DEPDIR) modules/gem5/$(DEPDIR) modules/loggop/$(DEPDIR) modules/packet_net/$(DEPDIR) modules/portals4/$(DEPDIR) modules/spin/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -793,7 +821,7 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-	-rm -rf ./$(DEPDIR) modules/dma/$(DEPDIR) modules/gem5/$(DEPDIR) modules/loggop/$(DEPDIR) modules/packet_net/$(DEPDIR) modules/portals4/$(DEPDIR)
+	-rm -rf ./$(DEPDIR) modules/dma/$(DEPDIR) modules/gem5/$(DEPDIR) modules/loggop/$(DEPDIR) modules/packet_net/$(DEPDIR) modules/portals4/$(DEPDIR) modules/spin/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -828,7 +856,6 @@ uninstall-am: uninstall-binPROGRAMS
 	uninstall-binPROGRAMS
 
 .PRECIOUS: Makefile
-
 
           #modules/portals4_smp/p4smp.cpp
 

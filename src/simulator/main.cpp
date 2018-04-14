@@ -10,8 +10,9 @@
 
 
 
-#ifdef HAVE_GEM5
+#ifdef HAS_GEM5
 #include "modules/spin/p4smp.hpp"
+#include "modules/gem5/gem5Mod.hpp"
 #endif
 
 #include "modules/portals4/p4.hpp"
@@ -32,41 +33,30 @@ int main(int argc, char * argv[]){
     Simulator sim(argc, argv, parser.schedules.size());
 
     bool simplenet = !args_info.network_file_given;
-    bool gem5 = args_info.gem5_conf_file_given;
-    
+    bool gem5 = args_info.gem5_conf_file_given;   
 
     simModule * lmod=NULL;
     simModule * dmamod=NULL;
     NetMod * nmod=NULL;
-
-#ifdef HAVE_GEM5
-    
-    if (gem5 && !simplenet){
-        //printf("SMP\n");
-        //lmod = new P4SMPMod(sim, parser, simplenet);
-        dmamod = new DMAmod(sim, parser.schedules.size());
-    }else{
-        lmod = new P4Mod(sim, parser, simplenet);
-    }
-#else
-
-    if (gem5) {
-        printf("Warning: configured without GEM5 support. Ignoring gem5 conf file.\n");
-        gem5=false;
-    }
-    lmod = new P4Mod(sim, parser, simplenet);
+    gem5Mod * gem5mod=NULL;
 
 
+    /* sPIN configuration */
+    //TODO: configure via external config file
+#ifndef HAS_GEM5 
+    printf("Current configuration requires gem5! (sPIN)\n");
+    exit(1);
 #endif
 
-    sim.addModule(lmod);    
+    lmod = new P4SMPMod(sim, parser, simplenet); //logic
+    dmamod = new DMAmod(sim, parser.schedules.size()); //Host DMA
+    nmod = new NetMod(sim, true); //Network
+    gem5mod = new gem5Mod(sim, parser.schedules.size()); //gem5
 
-    if (!simplenet){
-        nmod = new NetMod(sim, gem5);
-        sim.addModule((simModule *) nmod);
-    }
-
-    if(dmamod!=NULL) sim.addModule(dmamod);    
+    sim.addModule(lmod);
+    sim.addModule(dmamod);
+    sim.addModule(nmod);
+    sim.addModule(gem5mod);
 
     sim.simulate(parser);
     sim.printStatus(); 
@@ -74,6 +64,5 @@ int main(int argc, char * argv[]){
     if (nmod!=NULL) delete nmod; 
     if (lmod!=NULL) delete lmod; 
     if (dmamod!=NULL) delete dmamod;
-
 }
 
