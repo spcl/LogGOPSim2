@@ -6,6 +6,8 @@ Changelog
  v1.1: ported agraph to cgraph, Torsten Hoefler, Timo Schneider
  v1.0: Initial version - Torsten Hoefler, Timo Schneider
 
+**Note**: this branch is sPIN simulation development branch => LogGOPSim is configure to always run with gem5 (for now)
+
 Installing
 ----------
   * prerequisites to for LogGOPSim: 
@@ -33,6 +35,14 @@ Installing
     - make
     - make install
 
+
+sPIN example
+--------------------------------------
+  * Go into test/sPIN
+  * Execute ./run.sh (you may need to adjust your PATH env. var).
+  * Cross compilation tools are required!
+
+
 Running a LogP simulation without gem5
 --------------------------------------
   * write or generate a GOAL schedule or use one of the example
@@ -41,9 +51,9 @@ Running a LogP simulation without gem5
   * convert schedule to binary format using txt2bin:
     - e.g., txt2bin -i dissemination_16.goal -o dissemination_16.bin  
 
-  * execute simulation with default parameters (see LogGOPSim --help for
+  * execute simulation with default parameters (see lgs --help for
     more options):
-    - e.g., LogGOPSim -f dissemination_16.bin
+    - e.g., lgs -f dissemination_16.bin
 
   * interpret output:
     - for small simulations, each host end time is printed (22000ns for
@@ -64,8 +74,8 @@ Running a LogP+packet simulation with gem5
 
 Visualization
 -------------
-  * run LogGOPSim with -V <outfile> option:
-    - e.g., LogGOPSim -f dissemination_16.bin -V viz.out
+  * run lgs with -V <outfile> option:
+    - e.g., lgs -f dissemination_16.bin -V viz.out
 
   * compile DrawViz (simple "make")
   
@@ -106,7 +116,7 @@ Schedgen - automatic GOAL schedule generator
     - e.g., schedgen -p trace --traces liballprof-samples/sweep3d-2x2/pmpi-trace-rank-0.txt -o sweep-4.goal
     - convert and simulate:
       - e.g., txt2bin -i sweep-4.goal -o sweep-4.bin
-              LogGOPSim -f sweep-4.bin
+              lgs -f sweep-4.bin
 
 Benchmarks 
 ----------
