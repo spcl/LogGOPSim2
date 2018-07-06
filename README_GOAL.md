@@ -17,24 +17,60 @@ Additional uint32_t arguments can be passed to the packet handlers, they are spe
 The handlers matching the ME can share memory: the size of the memory to share is specified by the mem attribute.
   
 ### Put
-Executes a put operation of size <size> bytes towards rank <rank>. 
-A
-  [label:]put <size>b to <rank> [arg1 <value>] [arg2 <value>] [arg3 <value>] [arg4 <value>] [ct <counter id>] tag <tag>
+```
+put <size>b to <rank> [arg1 <value>] [arg2 <value>] [arg3 <value>] [arg4 <value>] [ct <counter id>] tag <tag>
+```
+Executes a put operation of size <size> bytes towards rank <rank>. A counter ID can be associated with the put: it will be incremented when the put is completed (at the target). 
 
-  [label:]get <size>b from <rank> [ct <counter id>] tag <tag>
+Additional uint64_t arguments can be passed to the packet handlers, they are specified with arg1..4.
+TODO: uniform types between put and append.
 
-  [label:]tappend <size>b to {priority,overflow}_list [hh <handler id>] [ph <handler id>] [ch <handler id>] [arg1 <value>] [arg2 <value>] [arg3 <value>] [arg4 <value>] [mem <size of shared memory>] allowed <rank> when <counter id> reaches <counter value> ct <counter id> [use_once] tag <tag>
+### Get
+```
+get <size>b from <rank> [ct <counter id>] tag <tag>
+```
+Issues a get of <size> bytes from rank <rank> from an ME with tag <tag>. A counter can be associated with this operation by using the "ct" attribute. 
+TODO: add arguments
 
-  [label:]tput <size>b to <rank> [arg1 <value>] [arg2 <value>] [arg3 <value>] [arg4 <value>] when <counter id> reaches <counter value> [ct <counter id>] tag <tag>
+### Triggered Operations
+```
+tappend <size>b to {priority,overflow}_list [hh <handler id>] [ph <handler id>] [ch <handler id>] [arg1 <value>] [arg2 <value>] [arg3 <value>] [arg4 <value>] [mem <size of shared memory>] allowed <rank> when <counter id> reaches <counter value> ct <counter id> [use_once] tag <tag>
+```
 
-  [label:]tget <size>b from <rank> when <counter id> reaches <counter value> [ct <counter id>] tag <tag>
+ ```
+ tput <size>b to <rank> [arg1 <value>] [arg2 <value>] [arg3 <value>] [arg4 <value>] when <counter id> reaches <counter value> [ct <counter id>] tag <tag>
+```
 
-  [label:]test <counter id> for <counter value>
+```
+tget <size>b from <rank> when <counter id> reaches <counter value> [ct <counter id>] tag <tag>
+```
 
-  [label:]calc <delay>
+They have the same syntax of normal operations but, in addition, they take also "when <ct> reaches <value>". This means that the operation will be triggered when the counter ID <ct> will reach the value <value>.
+   
+### Counter Operations
+
+```
+ test <counter id> for <counter value>
+```
+TODO: rename to wait
+It waits until the counter with ID <counter id> reaches the value <counter value>
+
+### Others
+```
+calc <delay>
+```
+Waits for <delay> time units (not sure, need to check).
+
+
+
+
+
+
+
+Scratch
 
   [label:]calcgem5 <function id> <length>b
- 
+
   <label> requires <label>
 
 The handler are defined in gem5_files/smp.c. The handler index is the position of the handler function in the
