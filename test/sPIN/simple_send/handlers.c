@@ -11,12 +11,26 @@
 
 void echo_hh_handler(void* data, size_t size)  {
     ptl_header_t * hh = (ptl_header_t *) data;
-    uint8_t * shared_mem = &(((uint8_t *) data)[MEM_MESSAGE]);
+    uint8_t * shared_mem = (uint8_t *) &(((uint32_t *) data)[MEM_MESSAGE]);
 
-    const char * msg = "written by header handler\0";
-    strcpy(shared_mem, msg);
+    /* the APPEND args are written in the shared mem */
+    uint64_t * append_args = (uint64_t *) shared_mem;
 
     printf("Hey! I'm the HEADER handler! Source: %u; Length: %u; Tag: %u\n", hh->source_id, hh->length, hh->match_bits);   
+
+    for (int i=0; i<4; i++){
+        printf("HH PUT arg[%i]: %u\n", i, hh->user_hdr.arg[i]);
+    }
+
+
+    for (int i=0; i<4; i++){
+        printf("HH APPEND arg[%i]: %llu\n", i, append_args[i]);
+    }
+
+
+    /* let's write a message in the shared memory so the other handlers can read it */
+    const char * msg = "written by header handler\0";
+    strcpy(shared_mem, msg);
 
 }
 

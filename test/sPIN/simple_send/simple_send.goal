@@ -1,7 +1,7 @@
 num_ranks 2
 rank 0{
-l0: put 1024b to 1 tag 10
+l0: put 1024b arg1 1 arg2 2 arg3 3 arg4 4 to 1 tag 10
 }
 rank 1{
-l0: append 1024b to priority_list hh 0 ph 1 ch 2 mem 128 allowed 0 ct 5 tag 10
+l0: append 1024b to priority_list hh 0 ph 1 ch 2 mem 128 arg1 10 arg2 12 arg3 13 arg4 14 allowed 0 ct 5 tag 10
 }

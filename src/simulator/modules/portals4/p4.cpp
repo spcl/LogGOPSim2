@@ -187,24 +187,19 @@ int P4Mod::append(goalevent& elem){
             } 
 
             int i;
-            for(i=3; i>=0; i--)
-            {
+            for(i=3; i>=0; i--){
             
                // printf("arg[%d]=%lu \n",i,elem.arg[i]);
                 if(elem.arg[i] != (uint64_t)-1) break;
 
             }
 
-            if(i>=0)
-            {
-                if((i+1)*sizeof(uint64_t)>nelem.mem)
-                {
+            if(i>=0){
+                if((i+1)*sizeof(uint64_t)>nelem.mem){
                     printf("Error: specify size of shared memory before using it in Append\n");
                     printf("You need at least %lu bytes \n",(i+1)*sizeof(uint64_t));
                     exit(-1);
-                }
-                else
-                {
+                } else {
                     memcpy(nelem.shared_mem,elem.arg,(i+1)*sizeof(uint64_t));
                 }
             }
