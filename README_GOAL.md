@@ -1,17 +1,24 @@
 
-Goal extension:
+# Goal extension
 
-Append:
+### Append
+```
 append <size>b to {priority,overflow}_list [hh <handler id>] [ph <handler id>] [ch <handler id>] [arg1 <value>] [arg2 <value>] [arg3 <value>] [arg4 <value>] [mem <size of shared memory>] allowed <rank> ct <counter id> [use_once] tag <tag>
+```
 
-It appends an ME to the priority_list or overflow_list. The matching is performed according to the <tag> value. Only the rank specified by <rank> can initiate operation matching this ME. Packet handlers indices can be specified with:
-   - hh: header handler
-   - ph: payload handler
-   - ch: completion handler
+It appends an ME to the priority_list or overflow_list. The matching is performed according to the <tag> value. Only the rank specified by <rank> can initiate operation matching this ME. A counter ID can be associated with the ME by using the "ct" attribute. The counter is incremented when a put matches the ME. The counter ID can then be used for triggered operations. 
+   
+Packet handlers indices can be specified with:
+   - hh: header handler index
+   - ph: payload handler index
+   - ch: completion handler index
+   
 Additional uint32_t arguments can be passed to the packet handlers, they are specified with arg1..4.
 The handlers matching the ME can share memory: the size of the memory to share is specified by the mem attribute.
   
-  
+### Put
+Executes a put operation of size <size> bytes towards rank <rank>. 
+A
   [label:]put <size>b to <rank> [arg1 <value>] [arg2 <value>] [arg3 <value>] [arg4 <value>] [ct <counter id>] tag <tag>
 
   [label:]get <size>b from <rank> [ct <counter id>] tag <tag>
