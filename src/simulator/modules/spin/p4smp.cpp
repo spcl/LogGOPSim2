@@ -268,6 +268,7 @@ static void copyCurrentHandlerData(void * ref, void *dest, size_t mem_size) {
   goalevent elem = *((goalevent *)pkt->header->getPayload());
   void *state = (void *)&(((uint32_t *)dest)[MEM_MESSAGE]);
   if (pkt->matched.mem) {
+    //printf("COPYING SHARED MEM: %u\n", pkt->matched.mem);
     memcpy(state, pkt->matched.shared_mem, pkt->matched.mem);
   }
 

@@ -11,16 +11,23 @@
 
 void echo_hh_handler(void* data, size_t size)  {
     ptl_header_t * hh = (ptl_header_t *) data;
+    uint8_t * shared_mem = &(((uint8_t *) data)[MEM_MESSAGE]);
+
+    const char * msg = "written by header handler\0";
+    strcpy(shared_mem, msg);
+
     printf("Hey! I'm the HEADER handler! Source: %u; Length: %u; Tag: %u\n", hh->source_id, hh->length, hh->match_bits);   
 
 }
 
 void echo_pp_handler(void* data, size_t size)  {
-    printf("Hey! I'm the PAYLOAD handler!\n");    
+    uint8_t * shared_mem = &(((uint8_t *) data)[MEM_MESSAGE]);
+    printf("Hey! I'm the PAYLOAD handler (msg: %s)!\n", (char *) shared_mem);    
 }
 
 void echo_cc_handler(void* data, size_t size)  {
-    printf("Hey! I'm the COMPLETION handler!\n");    
+    uint8_t * shared_mem = &(((uint8_t *) data)[MEM_MESSAGE]);
+    printf("Hey! I'm the COMPLETION handler (msg: %s)!\n", (char *) shared_mem);    
 }
 
 

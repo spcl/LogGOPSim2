@@ -3,5 +3,5 @@ rank 0{
 l0: put 1024b to 1 tag 10
 }
 rank 1{
-l0: append 1024b to priority_list hh 0 ph 1 ch 2 allowed 0 ct 5 tag 10
+l0: append 1024b to priority_list hh 0 ph 1 ch 2 mem 128 allowed 0 ct 5 tag 10
 }

@@ -6,7 +6,7 @@
 
 #define MEM_MESSAGE 4096+100  //in ints
 #define PACKET_SIZE 4096
-#define MEM_PER_ME 100+PACKET_SIZE   // in ints
+#define MEM_PER_ME 100+PACKET_SIZE   // in ints <- this is a max, the actual one is specified in the append
 
 
 
