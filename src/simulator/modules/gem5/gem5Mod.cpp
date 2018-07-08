@@ -372,9 +372,23 @@ int gem5Mod::executeHandler(gem5SimRequest &elem) {
 /* SIMCALLS */
 btime_t gem5Mod::simcall(gem5SimRequest &event, uint32_t num, void *data,
                       btime_t time, bool * suspend) {
-  printf("SIMCALL not implemented in this version (yet)!!!\n");
 
-  /* never reached */
+  simcall_hdr_t * simcall_hdr = (simcall_hdr_t *) data;  
+
+  
+
+  printf("SIMCALL not implemented in this version (yet). Event: %i; Suspend: %i!!!\n", simcall_hdr->event_type, simcall_hdr->suspend);
+
+  gem5SimCall * sc = new gem5SimCall();
+  sc->type = simcall_hdr->event_type;
+  sc->data = data;
+  sc->simreq = &event;
+  sc->time = time;
+
+  sim.addEvent(sc);
+
+  *suspend = simcall_hdr->suspend;
+
   return true;
 }
 

@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 
+#include "../../gem5/clientlib/lgslib.h"
 
 #define MEM_MESSAGE 4096+100  //in ints
 #define PACKET_SIZE 4096
@@ -62,8 +63,17 @@ typedef struct {
 }  ptl_payload_t;
 
 
+typedef struct {
+  simcall_hdr_t hdr;
+  uint32_t size;
+  uint32_t target;
+  uint32_t tag;
+} ptl_device_put_t;
 
 
+void PtlDevicePut(uint32_t target, uint32_t size, uint32_t tag);
+
+/*
 #define GETHOST       10
 #define PUTDEVICE     11
 #define PUTHOST       12
@@ -77,7 +87,7 @@ typedef struct {
 #define DMA_CAS_B     20
 #define DMA_FADD_NB   21
 #define DMA_FADD_B    22
-
+*/
 
 
 #endif /* __SPIN_HH__ */

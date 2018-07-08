@@ -39,3 +39,12 @@ int libmain(){
     }
     return op;
 }
+
+void * get_simcall_data(){
+    return (void *) simcall_data;
+}
+
+void simtrap(){
+    simcall = simcall+1;
+}
+

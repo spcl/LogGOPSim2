@@ -18,8 +18,20 @@ int P4SMPMod::dispatch(simModule *mod, simEvent *_elem) {
       return pmod->recvpkt(*((HostDataPkt *)_elem));
     case MATCHED_HOST_DATA_PKT:
       return pmod->processHandlers(*((MatchedHostDataPkt *)_elem));
+    case HANDLER_CALL:
+      return pmod->processHandlerCall(*((gem5SimCall *)_elem));
   }
   return -1;
+}
+
+int P4SMPMod::processHandlerCall(gem5SimCall &sc){
+
+    ptl_device_put_t * putd = (ptl_device_put_t *) sc.data;
+ 
+    printf("Handler at rank %i executing a put toward %i\n", sc.simreq->host, putd->target);   
+    goalevent * ev = new goalevent(sc.simreq->host, putd->target, putd->size, putd->tag, OP_NPUT, sc.time);
+    sim.addEvent(ev);
+    return 0;
 }
 
 int P4SMPMod::recvpkt(HostDataPkt &pkt) {

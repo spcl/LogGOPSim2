@@ -3,6 +3,7 @@
 
 typedef uint64_t btime_t;
 
+#ifdef __cplusplus
 class simEvent{
 public:
     btime_t time;
@@ -151,7 +152,7 @@ public:
     //goalevent(const goalevent& ev): LogGPBaseEvent(ev) {;}
 };
 
-
+#endif
 
 // mnemonic defines for op type
 static const int OP_SEND = 1;
@@ -195,10 +196,12 @@ static const int SIG_PKT_RECEIVED = 30;
 static const int OP_MSG_RTR = 31;
 static const int OP_MSG_RTS = 32;
 
+static const int HANDLER_CALL = 33;
+
 static const uint32_t ANY_SOURCE = ~0;
 static const uint32_t ANY_TAG = ~0;
 
-
+#ifdef __cplusplus
 /* this is a comparison functor that can be used to compare and sort
  * operation types of graph_node_properties */
 class gnp_op_comp_func {
@@ -208,6 +211,6 @@ class gnp_op_comp_func {
     return false;
   }
 };
-
+#endif
 
 #endif /* __SIMEVENTS_HPP__ */

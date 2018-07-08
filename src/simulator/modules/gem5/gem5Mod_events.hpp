@@ -20,6 +20,7 @@ typedef struct hpu hpu_t;
 
 typedef void (*gem5_copy_data_t)(void*, void*, size_t);
 
+
 class gem5SimRequest : public simEvent {
 private:
   bool is_suspended = false;
@@ -69,6 +70,14 @@ public:
     this->host = host;
     this->handlerIndex = handlerIndex;
   }
+};
+
+
+class gem5SimCall : public simEvent {
+
+public: 
+  void * data;
+  gem5SimRequest * simreq;
 };
 
 #endif /* __GEM5MOD_EVENTS_HPP__ */

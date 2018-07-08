@@ -200,7 +200,7 @@ int P4Mod::append(goalevent& elem){
                     printf("You need at least %lu bytes \n",(i+1)*sizeof(uint64_t));
                     exit(-1);
                 } else {
-                    memcpy(nelem.shared_mem,elem.arg,(i+1)*sizeof(uint64_t));
+                    memcpy(nelem.shared_mem, elem.arg, (i+1)*sizeof(uint64_t));
                 }
             }
 

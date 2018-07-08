@@ -16,6 +16,7 @@ lgs_CPPFLAGS = -std=c++11
 lgs_LDADD = -lcgraph
 BUILT_SOURCES = cmdline.c
 
+
 cmdline.c: cmdline.ggo
 	gengetopt < $(srcdir)/cmdline.ggo
 
