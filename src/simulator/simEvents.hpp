@@ -196,7 +196,7 @@ static const int SIG_PKT_RECEIVED = 30;
 static const int OP_MSG_RTR = 31;
 static const int OP_MSG_RTS = 32;
 
-static const int HANDLER_CALL = 33;
+static const int PUT_SIMCALL = 33;
 
 static const uint32_t ANY_SOURCE = ~0;
 static const uint32_t ANY_TAG = ~0;

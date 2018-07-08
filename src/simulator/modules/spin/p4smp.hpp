@@ -41,7 +41,7 @@ class P4SMPMod : public P4Mod {
 
     sim.addEventHandler(this, HOST_DATA_PKT, P4SMPMod::dispatch);
     sim.addEventHandler(this, MATCHED_HOST_DATA_PKT, P4SMPMod::dispatch);
-    sim.addEventHandler(this, HANDLER_CALL, P4SMPMod::dispatch);
+    sim.addEventHandler(this, PUT_SIMCALL, P4SMPMod::dispatch);
 
     return 0;
   }

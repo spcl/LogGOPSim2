@@ -18,7 +18,7 @@ int P4SMPMod::dispatch(simModule *mod, simEvent *_elem) {
       return pmod->recvpkt(*((HostDataPkt *)_elem));
     case MATCHED_HOST_DATA_PKT:
       return pmod->processHandlers(*((MatchedHostDataPkt *)_elem));
-    case HANDLER_CALL:
+    case PUT_SIMCALL:
       return pmod->processHandlerCall(*((gem5SimCall *)_elem));
   }
   return -1;
