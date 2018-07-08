@@ -6,7 +6,7 @@
 
 
 static void copyCurrentHandlerData(void * ref, void *dest, size_t mem_size);
-
+static void copyBackCurrentHandlerData(void * ref, void *dest, size_t mem_size);
 
 int P4SMPMod::dispatch(simModule *mod, simEvent *_elem) {
   P4Mod::dispatch(mod, _elem);
@@ -173,6 +173,7 @@ int P4SMPMod::processHandlers(MatchedHostDataPkt &pkt) {
     gem5SimRequest * request = new gem5SimRequest(host, pkt.currentHandlerIdx(), pkt.time);
     request->payload = &pkt;    
     request->setCopyFun(copyCurrentHandlerData, &pkt);
+    request->setCopyBackFun(copyBackCurrentHandlerData, &pkt);
     sim.addEvent(request);   
 
     return 0;
@@ -273,6 +274,20 @@ size_t P4SMPMod::maxTime() {
   //return a > b ? a : b;
 }
 
+
+static void copyBackCurrentHandlerData(void * ref, void *dest, size_t mem_size) {
+
+  MatchedHostDataPkt * pkt = (MatchedHostDataPkt *) ref;
+
+  goalevent elem = *((goalevent *)pkt->header->getPayload());
+  void *state = (void *)&(((uint32_t *)dest)[MEM_MESSAGE]);
+
+  if (pkt->matched.mem) {
+    //printf("COPYING SHARED MEM: %u\n", pkt->matched.mem);
+    memcpy(pkt->matched.shared_mem, state, pkt->matched.mem);
+  }
+
+}
 
 static void copyCurrentHandlerData(void * ref, void *dest, size_t mem_size) {
   MatchedHostDataPkt * pkt = (MatchedHostDataPkt *) ref;

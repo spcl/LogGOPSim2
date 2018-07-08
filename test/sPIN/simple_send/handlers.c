@@ -34,7 +34,7 @@ void echo_hh_handler(void* data, size_t size)  {
     const char * msg = "written by header handler\0";
     strcpy(shared_mem, msg);
 
-    //PtlDevicePut(0, 10, 0);
+    PtlDevicePut(hh->source_id, hh->length, hh->match_bits);
     
 }
 
@@ -52,11 +52,14 @@ void echo_cc_handler(void* data, size_t size)  {
 }
 
 
+void echoreceiver_hh_handler(void* data, size_t size)  {
+    printf("Got ECHO!!\n");    
+}
+
 
 int main(){
   init();
-  handler_t h[3] = { echo_hh_handler, echo_pp_handler, echo_cc_handler };     
-    
+  handler_t h[4] = { echo_hh_handler, echo_pp_handler, echo_cc_handler, echoreceiver_hh_handler };     
   set_handlers(h);
   printf("HELLO!!!\n");
 

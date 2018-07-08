@@ -37,7 +37,10 @@ public:
   uint32_t handlerIndex;
 
   gem5_copy_data_t copy_fun = NULL;
+  gem5_copy_data_t copy_back_fun = NULL;
+
   void * copy_fun_ref = NULL; /* to play along with the pointers to member functions */
+  void * copy_back_fun_ref = NULL;
 
   /* needed for drawing */
   btime_t start_hpu_time;
@@ -50,7 +53,15 @@ public:
     copy_fun_ref = ref;
   }
 
+  void setCopyBackFun(gem5_copy_data_t fun, void * ref){
+    copy_back_fun = fun; 
+    copy_back_fun_ref = ref;
+  }
+
+
+
   bool hasCopyFun(){ return copy_fun!=NULL; }  
+  bool hasCopyBackFun(){ return copy_back_fun!=NULL; }  
 
   bool isSuspended() { return is_suspended; }
   //bool hasData() { return data != NULL && data_size > 0; }

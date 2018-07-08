@@ -343,6 +343,11 @@ int gem5Mod::executeHandler(gem5SimRequest &elem) {
 
   HPU(host, hpu.hid)->suspendContext(0);
 
+  /* copy memory back */
+  if (elem.hasCopyBackFun()){
+    elem.copy_back_fun(elem.copy_fun_ref, DUMMYCACHE(host, hpu.hid)->getPtr(DATA), SHARED_DATA_SIZE);
+  }
+
   /* add to cpu time to hpu_time */
   hpu.time += htot;
 
@@ -375,9 +380,7 @@ btime_t gem5Mod::simcall(gem5SimRequest &event, uint32_t num, void *data,
 
   simcall_hdr_t * simcall_hdr = (simcall_hdr_t *) data;  
 
-  
-
-  printf("SIMCALL not implemented in this version (yet). Event: %i; Suspend: %i!!!\n", simcall_hdr->event_type, simcall_hdr->suspend);
+  //printf("SIMCALL not implemented in this version (yet). Event: %i; Suspend: %i!!!\n", simcall_hdr->event_type, simcall_hdr->suspend);
 
   gem5SimCall * sc = new gem5SimCall();
   sc->type = simcall_hdr->event_type;
